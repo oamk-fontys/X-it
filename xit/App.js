@@ -1,20 +1,79 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { View, SafeAreaView, StyleSheet } from "react-native";
+import { createStaticNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+import HomeScreen from "./screens/HomeScreen";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
+const Drawer = createDrawerNavigator();
+
+const DrawerNavigator = () => (
+  <Drawer.Navigator
+    screenOptions={{
+      header: ({ navigation }) => <Header navigation={navigation} />,
+    }}
+  >
+    <Drawer.Screen name="Home" component={HomeScreen} />
+  </Drawer.Navigator>
+);
+
+const RootStack = createNativeStackNavigator({
+  initialRouteName: 'Drawer',
+  screens: {
+    Drawer: {
+      screen: DrawerNavigator,
+      options: {
+        headerShown: false,
+      },
+    },
+    Home: {
+      screen: HomeScreen,
+      options: {
+        title: 'Home',
+      },
+    },
+  },
+});
+
+const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Navigation />
+      </View>
+      <Footer />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#222831",
+  },
+  content: {
+    flex: 1,
   },
 });
+
+// export default function App() {
+//   return (
+//     <Navigation>
+//       <SafeAreaView style={styles.container}> 
+//         <Footer />
+//       </SafeAreaView>
+//     </Navigation>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#222831",
+//   },
+// });
