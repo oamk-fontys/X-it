@@ -9,19 +9,45 @@ export default function PopularRooms() {
     useEffect(() => {
         //always rendering four rooms (unless instructed differently)
         //room info fetched
+        //dummy data represents db response
         let setter = [];
-        for (let i = 0; i < 4; i++) {
+        [
+            {
+              city: 'Oulu',
+              rating: 3.83,
+              roomName: `Dead Man's Island`,
+              img: ''
+            },
+            {
+              city: 'Helsinki',
+              rating: 4.32,
+              roomName: `Mysterious Lab`,
+              img: ''
+            },
+            {
+              city: 'Turku',
+              rating: 4.85,
+              roomName: `Phantom's Curse`,
+              img: ''
+            },
+            {
+              city: 'Jyväskylä',
+              rating: 2.97,
+              roomName: `The Cursed Temple`,
+              img: ''
+            }
+        ].forEach((e, i) => {
             setter.push(
-                //the values are hardcoded for now
                 <RoomElement
                     key={i}
-                    rating={Math.floor(Math.random() * 501) / 100}
-                    city='Oulu'
-                    roomName={`Dead Man's Island`}
-                    img='https://th.bing.com/th/id/OIP.kNqtHzGWxqZF-RKwgPjgmQHaKX?rs=1&pid=ImgDetMain'
+                    city={e.city}
+                    rating={e.rating}
+                    roomName={e.roomName}
+                    img={e.img}
                 />
             )
-        }
+        })
+        
         setPopularRoomList(setter);
     }, [])
 

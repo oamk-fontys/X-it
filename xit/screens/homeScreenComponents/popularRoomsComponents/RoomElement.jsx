@@ -14,10 +14,24 @@ export default function RoomElement({ rating, city, roomName, img }) {
                 <View
                     style={styles.imageView}
                 >
-                    <Image
-                        style={styles.image}
-                        source={{uri: img}}
-                    />
+                    {
+                        img
+                        ?
+                        <Image
+                            style={styles.image}
+                            source={{uri: img}}
+                        />
+                        :
+                        <View
+                            style={styles.noImage}
+                        >
+                            <Text
+                                style={styles.noImageText}
+                            >
+                                No Image
+                            </Text>
+                        </View>
+                    }
                 </View>
                 <View
                     style={styles.info}
@@ -76,6 +90,20 @@ const styles = new StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 5
+    },
+    noImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#EEEEEE',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noImageText: {
+        textAlign: 'center',
+        color: '#EEEEEE',
+        fontStyle: 'italic'
     },
     info: {
         flex: 5,

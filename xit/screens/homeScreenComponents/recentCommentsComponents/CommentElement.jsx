@@ -1,13 +1,34 @@
 import { StyleSheet, View, Text, Image } from "react-native";
 
-//https://tr.rbxcdn.com/38c6edcb50633730ff4cf39ac8859840/420/420/Hat/Png
+export default function CommentElement({
+    text,
+    roomName,
+    city,
+    username,
+    date,
+    pfp
+}) {
+    const formatDate = (date) => {
+        const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ];
 
-export default function CommentElement({ text }) {
-    const roomName = `Dead Man's Island`;
-    const city = 'Oulu';
-    const username = 'TheGreatEscaper';
-    const date = '14 Feb';
-    const pfp = 'https://tr.rbxcdn.com/38c6edcb50633730ff4cf39ac8859840/420/420/Hat/Png';
+        const month = months[new Date(date).getMonth()];
+        const day = new Date(date).getDate();
+
+        return `${day} ${month}`
+    }
 
     return (
         <View
@@ -44,7 +65,7 @@ export default function CommentElement({ text }) {
                         <Text
                             style={styles.commentHeadText}
                         >
-                            {date}
+                            {formatDate(date)}
                         </Text>
                     </View>
                     <View
@@ -55,7 +76,7 @@ export default function CommentElement({ text }) {
                         >
                             <Image
                                 style={styles.pfp}
-                                source={{uri: pfp}}
+                                source={{uri: pfp || 'https://tr.rbxcdn.com/38c6edcb50633730ff4cf39ac8859840/420/420/Hat/Png'}}
                             />
                         </View>
                         <View
@@ -85,7 +106,10 @@ const styles = new StyleSheet.create({
         width: '100%',
         flexDirection: 'column',
         backgroundColor: '#222831',
-        borderRadius: 10
+        borderRadius: 10,
+        shadowOpacity: 0.4,
+        shadowRadius: 6,
+        shadowOffset: {width: 4, height: 2}
     },
     titleView: {
         width: '100%',
@@ -128,9 +152,9 @@ const styles = new StyleSheet.create({
         height: 60,
     },
     pfp: {
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%'
+        width: 60,
+        height: 60,
+        borderRadius: 30
     },
     commentTextView: {
         marginStart: 5,
