@@ -2,8 +2,10 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Header({ navigation }) {
+export default function Header() {
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.safeArea}>
