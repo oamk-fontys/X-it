@@ -1,15 +1,23 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import Rating from "./Rating";
-import { useEffect, useState } from "react";
 
-export default function RoomElement({ rating, city, roomName, img }) {
+export default function RoomElement({
+    navigation,
+    rating,
+    city,
+    roomName,
+    img
+}) {
     return (
         <View
             style={styles.container}
         >
-            <View
+            <TouchableOpacity
                 style={styles.body}
+                onPress={() => {
+                    //navigation.navigate('RoomDetails');
+                }}
             >
                 <View
                     style={styles.imageView}
@@ -56,7 +64,7 @@ export default function RoomElement({ rating, city, roomName, img }) {
                         </Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }

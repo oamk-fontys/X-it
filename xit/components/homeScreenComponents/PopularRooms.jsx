@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import RoomElement from "./popularRoomsComponents/RoomElement";
 
-export default function PopularRooms() {
+export default function PopularRooms({ navigation }) {
     const [popularRoomList, setPopularRoomList] = useState([]);
 
     useEffect(() => {
@@ -44,6 +44,7 @@ export default function PopularRooms() {
                     rating={e.rating}
                     roomName={e.roomName}
                     img={e.img}
+                    navigation={navigation}
                 />
             )
         })
