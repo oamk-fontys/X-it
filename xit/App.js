@@ -15,10 +15,23 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => (
   <Drawer.Navigator
     screenOptions={{
-      header: ({ navigation }) => <Header navigation={navigation} />,
+      header: () => <Header />,
     }}
   >
-    <Drawer.Screen name="Home" component={HomeScreen} />
+    <Drawer.Screen
+      name="Home"
+      component={HomeScreen}
+    />
+    <Drawer.Screen
+      name='Room Details'
+      component={RoomDetailsScreen}
+      options={{
+        drawerItemStyle: {
+          height: 0
+        },
+        headerShown: () => <Header />
+      }}
+    />
   </Drawer.Navigator>
 );
 
@@ -30,13 +43,7 @@ const RootStack = createNativeStackNavigator({
       options: {
         headerShown: false,
       },
-    },
-    Home: {
-      screen: HomeScreen,
-      options: {
-        title: 'Home',
-      },
-    },
+    }
   },
 });
 

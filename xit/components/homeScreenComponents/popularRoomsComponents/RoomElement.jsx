@@ -1,14 +1,16 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import Rating from "./Rating";
+import { useNavigation } from "@react-navigation/native";
 
 export default function RoomElement({
-    navigation,
     rating,
     city,
     roomName,
     img
 }) {
+    const navigation = useNavigation();
+
     return (
         <View
             style={styles.container}
@@ -16,7 +18,7 @@ export default function RoomElement({
             <TouchableOpacity
                 style={styles.body}
                 onPress={() => {
-                    //navigation.navigate('RoomDetails');
+                    navigation.navigate('Room Details');
                 }}
             >
                 <View

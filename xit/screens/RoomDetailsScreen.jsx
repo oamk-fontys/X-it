@@ -1,5 +1,7 @@
+import { Text } from "react-native";
+
 export default function RoomDetailsScreen() {
-    return (
-        null
-    );
+    return(
+        <Text>This is details page</Text>
+    )
 }

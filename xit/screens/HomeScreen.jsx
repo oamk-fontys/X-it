@@ -4,10 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PopularRooms from "../components/homeScreenComponents/PopularRooms";
 import RecentComments from "../components/homeScreenComponents/RecentComments";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <PopularRooms navigation={navigation} />
+      <PopularRooms />
       <RecentComments />
     </SafeAreaView>
   );
