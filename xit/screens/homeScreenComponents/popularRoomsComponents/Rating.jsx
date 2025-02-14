@@ -10,7 +10,7 @@ export default function Rating({ rating }) {
         );
     }
 
-    for (let i = 0; i < rating; i += 0.5) {
+    for (let i = 0; i < rating - 0.25; i += 0.5) {
         const floor = Math.floor(i);
 
         if (stars[floor] === 'star-o') {

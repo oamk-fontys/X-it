@@ -3,24 +3,7 @@ import { StyleSheet, View, Text, Image } from "react-native";
 import Rating from "./Rating";
 import { useEffect, useState } from "react";
 
-export default function RoomElement() {
-    const [rating, setRating] = useState();
-    const [city, setCity] = useState();
-    const [roomName, setRoomName] = useState();
-    const [img, setImg] = useState();
-
-    useEffect(() => {
-        //fetching room information
-
-        //rating is random to test star rendering engine
-        setRating(
-            Math.floor(Math.random() * 501) / 100
-        );
-        setCity('Oulu');
-        setRoomName(`Dead Man's Island`);
-        setImg('https://th.bing.com/th/id/OIP.kNqtHzGWxqZF-RKwgPjgmQHaKX?rs=1&pid=ImgDetMain');
-    }, [])
-
+export default function RoomElement({ rating, city, roomName, img }) {
     return (
         <View
             style={styles.container}
@@ -80,7 +63,10 @@ const styles = new StyleSheet.create({
         paddingStart: 10,
         paddingEnd: 10,
         paddingTop: 5,
-        paddingBottom: 5
+        paddingBottom: 5,
+        shadowOpacity: 0.4,
+        shadowRadius: 6,
+        shadowOffset: {width: 4, height: 2}
     },
     imageView: {
         height: '100%',

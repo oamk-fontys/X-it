@@ -8,11 +8,18 @@ export default function PopularRooms() {
 
     useEffect(() => {
         //always rendering four rooms (unless instructed differently)
-        //room info fetched in RoomElement
+        //room info fetched
         let setter = [];
         for (let i = 0; i < 4; i++) {
             setter.push(
-                <RoomElement key={i}/>
+                //the values are hardcoded for now
+                <RoomElement
+                    key={i}
+                    rating={Math.floor(Math.random() * 501) / 100}
+                    city='Oulu'
+                    roomName={`Dead Man's Island`}
+                    img='https://th.bing.com/th/id/OIP.kNqtHzGWxqZF-RKwgPjgmQHaKX?rs=1&pid=ImgDetMain'
+                />
             )
         }
         setPopularRoomList(setter);
