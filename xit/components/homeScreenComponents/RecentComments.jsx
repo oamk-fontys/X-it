@@ -183,7 +183,7 @@ const styles = new StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingTop: 10
+        paddingTop: 10,
     },
     body: {
         height: '100%',

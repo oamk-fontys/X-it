@@ -81,7 +81,7 @@ const styles = new StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingBottom: 10
+        paddingBottom: 10,
     },
     body: {
         height: '100%',
