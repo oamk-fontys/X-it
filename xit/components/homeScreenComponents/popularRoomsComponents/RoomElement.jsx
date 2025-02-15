@@ -4,6 +4,7 @@ import Rating from "./Rating";
 import { useNavigation } from "@react-navigation/native";
 
 export default function RoomElement({
+    id,
     rating,
     city,
     roomName,
@@ -18,7 +19,7 @@ export default function RoomElement({
             <TouchableOpacity
                 style={styles.body}
                 onPress={() => {
-                    navigation.navigate('Room Details');
+                    navigation.navigate('Room Details', {id: id});
                 }}
             >
                 <View
@@ -49,7 +50,10 @@ export default function RoomElement({
                     <View
                         style={styles.top}
                     >
-                        <Rating rating={rating} />
+                        <Rating
+                            rating={rating}
+                            size={16}
+                        />
                         <Text
                             style={styles.city}
                         >
