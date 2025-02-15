@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export default function Rating({ rating }) {
+export default function Rating({ rating, size }) {
     let stars = [];
 
     for (let i = 0; i < 5; i++) {
@@ -28,7 +28,7 @@ export default function Rating({ rating }) {
                 <FontAwesome
                     key={i}
                     name={e}
-                    size={16}
+                    size={size}
                     color='#00ADB5'
                     style={styles.star}
                 />
