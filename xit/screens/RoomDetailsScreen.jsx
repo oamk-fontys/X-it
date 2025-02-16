@@ -4,8 +4,7 @@ import React from "react";
 import Rating from "../components/homeScreenComponents/popularRoomsComponents/Rating";
 import Comments from "../components/roomDetailsScreenComponents/Comments";
 
-export default function RoomDetailsScreen({ route }) {
-    const { id } = route.params;
+export default function RoomDetailsScreen({ id }) {
     const [img, setImg] = useState();
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();

@@ -24,7 +24,12 @@ const DrawerNavigator = () => (
     />
     <Drawer.Screen
       name='Room Details'
-      component={RoomDetailsScreen}
+      component={({ route }) => (
+        <RoomDetailsScreen
+          key={route.params.id}
+          id={route.params.id}
+        />
+      )}
       options={{
         drawerItemStyle: {
           height: 0
