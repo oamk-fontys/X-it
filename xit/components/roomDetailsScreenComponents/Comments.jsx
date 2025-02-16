@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, TextInput } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import CommentElement from "./CommentElement";
@@ -223,6 +223,7 @@ export default function Comments({ roomId }) {
                 <WriteComment
                     roomId={roomId}
                     playedSection={playedSection}
+                    comments={comments}
                     setComments={setComments}
                 />
             </View>

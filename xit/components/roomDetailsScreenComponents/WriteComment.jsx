@@ -1,8 +1,27 @@
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function WriteComment({ roomId, playedSection, setComments }) {
+export default function WriteComment({ roomId, playedSection, comments, setComments }) {
+    const [text, setText] = useState('');
+
+    const postComment = () => {
+        if (text) {
+            setComments([
+                {
+                    text: text,
+                    userName: 'unnamed',
+                    date: new Date().toISOString(),
+                    pfp: '',
+                    played: playedSection
+                },
+                ...comments
+            ])
+        }
+        setText('');
+    }
+
     return (
         <View
             style={styles.writeComment}
@@ -20,10 +39,15 @@ export default function WriteComment({ roomId, playedSection, setComments }) {
                         'Did Not Play'
                     } section...`}
                     placeholderTextColor='#EEEEEE'
+                    value={text}
+                    onChangeText={val => {
+                        setText(val);
+                    }}
                 />
             </View>
             <TouchableOpacity
                 style={styles.postCommentView}
+                onPress={postComment}
             >
                 <Ionicons
                     name="arrow-up-circle"
@@ -56,6 +80,7 @@ const styles = new StyleSheet.create({
         width: '100%',
         borderBottomWidth: 1,
         borderColor: '#EEEEEE',
+        color: '#EEEEEE'
         
     },
     postCommentView: {
