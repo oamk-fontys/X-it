@@ -1,15 +1,19 @@
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, TextInput } from "react-native";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import CommentElement from "./CommentElement";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Comments({ roomId }) {
     const [spoilerMode, setSpoilerMode] = useState(false);
     const [playedSection, setPlayedSection] = useState(false);
     const [comments, setComments] = useState([]);
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
+        setSpoilerMode(false);
+        setPlayedSection(false);
+
         let setter = [];
 
         [
@@ -123,7 +127,7 @@ export default function Comments({ roomId }) {
         })
 
         setComments(setter);
-    }, [])
+    }, []))
 
     return (
         <View
