@@ -1,0 +1,69 @@
+# React Native specific
+node_modules/
+*.log
+*.keystore
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.ipa
+*.apk
+*.aab
+*.xcworkspace
+*.xcuserstate
+*.xcodeproj/
+*.hmap
+*.swp
+*.DS_Store
+.env
+.env.*.local
+
+# WebStorm specific
+.idea/
+*.iml
+*.iws
+out/
+# WebStorm working directory options
+wssettings.xml
+
+# TypeScript
+*.tsbuildinfo
+
+# Metro bundler cache
+.expo
+.expo-shared
+.expo-cli/
+.cache
+babel-loader-cache/
+yarn-error.log
+npm-debug.log
+package-lock.json
+*.lock
+
+# Android
+*.gradle
+*.settings/
+*.classpath
+local.properties
+*.so
+*.o
+*.a
+*.dex
+*.jar
+*.war
+*.ear
+/build/
+.cxx/
+.externalNativeBuild/
+
+# iOS
+*.pbxproj
+*.xcscmblueprint
+*.xcscheme
+Pods/
+DerivedData/
+*.xcuserdatad/
+*.xcworkspace/
+*.xcodeproj/
+build/
