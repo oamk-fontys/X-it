@@ -20,11 +20,15 @@ export default function CommentElement({ username, text, pfp, date }) {
 
         const dateObject = new Date(date);
 
-        const time = `${dateObject.getHours()}:${dateObject.getMinutes()}`;
+        const hours = dateObject.getHours();
+        let minutes = dateObject.getMinutes().toString();
+        if (minutes.length === 1) {
+            minutes = `0${minutes}`
+        }
         const month = months[dateObject.getMonth()];
         const day = dateObject.getDate()
 
-        return `${time} ${day} ${month}`
+        return `${hours}:${minutes} ${day} ${month}`
     }
 
     return (
