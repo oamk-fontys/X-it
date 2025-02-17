@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import HomeScreen from "./screens/HomeScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RoomDetailsScreen from "./screens/RoomDetailsScreen";
@@ -18,6 +19,7 @@ const DrawerNavigator = () => (
       header: () => <Header />,
     }}
   >
+    <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen
       name="Home"
       component={HomeScreen}
@@ -81,19 +83,3 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default function App() {
-//   return (
-//     <Navigation>
-//       <SafeAreaView style={styles.container}> 
-//         <Footer />
-//       </SafeAreaView>
-//     </Navigation>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#222831",
-//   },
-// });
