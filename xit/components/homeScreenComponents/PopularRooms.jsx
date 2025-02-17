@@ -13,33 +13,38 @@ export default function PopularRooms() {
         let setter = [];
         [
             {
-              city: 'Oulu',
-              rating: 3.83,
-              roomName: `Dead Man's Island`,
-              img: ''
+                id: 1,
+                city: 'Oulu',
+                rating: 3.83,
+                roomName: `Dead Man's Island`,
+                img: ''
             },
             {
-              city: 'Helsinki',
-              rating: 4.32,
-              roomName: `Mysterious Lab`,
-              img: ''
+                id: 2,
+                city: 'Helsinki',
+                rating: 4.32,
+                roomName: `Mysterious Lab`,
+                img: ''
             },
             {
-              city: 'Turku',
-              rating: 4.85,
-              roomName: `Phantom's Curse`,
-              img: ''
+                id: 3,
+                city: 'Turku',
+                rating: 4.85,
+                roomName: `Phantom's Curse`,
+                img: ''
             },
             {
-              city: 'Jyväskylä',
-              rating: 2.97,
-              roomName: `The Cursed Temple`,
-              img: ''
+                id: 4,
+                city: 'Jyväskylä',
+                rating: 2.97,
+                roomName: `The Cursed Temple`,
+                img: ''
             }
         ].forEach((e, i) => {
             setter.push(
                 <RoomElement
                     key={i}
+                    id={e.id}
                     city={e.city}
                     rating={e.rating}
                     roomName={e.roomName}

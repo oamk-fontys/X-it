@@ -1,6 +1,6 @@
 import React from "react";
-import { View,  StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, StyleSheet, SafeAreaView as SafeAreaViewIos, Platform } from "react-native";
+import { SafeAreaView as SafeAreaViewAndroid } from "react-native-safe-area-context";
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -9,17 +9,31 @@ import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import RoomDetailsScreen from "./screens/RoomDetailsScreen";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => (
   <Drawer.Navigator
     screenOptions={{
-      header: ({ navigation }) => <Header navigation={navigation} />,
+      header: () => <Header />,
     }}
   >
-    <Drawer.Screen name="Home" component={HomeScreen} />
     <Drawer.Screen name="Profile" component={ProfileScreen} />
+    <Drawer.Screen
+      name="Home"
+      component={HomeScreen}
+    />
+    <Drawer.Screen
+      name='Room Details'
+      component={RoomDetailsScreen}
+      options={{
+        drawerItemStyle: {
+          height: 0
+        },
+        headerShown: () => <Header />
+      }}
+    />
   </Drawer.Navigator>
 );
 
@@ -31,27 +45,32 @@ const RootStack = createNativeStackNavigator({
       options: {
         headerShown: false,
       },
-    },
-    Home: {
-      screen: HomeScreen,
-      options: {
-        title: 'Home',
-      },
-    },
+    }
   },
 });
 
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Navigation />
-      </View>
-      <Footer />
-    </SafeAreaView>
-  );
+  if (Platform.OS === 'android') {
+    return (
+      <SafeAreaViewAndroid style={styles.container}>
+        <View style={styles.content}>
+          <Navigation />
+        </View>
+        <Footer />
+      </SafeAreaViewAndroid>
+    )
+  } else {
+    return (
+      <SafeAreaViewIos style={styles.container}>
+        <View style={styles.content}>
+          <Navigation />
+        </View>
+        <Footer />
+      </SafeAreaViewIos>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
