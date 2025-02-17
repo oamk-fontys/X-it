@@ -1,7 +1,10 @@
 import React from "react";
 import { StyleSheet, ScrollView, View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+
+import InfoItem from "../components/profile/InfoItem";
+import StatCard from "../components/profile/StatCard";
+import BookingItem from "../components/profile/BookingItem";
 
 export default function ProfileScreen() {
   // Mock data
@@ -63,34 +66,6 @@ export default function ProfileScreen() {
   );
 }
 
-// Reusable components
-const InfoItem = ({ icon, title, value }) => (
-  <View style={styles.infoItem}>
-    <MaterialIcons name={icon} size={24} color="#EEEEEE" />
-    <View style={styles.infoText}>
-      <Text style={styles.infoTitle}>{title}</Text>
-      <Text style={styles.infoValue}>{value}</Text>
-    </View>
-  </View>
-);
-
-const StatCard = ({ title, value }) => (
-  <View style={styles.statCard}>
-    <Text style={styles.statValue}>{value}</Text>
-    <Text style={styles.statTitle}>{title}</Text>
-  </View>
-);
-
-const BookingItem = ({ booking }) => (
-  <View style={styles.bookingItem}>
-    <MaterialIcons name="event" size={20} color="#EEEEEE" />
-    <View style={styles.bookingDetails}>
-      <Text style={styles.bookingDate}>{booking.date}</Text>
-      <Text style={styles.bookingRoom}>{booking.room}</Text>
-    </View>
-  </View>
-);
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -127,61 +102,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#393E46",
     paddingBottom: 8,
   },
-  infoItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  infoText: {
-    marginLeft: 15,
-  },
-  infoTitle: {
-    color: "#888",
-    fontSize: 14,
-  },
-  infoValue: {
-    color: "#EEEEEE",
-    fontSize: 16,
-  },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  statCard: {
-    backgroundColor: "#393E46",
-    borderRadius: 10,
-    padding: 15,
-    width: "30%",
-    alignItems: "center",
-  },
-  statValue: {
-    color: "#EEEEEE",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  statTitle: {
-    color: "#888",
-    fontSize: 12,
-    textAlign: "center",
-  },
-  bookingItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#393E46",
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
-  },
-  bookingDetails: {
-    marginLeft: 15,
-  },
-  bookingDate: {
-    color: "#EEEEEE",
-    fontSize: 14,
-  },
-  bookingRoom: {
-    color: "#888",
-    fontSize: 12,
-  },
+  }
 });
