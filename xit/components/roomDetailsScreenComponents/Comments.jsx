@@ -252,7 +252,7 @@ const styles = new StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        flex: 2
+        paddingVertical: 10
     },
     headerView: {
         flex: 1,
@@ -270,8 +270,8 @@ const styles = new StyleSheet.create({
         fontSize: 18,
     },
     content: {
-        flex: 14,
-        width: '100%'
+        width: '100%',
+        flex: 1
     },
     contentScrollable: {
         alignItems: 'center',

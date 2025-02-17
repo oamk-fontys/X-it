@@ -61,27 +61,25 @@ export default function WriteComment({ roomId, playedSection, comments, setComme
 
 const styles = new StyleSheet.create({
     writeComment: {
-        flex: 2,
         width: '100%',
         backgroundColor: '#00ADB5',
         borderRadius: 15,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     inputView: {
         flex: 1,
-        height: '100%',
         padding: 5,
         paddingStart: 15,
         paddingEnd: 15
     },
     input: {
-        height: '100%',
         width: '100%',
         borderBottomWidth: 1,
         borderColor: '#EEEEEE',
-        color: '#EEEEEE'
-        
+        color: '#EEEEEE',
+        fontSize: 16,
+        height: 40
     },
     postCommentView: {
         padding: 5,
