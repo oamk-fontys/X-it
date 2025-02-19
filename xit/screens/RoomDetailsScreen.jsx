@@ -1,11 +1,11 @@
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React from "react";
 import Rating from "../components/homeScreenComponents/popularRoomsComponents/Rating";
 import Comments from "../components/roomDetailsScreenComponents/Comments";
 
-export default function RoomDetailsScreen({ route }) {
-    const { id } = route.params;
+export default function RoomDetailsScreen({ id }) {
     const [img, setImg] = useState();
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();
@@ -45,7 +45,7 @@ export default function RoomDetailsScreen({ route }) {
         <View
             style={styles.container}
         >
-            <ScrollView
+            <KeyboardAwareScrollView
                 contentContainerStyle={styles.containerScrollable}
             >
                 <View
@@ -107,7 +107,7 @@ export default function RoomDetailsScreen({ route }) {
                     </TouchableOpacity>
                 </View>
                 <Comments roomId={id} />
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </View>
     )
 }

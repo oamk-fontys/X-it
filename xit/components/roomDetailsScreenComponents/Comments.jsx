@@ -1,8 +1,8 @@
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, TextInput } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import CommentElement from "./CommentElement";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import WriteComment from "./WriteComment";
 
 export default function Comments({ roomId }) {
     const [spoilerMode, setSpoilerMode] = useState(false);
@@ -220,34 +220,12 @@ export default function Comments({ roomId }) {
                         ))}
                     </ScrollView>
                 </View>
-                <View
-                    style={styles.writeComment}
-                >
-                    <View
-                        style={styles.inputView}
-                    >
-                        <TextInput
-                            style={styles.input}
-                            placeholder={`Write comment for ${
-                                playedSection
-                                ?
-                                'Did Play'
-                                :
-                                'Did Not Play'
-                            } section...`}
-                            placeholderTextColor='#EEEEEE'
-                        />
-                    </View>
-                    <TouchableOpacity
-                        style={styles.postCommentView}
-                    >
-                        <Ionicons
-                            name="arrow-up-circle"
-                            size={35}
-                            color="#EEEEEE"
-                        />
-                    </TouchableOpacity>
-                </View>
+                <WriteComment
+                    roomId={roomId}
+                    playedSection={playedSection}
+                    comments={comments}
+                    setComments={setComments}
+                />
             </View>
         </View>
     )
@@ -274,7 +252,7 @@ const styles = new StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        flex: 2
+        paddingVertical: 10
     },
     headerView: {
         flex: 1,
@@ -292,38 +270,11 @@ const styles = new StyleSheet.create({
         fontSize: 18,
     },
     content: {
-        flex: 14,
-        width: '100%'
+        width: '100%',
+        flex: 1
     },
     contentScrollable: {
         alignItems: 'center',
         width: '100%'
-    },
-    writeComment: {
-        flex: 2,
-        width: '100%',
-        backgroundColor: '#00ADB5',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    inputView: {
-        flex: 1,
-        height: '100%',
-        padding: 5,
-        paddingStart: 15,
-        paddingEnd: 15
-    },
-    input: {
-        height: '100%',
-        width: '100%',
-        borderBottomWidth: 1,
-        borderColor: '#EEEEEE',
-        
-    },
-    postCommentView: {
-        padding: 5,
-        paddingEnd: 15,
-        paddingStart: 0,
-    },
+    }
 })
