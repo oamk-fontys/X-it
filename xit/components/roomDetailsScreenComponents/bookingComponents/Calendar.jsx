@@ -85,7 +85,8 @@ const styles = new StyleSheet.create({
         borderRadius: 15,
         position: 'absolute',
         marginTop: 15,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        zIndex: 1
     },
     calendar: {
         backgroundColor: '#393E46',

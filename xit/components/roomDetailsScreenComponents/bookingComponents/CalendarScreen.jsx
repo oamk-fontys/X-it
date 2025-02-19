@@ -1,8 +1,8 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import DateTimePicker from "react-native-ui-datepicker";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useState } from "react";
 import Calendar from "./Calendar";
+import TimeSlots from "./TimeSlots";
 
 export default function CalendarScreen() {
     const [calendarDisplay, setCalendarDisplay] = useState('none');
@@ -25,33 +25,43 @@ export default function CalendarScreen() {
         <View
             style={styles.container}
         >
-            <View
-                style={styles.dateView}
+            <ScrollView
+                contentContainerStyle={styles.scrollable}
             >
-                <Text
-                    style={styles.dateText}
-                >
-                    {formatDate(selectedDate)}
-                </Text>
-                <TouchableOpacity
-                    style={styles.selectDateButton}
-                    onPress={() => {
-                        setCalendarDisplay('flex')
-                    }}
+                <View
+                    style={styles.dateView}
                 >
                     <Text
-                        style={styles.selectDateButtonText}
+                        style={styles.dateText}
                     >
-                        Select Date
+                        {formatDate(selectedDate)}
                     </Text>
-                </TouchableOpacity>
-            </View>
-            <Calendar
-                calendarDisplay={calendarDisplay}
-                setCalendarDisplay={setCalendarDisplay}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-            />
+                    <TouchableOpacity
+                        style={styles.selectDateButton}
+                        onPress={() => {
+                            setCalendarDisplay('flex')
+                        }}
+                    >
+                        <Text
+                            style={styles.selectDateButtonText}
+                        >
+                            Select Date
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <Calendar
+                    calendarDisplay={calendarDisplay}
+                    setCalendarDisplay={setCalendarDisplay}
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                />
+                <TimeSlots
+                    key={selectedDate}
+                />
+                <View
+                    style={styles.spacer}
+                ></View>
+            </ScrollView>
         </View>
     )
 }
@@ -60,8 +70,11 @@ const styles = new StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        alignItems: 'center',
         backgroundColor: '#222831'
+    },
+    scrollable: {
+        width: '100%',
+        alignItems: 'center'
     },
     dateView: {
         flexDirection: 'row',
@@ -84,4 +97,7 @@ const styles = new StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
     },
+    spacer: {
+        height: 30
+    }
 })
