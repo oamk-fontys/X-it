@@ -49,7 +49,7 @@ const DrawerNavigator = () => (
 );
 
 const RootStack = createNativeStackNavigator({
-  initialRouteName: 'Calendar',
+  initialRouteName: 'Drawer',
   screens: {
     Drawer: {
       screen: DrawerNavigator,
