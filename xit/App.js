@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RoomDetailsScreen from "./screens/RoomDetailsScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,12 @@ const DrawerNavigator = () => (
       name="Home"
       component={HomeScreen}
     />
+
+    <Drawer.Screen
+      name={"Login"}
+      component={LoginScreen}
+    />
+
     <Drawer.Screen
       name='Room Details'
       component={RoomDetailsScreen}

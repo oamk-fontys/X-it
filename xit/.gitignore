@@ -34,3 +34,12 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# WebStorm specific
+.idea/
+*.iml
+*.iws
+out/
+# WebStorm working directory options
+wssettings.xml
+
