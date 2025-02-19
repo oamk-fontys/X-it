@@ -1,11 +1,14 @@
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import Rating from "../components/homeScreenComponents/popularRoomsComponents/Rating";
 import Comments from "../components/roomDetailsScreenComponents/Comments";
 
 export default function RoomDetailsScreen({ id }) {
+    const navigation = useNavigation();
+
     const [img, setImg] = useState();
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();
@@ -23,7 +26,7 @@ export default function RoomDetailsScreen({ id }) {
     }
 
     const bookingPress = () => {
-        alert('Booking');
+        navigation.navigate('Calendar');
     }
 
     useEffect(() => {
