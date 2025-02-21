@@ -10,6 +10,8 @@ import ProfileScreen from "./screens/ProfileScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RoomDetailsScreen from "./screens/RoomDetailsScreen";
+import CalendarScreen from "./components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import secondaryHeader from "./helpers/secondaryHeaderOptions";
 import LoginScreen from "./screens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
@@ -20,15 +22,19 @@ const DrawerNavigator = () => (
       header: () => <Header />,
     }}
   >
-    <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen
       name="Home"
       component={HomeScreen}
     />
 
     <Drawer.Screen
-      name={"Login"}
-      component={LoginScreen}
+        name={"Login"}
+        component={LoginScreen}
+    />
+
+    <Drawer.Screen
+      name="Profile"
+      component={ProfileScreen}
     />
 
     <Drawer.Screen
@@ -56,6 +62,10 @@ const RootStack = createNativeStackNavigator({
       options: {
         headerShown: false,
       },
+    },
+    Calendar: {
+      screen: CalendarScreen,
+      options: secondaryHeader('Choose Reservation Time'),
     }
   },
 });
