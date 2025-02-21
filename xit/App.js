@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import RoomDetailsScreen from "./screens/RoomDetailsScreen";
 import CalendarScreen from "./components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import secondaryHeader from "./helpers/secondaryHeaderOptions";
+import LoginScreen from "./screens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +25,11 @@ const DrawerNavigator = () => (
     <Drawer.Screen
       name="Home"
       component={HomeScreen}
+    />
+
+    <Drawer.Screen
+        name={"Login"}
+        component={LoginScreen}
     />
 
     <Drawer.Screen
