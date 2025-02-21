@@ -1,18 +1,64 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
     const navigation = useNavigation();
 
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+        if (!username || !password) {
+            Alert.alert("Error", "Username and password are required.");
+            return;
+        }
+
+        try {
+            // check the API address
+            // const response = await fetch("https://??????/api/auth/login", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({ username, password }),
+            // });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert("Success", `Welcome back, ${username}!`);
+                console.log("Token:", data.token);
+            } else {
+                Alert.alert("Login Failed", data.message || "Invalid credentials");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            Alert.alert("Error", "Something went wrong. Please try again.");
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>LOG IN TO START</Text>
 
-            <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#aaa" />
-            <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#aaa" secureTextEntry />
+            <TextInput
+                style={styles.input}
+                placeholder="Username"
+                placeholderTextColor="#aaa"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#aaa"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+            />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>LOG IN</Text>
             </TouchableOpacity>
 
