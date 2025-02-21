@@ -21,6 +21,9 @@ export default function Calendar({
                 onChange={({ date }) => {
                     setSelectedDate(date);
                 }}
+                firstDayOfWeek={1}
+                disableMonthPicker={true}
+                disableYearPicker={true}
                 style={styles.calendar}
                 styles={{
                     header: {
@@ -86,7 +89,9 @@ const styles = new StyleSheet.create({
         position: 'absolute',
         marginTop: 15,
         marginHorizontal: 10,
-        zIndex: 1
+        zIndex: 1,
+        borderBottomWidth: 1,
+        borderColor: '#EEEEEE'
     },
     calendar: {
         backgroundColor: '#393E46',
