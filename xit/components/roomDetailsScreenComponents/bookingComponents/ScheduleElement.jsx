@@ -23,23 +23,26 @@ export default function ScheduleElement({
     let available = true;
 
     todayReservations.forEach(e => {
+        const start = new Date(e.start_time);
+        const end = new Date(e.end_time);
+
         if (
             (
-                getHour(e.start_time) - 1 < hour
+                start.getHours() - 1 < hour
                 &&
-                getHour(e.end_time) > hour
+                end.getHours() > hour
             )
             ||
             (
-                getHour(e.start_time) - 1 === hour
+                start.getHours() - 1 === hour
                 &&
-                getMinute(e.start_time) <= minute
+                start.getMinutes() <= minute
             )
             ||
             (
-                getHour(e.end_time) === hour
+                end.getHours() === hour
                 &&
-                getMinute(e.end_time) >= minute
+                end.getMinutes() >= minute
             )
         ) {
             available = false;
@@ -49,11 +52,21 @@ export default function ScheduleElement({
     const now = new Date();
 
     if (
-        hour === getHour(todaySchedule.start_time)
-        &&
-        minute === 0
-        &&
-        getMinute(todaySchedule.start_time) === 30
+        (
+            hour === getHour(todaySchedule.start_time)
+            &&
+            minute === 0
+            &&
+            getMinute(todaySchedule.start_time) === 30
+        )
+        ||
+        (
+            hour === getHour(todaySchedule.end_time)
+            &&
+            minute === 30
+            &&
+            getMinute(todaySchedule.end_time) === 0
+        )
     ) {
         return (
             <View
