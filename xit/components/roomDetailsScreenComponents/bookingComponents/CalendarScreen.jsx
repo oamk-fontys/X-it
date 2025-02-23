@@ -13,7 +13,6 @@ export default function CalendarScreen() {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
-
         const day = new Date(date).getDate();
         const month = months[new Date(date).getMonth()];
         const year = new Date(date).getFullYear();
@@ -25,6 +24,12 @@ export default function CalendarScreen() {
         <View
             style={styles.container}
         >
+            <Calendar
+                calendarDisplay={calendarDisplay}
+                setCalendarDisplay={setCalendarDisplay}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+            />
             <ScrollView
                 contentContainerStyle={styles.scrollable}
             >
@@ -49,14 +54,9 @@ export default function CalendarScreen() {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <Calendar
-                    calendarDisplay={calendarDisplay}
-                    setCalendarDisplay={setCalendarDisplay}
-                    selectedDate={selectedDate}
-                    setSelectedDate={setSelectedDate}
-                />
                 <TimeSlots
                     key={selectedDate}
+                    selectedDate={selectedDate}
                 />
                 <View
                     style={styles.spacer}
