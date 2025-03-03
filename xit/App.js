@@ -13,6 +13,7 @@ import RoomDetailsScreen from "./screens/RoomDetailsScreen";
 import CalendarScreen from "./components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import secondaryHeader from "./helpers/secondaryHeaderOptions";
 import LoginScreen from "./screens/LoginScreen";
+import { RoomProvider } from "./context/RoomProvider";
 
 const Drawer = createDrawerNavigator();
 
@@ -75,21 +76,25 @@ const Navigation = createStaticNavigation(RootStack);
 export default function App() {
   if (Platform.OS === 'android') {
     return (
-      <SafeAreaViewAndroid style={styles.container}>
-        <View style={styles.content}>
-          <Navigation />
-        </View>
-        <Footer />
-      </SafeAreaViewAndroid>
+      <RoomProvider>
+        <SafeAreaViewAndroid style={styles.container}>
+          <View style={styles.content}>
+            <Navigation />
+          </View>
+          <Footer />
+        </SafeAreaViewAndroid>
+      </RoomProvider>
     )
   } else {
     return (
-      <SafeAreaViewIos style={styles.container}>
-        <View style={styles.content}>
-          <Navigation />
-        </View>
-        <Footer />
-      </SafeAreaViewIos>
+      <RoomProvider>
+        <SafeAreaViewIos style={styles.container}>
+          <View style={styles.content}>
+            <Navigation />
+          </View>
+          <Footer />
+        </SafeAreaViewIos>
+      </RoomProvider>
     )
   }
 }
