@@ -11,12 +11,6 @@ export default function RoomDetailsScreen({ id }) {
     const navigation = useNavigation();
     const { getRoomById } = useRooms();
 
-    // const [img, setImg] = useState();
-    // const [title, setTitle] = useState();
-    // const [description, setDescription] = useState();
-    // const [ratings, setRatings] = useState([]);
-    // const [companyName, setCompanyName] = useState();
-
     const room = getRoomById(id);
     const img = '';
     const title = room.name;
