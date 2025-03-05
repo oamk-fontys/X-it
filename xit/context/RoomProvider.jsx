@@ -7,7 +7,7 @@ export const RoomProvider = ({ children }) => {
     const [rooms, setRooms] = useState([])
 
     useEffect(() => {
-        fetch('')
+        fetch('http://172.20.10.3:3000/api/room')
         .then(res => res.json())
         .then(json => {
             setRooms(json)
@@ -18,11 +18,38 @@ export const RoomProvider = ({ children }) => {
         return rooms.find(e => e.id === id)
     }
 
+    const searchForRoom = (query) => {
+        if (query === '') {
+            return rooms
+        }
+
+        let out = [];
+
+        out = rooms.filter(e =>(
+            e.name.includes(query)
+        ));
+
+        out.push(...rooms.filter(e => (
+            !out.includes(e)
+            &&
+            e.description.includes(query)
+        )));
+
+        out.push(...rooms.filter(e => (
+            !out.includes(e)
+            &&
+            e.companyId.includes(query)
+        )));
+
+        return out;
+    }
+
     return (
         <RoomContext.Provider
             value={{
                 rooms,
-                getRoomById
+                getRoomById,
+                searchForRoom
             }}
         >
             {children}

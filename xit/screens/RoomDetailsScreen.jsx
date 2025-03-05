@@ -1,5 +1,4 @@
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
@@ -31,21 +30,6 @@ export default function RoomDetailsScreen({ id }) {
     const bookingPress = () => {
         navigation.navigate('Calendar');
     }
-
-    // useEffect(() => {
-    //     //fetching info using id passed by RoomElement
-    //     setImg('https://www.exitoulu.fi/wp-content/uploads/2020/11/theheist3-1200x800.jpg');
-    //     setTitle('The Heist');
-    //     setDescription(`Galleria Via Nuevo on has acquired possession of an extremely valuable piece of art. Your team of experienced top criminals has to bypass gallery's unusual security system, steal the piece and get out in time and leaving no trace behind. The challenge is big, but so is the reward.`);
-    //     setCompanyName('Exit Oulu');
-    //     let ratingsSetter = [];
-    //     for (let i = 0; i < 9; i++) {
-    //         ratingsSetter.push(
-    //             Math.floor(Math.random() * 5) + 1
-    //         )
-    //     }
-    //     setRatings(ratingsSetter);
-    // }, [])
 
     return(
         <View
@@ -165,7 +149,8 @@ const styles = new StyleSheet.create({
         borderRadius: 10,
         shadowOpacity: 0.5,
         shadowRadius: 5,
-        shadowOffset: {height: 1, width: 1}
+        shadowOffset: {height: 1, width: 1},
+        textAlign: 'center'
     },
     ratingView: {
         width: '100%',
