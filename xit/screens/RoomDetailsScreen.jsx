@@ -1,19 +1,21 @@
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
-import { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import Rating from "../components/homeScreenComponents/popularRoomsComponents/Rating";
 import Comments from "../components/roomDetailsScreenComponents/Comments";
+import { useRooms } from "../context/RoomProvider";
 
 export default function RoomDetailsScreen({ id }) {
     const navigation = useNavigation();
+    const { getRoomById } = useRooms();
 
-    const [img, setImg] = useState();
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [ratings, setRatings] = useState([]);
-    const [companyName, setCompanyName] = useState();
+    const room = getRoomById(id);
+    const img = '';
+    const title = room.name;
+    const description = room.description;
+    const ratings = [];
+    const companyName = room.companyId
 
     const average = (arr) => {
         let sum = 0;
@@ -29,21 +31,6 @@ export default function RoomDetailsScreen({ id }) {
         navigation.navigate('Calendar');
     }
 
-    useEffect(() => {
-        //fetching info using id passed by RoomElement
-        setImg('https://www.exitoulu.fi/wp-content/uploads/2020/11/theheist3-1200x800.jpg');
-        setTitle('The Heist');
-        setDescription(`Galleria Via Nuevo on has acquired possession of an extremely valuable piece of art. Your team of experienced top criminals has to bypass gallery's unusual security system, steal the piece and get out in time and leaving no trace behind. The challenge is big, but so is the reward.`);
-        setCompanyName('Exit Oulu');
-        let ratingsSetter = [];
-        for (let i = 0; i < 9; i++) {
-            ratingsSetter.push(
-                Math.floor(Math.random() * 5) + 1
-            )
-        }
-        setRatings(ratingsSetter);
-    }, [])
-
     return(
         <View
             style={styles.container}
@@ -54,10 +41,24 @@ export default function RoomDetailsScreen({ id }) {
                 <View
                     style={styles.posterView}
                 >
-                    <Image
-                        style={styles.poster}
-                        source={{uri: img}}
-                    />
+                    {
+                        img
+                        ?
+                        <Image
+                            style={styles.poster}
+                            source={{uri: img}}
+                        />
+                        :
+                        <View
+                            style={[
+                                styles.poster,
+                                {
+                                    borderWidth: 1,
+                                    borderColor: '#EEEEEE'
+                                }
+                            ]}
+                        ></View>
+                    }
                     <Text
                         style={styles.title}
                     >
@@ -148,7 +149,8 @@ const styles = new StyleSheet.create({
         borderRadius: 10,
         shadowOpacity: 0.5,
         shadowRadius: 5,
-        shadowOffset: {height: 1, width: 1}
+        shadowOffset: {height: 1, width: 1},
+        textAlign: 'center'
     },
     ratingView: {
         width: '100%',
@@ -185,7 +187,7 @@ const styles = new StyleSheet.create({
         alignItems: 'center'
     },
     companyNameView: {
-
+        flex: 1
     },
     companyName: {
         color: '#EEEEEE',

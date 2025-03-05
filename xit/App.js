@@ -13,6 +13,8 @@ import RoomDetailsScreen from "./screens/RoomDetailsScreen";
 import CalendarScreen from "./components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import secondaryHeader from "./helpers/secondaryHeaderOptions";
 import LoginScreen from "./screens/LoginScreen";
+import { RoomProvider } from "./context/RoomProvider";
+import RoomListScreen from "./screens/RoomListScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +37,11 @@ const DrawerNavigator = () => (
     <Drawer.Screen
       name="Profile"
       component={ProfileScreen}
+    />
+
+    <Drawer.Screen
+      name="Rooms"
+      component={RoomListScreen}
     />
 
     <Drawer.Screen
@@ -75,21 +82,25 @@ const Navigation = createStaticNavigation(RootStack);
 export default function App() {
   if (Platform.OS === 'android') {
     return (
-      <SafeAreaViewAndroid style={styles.container}>
-        <View style={styles.content}>
-          <Navigation />
-        </View>
-        <Footer />
-      </SafeAreaViewAndroid>
+      <RoomProvider>
+        <SafeAreaViewAndroid style={styles.container}>
+          <View style={styles.content}>
+            <Navigation />
+          </View>
+          <Footer />
+        </SafeAreaViewAndroid>
+      </RoomProvider>
     )
   } else {
     return (
-      <SafeAreaViewIos style={styles.container}>
-        <View style={styles.content}>
-          <Navigation />
-        </View>
-        <Footer />
-      </SafeAreaViewIos>
+      <RoomProvider>
+        <SafeAreaViewIos style={styles.container}>
+          <View style={styles.content}>
+            <Navigation />
+          </View>
+          <Footer />
+        </SafeAreaViewIos>
+      </RoomProvider>
     )
   }
 }
