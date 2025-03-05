@@ -4,10 +4,13 @@ import { useEffect, useState, useContext, createContext } from "react";
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
+
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
     const [rooms, setRooms] = useState([])
 
     useEffect(() => {
-        fetch('http://172.20.10.3:3000/api/room')
+        fetch(apiUrl + '/api/room')
         .then(res => res.json())
         .then(json => {
             setRooms(json)
