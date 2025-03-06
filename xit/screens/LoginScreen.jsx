@@ -1,76 +1,65 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-const LoginScreen = () => {
+import { useAuth } from '../context/AuthContext';
+
+export default function LoginScreen() {
     const navigation = useNavigation();
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const { login } = useAuth();
 
     const handleLogin = async () => {
-        if (!username || !password) {
-            Alert.alert("Error", "Username and password are required.");
+
+        if (!email || !password) {
+            Alert.alert("Error", "Email and password are required.");
             return;
         }
 
         try {
-            // check the API address
-            // const response = await fetch("https://??????/api/auth/login", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({ username, password }),
-            // });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                Alert.alert("Success", `Welcome back, ${username}!`);
-                console.log("Token:", data.token);
-            } else {
-                Alert.alert("Login Failed", data.message || "Invalid credentials");
-            }
+          await login(email, password);
         } catch (error) {
-            console.error("Login error:", error);
-            Alert.alert("Error", "Something went wrong. Please try again.");
+          alert('Login failed: ' + error.message);
         }
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>LOG IN TO START</Text>
+            <Text style={styles.title}>Log in</Text>
 
             <TextInput
                 style={styles.input}
-                placeholder="Username"
+                placeholder="Email"
                 placeholderTextColor="#aaa"
-                value={username}
-                onChangeText={setUsername}
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
                 placeholderTextColor="#aaa"
+                autoCapitalize="none"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
             />
 
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>LOG IN</Text>
+                <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
 
             <View style={styles.linkContainer}>
-                <Text style={styles.text}>NOT A USER?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
-                    <Text style={styles.linkText}>SIGN UP</Text>
+                <Text style={styles.text}>Not registered?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Sign up")}>
+                    <Text style={styles.linkText}>Sign up</Text>
                 </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
-                <Text style={styles.forgotPassword}>FORGOT PASSWORD</Text>
+                <Text style={styles.forgotPassword}>Forgot password</Text>
             </TouchableOpacity>
         </View>
     );
@@ -127,5 +116,3 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
-
-export default LoginScreen;
