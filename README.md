@@ -27,7 +27,7 @@ Mobile app client
    Replace 0.0.0.0 with your ip address. Do not change port
 
    ```
-   EXPO_PUBLIC_API_URL=http://0.0.0.0:3000
+   EXPO_PUBLIC_API_URL=http://0.0.0.0:3000/api
    ```
 
 4. Start application in dev mode: 
