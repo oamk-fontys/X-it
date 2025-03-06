@@ -10,7 +10,7 @@ export const RoomProvider = ({ children }) => {
     const [rooms, setRooms] = useState([])
 
     useEffect(() => {
-        fetch(apiUrl + '/api/room')
+        fetch(apiUrl + '/room')
         .then(res => res.json())
         .then(json => {
             setRooms(json)
