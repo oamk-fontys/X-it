@@ -5,10 +5,15 @@ import React from "react";
 import Rating from "../components/homeScreenComponents/popularRoomsComponents/Rating";
 import Comments from "../components/roomDetailsScreenComponents/Comments";
 import { useRooms } from "../context/RoomProvider";
+import { useAuth } from '../context/AuthContext';
 
 export default function RoomDetailsScreen({ id }) {
     const navigation = useNavigation();
     const { getRoomById } = useRooms();
+    const { user } = useAuth();
+
+    // unauthorized users are navigated to login page
+    const navigationTarget = user ? 'Calendar' : 'Login';
 
     const room = getRoomById(id);
     const img = '';
@@ -28,7 +33,7 @@ export default function RoomDetailsScreen({ id }) {
     }
 
     const bookingPress = () => {
-        navigation.navigate('Calendar');
+        navigation.navigate(navigationTarget);
     }
 
     return(

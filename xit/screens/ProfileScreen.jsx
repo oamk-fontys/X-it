@@ -1,17 +1,19 @@
 import React from "react";
-import { StyleSheet, ScrollView, View, Text, Image } from "react-native";
+import { StyleSheet, ScrollView, View, Text, Image, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { useAuth } from '../context/AuthContext';
 
 import InfoItem from "../components/profile/InfoItem";
 import StatCard from "../components/profile/StatCard";
 import BookingItem from "../components/profile/BookingItem";
 
 export default function ProfileScreen() {
-  // Mock data
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+358 12 345 6789",
+
+  const { user, logout } = useAuth();
+
+  // remove test data
+  const userMock = {
     profilePic: require("../assets/profile-placeholder.jpeg"),
     roomStats: {
       totalBookings: 15,
@@ -27,40 +29,42 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Profile Header */}
         <View style={styles.profileHeader}>
           <Image 
-            source={user.profilePic} 
+            source={userMock.profilePic} 
             style={styles.profileImage}
             defaultSource={require("../assets/profile-placeholder.jpeg")}
           />
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{user?.username}</Text>
         </View>
 
         {/* Contact Info */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Contact Information</Text>
-          <InfoItem icon="mail" title="Email" value={user.email} />
-          <InfoItem icon="phone" title="Phone" value={user.phone} />
+          <InfoItem icon="mail" title="Email" value={user?.email} />
+          <InfoItem icon="phone" title="Phone" value={user?.phoneNumber} />
         </View>
 
         {/* Room Stats */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Room Statistics</Text>
           <View style={styles.statsContainer}>
-            <StatCard title="Total Bookings" value={user.roomStats.totalBookings} />
-            <StatCard title="Upcoming" value={user.roomStats.upcoming} />
-            <StatCard title="Favorites" value={user.roomStats.favorites} />
+            <StatCard title="Total Bookings" value={userMock.roomStats.totalBookings} />
+            <StatCard title="Upcoming" value={userMock.roomStats.upcoming} />
+            <StatCard title="Favorites" value={userMock.roomStats.favorites} />
           </View>
         </View>
 
         {/* Future Bookings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Future Bookings</Text>
-          {user.bookings.map(booking => (
+          {userMock.bookings.map(booking => (
             <BookingItem key={booking.id} booking={booking} />
           ))}
         </View>
+
+        {/* Logout */}
+        <Button title="Logout" onPress={logout} />
       </ScrollView>
     </SafeAreaView>
   );
