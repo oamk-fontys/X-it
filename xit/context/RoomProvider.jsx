@@ -15,6 +15,9 @@ export const RoomProvider = ({ children }) => {
         .then(json => {
             setRooms(json)
         })
+        .catch(e => {
+            alert(e.message)
+        })
     }, [])
 
     const getRoomById = (id) => {

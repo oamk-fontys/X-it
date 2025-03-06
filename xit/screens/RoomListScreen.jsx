@@ -35,14 +35,24 @@ export default function RoomListScreen() {
             <ScrollView
                 style={styles.containerScrollable}
             >
-                {searchForRoom(query).map((e, i) => (
-                    <RoomElement
-                        key={i}
-                        title={e.name}
-                        companyName={e.companyId}
-                        id={e.id}                        
-                    />
-                ))}
+                {
+                    searchForRoom(query).length === 0
+                    ?
+                    <Text
+                        style={styles.noResults}
+                    >
+                        No Results
+                    </Text>
+                    :
+                    searchForRoom(query).map((e, i) => (
+                        <RoomElement
+                            key={i}
+                            title={e.name}
+                            companyName={e.companyId}
+                            id={e.id}                        
+                        />
+                    ))
+                }
             </ScrollView>
         </View>
     )
@@ -80,4 +90,12 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
     },
+    noResults: {
+        width: '100%',
+        textAlign: 'center',
+        fontSize: 32,
+        color: '#EEEEEE',
+        fontStyle: 'italic',
+        marginTop: 10
+    }
 })
