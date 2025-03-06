@@ -1,23 +1,40 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { useEffect, useState } from "react";
 import RoomElement from "./popularRoomsComponents/RoomElement";
 import { useRooms } from "../../context/RoomProvider";
 
 export default function PopularRooms() {
     const { rooms } = useRooms()
     
-    let popularRoomList = [];
-    for (let i = 0; i < 4; i++) {
-        const e = rooms[i]
+    let popularRoomList = [
+        <View
+            key={0}
+            style={styles.loadingView}
+        >
+            <Text
+                style={styles.loadingText}
+            >
+                Loading...
+            </Text>
+        </View>
+    ];
 
-        popularRoomList.push(
-            <RoomElement
-                key={i}
-                id={e?.id}
-                roomName={e?.name}
-            />
-        )
+    if (rooms.length !== 0) {
+        popularRoomList = [];
+
+        for (let i = 0; i < 4; i++) {
+            const e = rooms[i]
+    
+            if (e) {
+                popularRoomList.push(
+                    <RoomElement
+                        key={i}
+                        id={e.id}
+                        roomName={e.name}
+                    />
+                )
+            }
+        }
     }
 
     return(
@@ -47,6 +64,17 @@ export default function PopularRooms() {
 }
 
 const styles = new StyleSheet.create({
+    loadingView: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    loadingText: {
+        fontSize: 24,
+        color: '#EEEEEE',
+        fontStyle: 'italic'
+    },
     container: {
         flex: 1,
         padding: 20,
