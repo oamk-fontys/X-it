@@ -1,13 +1,19 @@
 import React from "react";
-import { View, StyleSheet, Text, ScrollView, TextInput } from "react-native"
+import { View, StyleSheet, Text, ScrollView, TextInput, TouchableOpacity } from "react-native"
 import RoomElement from "../components/roomListComponents/RoomElement";
 import { useRooms } from "../context/RoomProvider";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from "react";
+import Filters from "../components/roomListComponents/Filters";
 
 export default function RoomListScreen() {
-    const { searchForRoom } = useRooms();
+    const { searchForRoom, filteredRooms } = useRooms();
     const [query, setQuery] = useState('');
+    const [hideFilters, setHideFilters] = useState(true);
+    const [filters, setFilters] = useState({});
+
+    const result = filteredRooms(searchForRoom(query), filters)
 
     return (
         <View
@@ -16,6 +22,18 @@ export default function RoomListScreen() {
             <View
                 style={styles.inputView}
             >
+                <TouchableOpacity
+                    onPress={() => {
+                        setHideFilters(!hideFilters)
+                    }}
+                >
+                    <MaterialIcons
+                        name="menu"
+                        size={32}
+                        color="#EEEEEE"
+                        style={styles.filtersIcon}
+                    />
+                </TouchableOpacity>
                 <TextInput
                     style={styles.input}
                     placeholder="Search..."
@@ -32,11 +50,16 @@ export default function RoomListScreen() {
                     style={styles.inputIcon}
                 />
             </View>
+            <Filters
+                hide={hideFilters}
+                setHide={setHideFilters}
+                setFilters={setFilters}
+            />
             <ScrollView
                 style={styles.containerScrollable}
             >
                 {
-                    searchForRoom(query).length === 0
+                    result.length === 0
                     ?
                     <Text
                         style={styles.noResults}
@@ -44,7 +67,7 @@ export default function RoomListScreen() {
                         No Results
                     </Text>
                     :
-                    searchForRoom(query).map((e, i) => (
+                    result.map((e, i) => (
                         <RoomElement
                             key={i}
                             title={e.name}
@@ -71,6 +94,9 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         alignItems: 'center',
         justifyContent: 'flex-end',
+    },
+    filtersIcon: {
+        marginRight: 15
     },
     input: {
         height: 50,
