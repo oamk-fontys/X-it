@@ -50,12 +50,41 @@ export const RoomProvider = ({ children }) => {
         return out;
     }
 
+    const getCompanies = () => {
+        let out = [];
+
+        rooms.forEach(e => {
+            if (!out.includes(e.companyId)) {
+                out.push(e.companyId)
+            }
+        });
+
+        return out;
+    }
+
+    const filteredRooms = (rooms, filters) => {
+        const { company } = filters;
+
+        let filtered = [];
+        if (company && company.length !== 0) {
+            filtered = rooms.filter(e => (
+                company.includes(e.companyId)
+            ))
+        } else {
+            filtered = rooms
+        }
+
+        return filtered
+    }
+
     return (
         <RoomContext.Provider
             value={{
                 rooms,
                 getRoomById,
-                searchForRoom
+                searchForRoom,
+                getCompanies,
+                filteredRooms
             }}
         >
             {children}
