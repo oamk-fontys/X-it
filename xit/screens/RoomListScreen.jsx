@@ -13,7 +13,7 @@ export default function RoomListScreen() {
     const [hideFilters, setHideFilters] = useState(true);
     const [filters, setFilters] = useState({});
 
-    const result = filteredRooms(searchForRoom(query), filters)
+    const result = filteredRooms(searchForRoom(query.trim().toLowerCase()), filters)
 
     return (
         <View
