@@ -6,7 +6,9 @@ import { AuthProvider } from './context/AuthContext';
 import { RoomProvider } from "./context/RoomProvider";
 
 import AppNavigation from "./helpers/AppNavigation";
-import Footer from "./components/Footer";
+
+import globalStyles from "./theme/globalStyles";
+import themeLight from "./theme/themeLight";
 
 export default function App() {
 
@@ -15,23 +17,12 @@ export default function App() {
   return (
     <AuthProvider>
       <RoomProvider>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.content}>
+        <SafeAreaView style={[globalStyles.safeArea, { backgroundColor: themeLight.colors.background }]}>
+          <View style={globalStyles.content}>
             <AppNavigation />
           </View>
-          <Footer />
         </SafeAreaView>
       </RoomProvider>
     </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#222831",
-  },
-  content: {
-    flex: 1,
-  },
-});
