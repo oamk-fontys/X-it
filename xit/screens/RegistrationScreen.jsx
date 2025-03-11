@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
+import { View, TextInput, Text, Alert, TouchableOpacity } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import globalStyles from '../theme/globalStyles';
 
 export default function RegistrationScreen({ navigation }){
 
@@ -39,17 +40,17 @@ export default function RegistrationScreen({ navigation }){
     };
 
     return (
-        <View style={styles.container}>
-        <Text style={styles.title}>Register</Text>
+        <View style={globalStyles.container}>
+        <Text style={globalStyles.title}>Register</Text>
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
@@ -57,7 +58,7 @@ export default function RegistrationScreen({ navigation }){
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -65,61 +66,49 @@ export default function RegistrationScreen({ navigation }){
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="First Name"
             value={firstName}
             onChangeText={setFirstName}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Last Name"
             value={lastName}
             onChangeText={setLastName}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Phone Number"
             value={phoneNumber}
             onChangeText={setPhoneNumber}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Date of Birth (DD.MM.YYYY)"
             value={dateOfBirth}
             onChangeText={setDateOfBirth}
         />
-        <Button title="Register" onPress={handleRegister} />
-        <Button
-            title="Already have an account? Login"
-            onPress={() => navigation.navigate('Login')}
-        />
+        <TouchableOpacity 
+            style={globalStyles.button}
+            onPress={handleRegister}>
+                <Text style={globalStyles.buttonText}>Register</Text>
+            </TouchableOpacity>
+
+            <View style={globalStyles.linkContainer}>
+                <Text style={[globalStyles.text, { marginRight: 5 }]}>Already have an account?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                    <Text style={globalStyles.link}>Login</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-    input: {
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-    },
-});

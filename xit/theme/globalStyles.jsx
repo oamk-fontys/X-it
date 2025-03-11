@@ -23,7 +23,7 @@ const globalStyles = StyleSheet.create({
         color: themeLight.colors.text,
         fontSize: themeLight.fontSizes.large,
         fontWeight: "bold",
-        marginBottom: 20
+        marginVertical: 20
     },
 
     //Button styles
@@ -56,10 +56,13 @@ const globalStyles = StyleSheet.create({
     input: {
         width: "80%",
         height: 40,
+        placeholderTextColor: "#FFFFFF",
         backgroundColor: themeLight.colors.primary,
         borderRadius: 5,
         paddingHorizontal: 10,
         marginBottom: 10,
+        borderColor: '#ccc',
+        borderWidth: 1,
     },
 
     
