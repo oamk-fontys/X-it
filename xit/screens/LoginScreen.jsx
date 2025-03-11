@@ -4,7 +4,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { useAuth } from '../context/AuthContext';
 import globalStyles from "../theme/globalStyles";
-import themeLight from "../theme/themeLight";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -55,14 +54,14 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             <View style={globalStyles.linkContainer}>
-                <Text style={globalStyles.text}>Not registered?</Text>
+                <Text style={[globalStyles.text, { marginRight: 5 }]}>Not registered?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Sign up")}>
-                    <Text style={globalStyles.linkText}>Sign up</Text>
+                    <Text style={globalStyles.link}>Sign up</Text>
                 </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
-                <Text style={globalStyles.forgotPassword}>Forgot password</Text>
+                <Text style={globalStyles.link}>Forgot password</Text>
             </TouchableOpacity>
             </View>
         </View>

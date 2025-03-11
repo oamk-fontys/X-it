@@ -11,12 +11,22 @@ const globalStyles = StyleSheet.create({
     },
     text: {
         color: themeLight.colors.text,
-        fontSize: 16
+        fontSize: themeLight.fontSizes.medium
     },
     container: {
         justifyContent: "center",
         alignItems: "center"
     },
+
+    //Text styles
+    title: {
+        color: themeLight.colors.text,
+        fontSize: themeLight.fontSizes.large,
+        fontWeight: "bold",
+        marginBottom: 20
+    },
+
+    //Button styles
     button: {
         width: "80%",
         backgroundColor: "#00ADB5",
@@ -27,38 +37,28 @@ const globalStyles = StyleSheet.create({
     },
     buttonText: {
         color: "#fff",
-        fontSize: 16,
+        fontSize: themeLight.fontSizes.medium,
     },
 
+    //Link styles
     linkContainer: {
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 10,
     },
-    linkText: {
-        color: "#00ADB5",
-        fontWeight: "bold",
-        marginLeft: 5,
-    },
-    forgotPassword: {
-        color: "#00ADB5",
+    link: {
+        color: themeLight.colors.primary,
         fontWeight: "bold",
     },
-    title: {
-        color: themeLight.colors.text,
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 20
-    },
+
 
     //Input styles
     input: {
         width: "80%",
         height: 40,
-        backgroundColor: "#393E46",
+        backgroundColor: themeLight.colors.primary,
         borderRadius: 5,
         paddingHorizontal: 10,
-        color: "#fff",
         marginBottom: 10,
     },
 
@@ -72,12 +72,17 @@ const globalStyles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 20
     },
-    footer: {
+    footerContainer: {
         height: 50,
         backgroundColor: themeLight.colors.secondary,
         alignItems: "center",
         justifyContent: "center",
+        
     },
+    footerContent: {
+        fontSize: themeLight.fontSizes.small,
+        fontWeight: "bold"
+    }
 })
 
 export default globalStyles

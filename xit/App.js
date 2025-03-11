@@ -8,7 +8,6 @@ import { RoomProvider } from "./context/RoomProvider";
 import AppNavigation from "./helpers/AppNavigation";
 
 import globalStyles from "./theme/globalStyles";
-import themeLight from "./theme/themeLight";
 
 export default function App() {
 
@@ -17,7 +16,7 @@ export default function App() {
   return (
     <AuthProvider>
       <RoomProvider>
-        <SafeAreaView style={[globalStyles.safeArea, { backgroundColor: themeLight.colors.background }]}>
+        <SafeAreaView style={globalStyles.safeArea}>
           <View style={globalStyles.content}>
             <AppNavigation />
           </View>
