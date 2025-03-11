@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, Alert, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import globalStyles from '../theme/globalStyles';
 
@@ -40,11 +40,13 @@ export default function RegistrationScreen({ navigation }){
     };
 
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaView style={globalStyles.safeArea}>
+            <View style={globalStyles.container}>
         <Text style={globalStyles.title}>Register</Text>
         <TextInput
             style={globalStyles.input}
             placeholder="Email"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -52,6 +54,7 @@ export default function RegistrationScreen({ navigation }){
         <TextInput
             style={globalStyles.input}
             placeholder="Password"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -60,6 +63,7 @@ export default function RegistrationScreen({ navigation }){
         <TextInput
             style={globalStyles.input}
             placeholder="Confirm Password"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
@@ -68,6 +72,7 @@ export default function RegistrationScreen({ navigation }){
         <TextInput
             style={globalStyles.input}
             placeholder="Username"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
@@ -75,24 +80,28 @@ export default function RegistrationScreen({ navigation }){
         <TextInput
             style={globalStyles.input}
             placeholder="First Name"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={firstName}
             onChangeText={setFirstName}
         />
         <TextInput
             style={globalStyles.input}
             placeholder="Last Name"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={lastName}
             onChangeText={setLastName}
         />
         <TextInput
             style={globalStyles.input}
             placeholder="Phone Number"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={phoneNumber}
             onChangeText={setPhoneNumber}
         />
         <TextInput
             style={globalStyles.input}
             placeholder="Date of Birth (DD.MM.YYYY)"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={dateOfBirth}
             onChangeText={setDateOfBirth}
         />
@@ -108,7 +117,7 @@ export default function RegistrationScreen({ navigation }){
                     <Text style={globalStyles.link}>Login</Text>
                 </TouchableOpacity>
             </View>
-
-        </View>
+            </View>
+        </SafeAreaView>
     );
 };

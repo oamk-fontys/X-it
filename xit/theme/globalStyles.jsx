@@ -1,43 +1,45 @@
 import { StyleSheet } from "react-native";
-import themeLight from "./themeLight";
+import theme from "./theme";
 
 const globalStyles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: themeLight.colors.background,
-    },
-    content: {
-        flex: 1
-    },
-    text: {
-        color: themeLight.colors.text,
-        fontSize: themeLight.fontSizes.medium
+        backgroundColor: theme.colors.background,
     },
     container: {
         justifyContent: "center",
         alignItems: "center"
     },
+    content: {
+        flex: 1
+    },
+
 
     //Text styles
     title: {
-        color: themeLight.colors.text,
-        fontSize: themeLight.fontSizes.large,
+        color: theme.colors.text,
+        fontSize: theme.fontSizes.large,
         fontWeight: "bold",
         marginVertical: 20
+    },
+    text: {
+        color: theme.colors.text,
+        fontSize: theme.fontSizes.medium
     },
 
     //Button styles
     button: {
         width: "80%",
-        backgroundColor: "#00ADB5",
+        backgroundColor: theme.colors.primary,
         paddingVertical: 10,
         borderRadius: 5,
         alignItems: "center",
         marginBottom: 10,
     },
     buttonText: {
-        color: "#fff",
-        fontSize: themeLight.fontSizes.medium,
+        color: theme.colors.text,
+        fontSize: theme.fontSizes.medium,
+        fontWeight: "bold"
     },
 
     //Link styles
@@ -47,43 +49,56 @@ const globalStyles = StyleSheet.create({
         marginBottom: 10,
     },
     link: {
-        color: themeLight.colors.primary,
+        color: theme.colors.primary,
         fontWeight: "bold",
+        fontSize: theme.fontSizes.medium
     },
-
 
     //Input styles
     input: {
         width: "80%",
         height: 40,
-        placeholderTextColor: "#FFFFFF",
-        backgroundColor: themeLight.colors.primary,
+        color: theme.colors.text,
+        backgroundColor: theme.colors.containerBackground,
         borderRadius: 5,
         paddingHorizontal: 10,
         marginBottom: 10,
-        borderColor: '#ccc',
+        borderColor: theme.colors.mutedText,
         borderWidth: 1,
     },
 
+    placeholderTextColor: theme.colors.mutedText,
+
+    //Icon styles
+    icon: {
+        color: theme.colors.text
+    },
+
     
-    //HEADER AND FOOTER STYLES
-    header: {
+    //Header and footer styles
+    headerContainer: {
         height: 60,
-        backgroundColor: themeLight.colors.secondary,
+        backgroundColor: theme.colors.primaryMuted,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
         paddingHorizontal: 20
     },
+    headerContent: {
+        fontSize: theme.fontSizes.large,
+        color: theme.colors.text,
+        fontWeight: "bold"
+    },
     footerContainer: {
         height: 50,
-        backgroundColor: themeLight.colors.secondary,
+        backgroundColor: theme.colors.primaryMuted,
         alignItems: "center",
         justifyContent: "center",
         
     },
     footerContent: {
-        fontSize: themeLight.fontSizes.small,
+        fontSize: theme.fontSizes.small,
+        color: theme.colors.text,
         fontWeight: "bold"
     }
 })
