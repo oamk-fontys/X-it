@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
+import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import globalStyles from '../theme/globalStyles';
 
 export default function RegistrationScreen({ navigation }){
 
@@ -39,87 +40,84 @@ export default function RegistrationScreen({ navigation }){
     };
 
     return (
-        <View style={styles.container}>
-        <Text style={styles.title}>Register</Text>
+        <SafeAreaView style={globalStyles.safeArea}>
+            <View style={globalStyles.container}>
+        <Text style={globalStyles.title}>Register</Text>
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Email"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Password"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Confirm Password"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Username"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="First Name"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={firstName}
             onChangeText={setFirstName}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Last Name"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={lastName}
             onChangeText={setLastName}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Phone Number"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={phoneNumber}
             onChangeText={setPhoneNumber}
         />
         <TextInput
-            style={styles.input}
+            style={globalStyles.input}
             placeholder="Date of Birth (DD.MM.YYYY)"
+            placeholderTextColor={globalStyles.placeholderTextColor}
             value={dateOfBirth}
             onChangeText={setDateOfBirth}
         />
-        <Button title="Register" onPress={handleRegister} />
-        <Button
-            title="Already have an account? Login"
-            onPress={() => navigation.navigate('Login')}
-        />
-        </View>
+        <TouchableOpacity 
+            style={globalStyles.button}
+            onPress={handleRegister}>
+                <Text style={globalStyles.buttonText}>Register</Text>
+            </TouchableOpacity>
+
+            <View style={globalStyles.linkContainer}>
+                <Text style={[globalStyles.text, { marginRight: 5 }]}>Already have an account?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                    <Text style={globalStyles.link}>Login</Text>
+                </TouchableOpacity>
+            </View>
+            </View>
+        </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-    input: {
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-    },
-});

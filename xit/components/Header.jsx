@@ -1,39 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import globalStyles from "../theme/globalStyles";
 
 export default function Header() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Text style={styles.title}>My App</Text>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <MaterialIcons name="menu" size={28} color="#EEEEEE" />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View style={globalStyles.headerContainer}>
+      <Text style={globalStyles.headerContent}>X-it</Text>
+      <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <MaterialIcons name="menu" size={28} style={globalStyles.icon} />
+      </TouchableOpacity>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: "#393E46",
-  },
-  header: {
-    height: 60,
-    backgroundColor: "#393E46",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-  },
-  title: {
-    color: "#EEEEEE",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});

@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text, Image } from "react-native";
+import globalStyles from "../../../theme/globalStyles";
 
 export default function CommentElement({
     text,
@@ -32,7 +33,7 @@ export default function CommentElement({
 
     return (
         <View
-            style={styles.container}
+            style={globalStyles.container}
         >
             <View
                 style={styles.body}
