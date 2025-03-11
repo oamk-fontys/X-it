@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { useAuth } from '../context/AuthContext';
+import globalStyles from "../theme/globalStyles";
+import themeLight from "../theme/themeLight";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -26,11 +28,12 @@ export default function LoginScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Log in</Text>
+        <View style={globalStyles.safeArea}>
+            <View style={globalStyles.container}>
+            <Text style={globalStyles.title}>Log in</Text>
 
             <TextInput
-                style={styles.input}
+                style={globalStyles.input}
                 placeholder="Email"
                 placeholderTextColor="#aaa"
                 autoCapitalize="none"
@@ -38,7 +41,7 @@ export default function LoginScreen() {
                 onChangeText={setEmail}
             />
             <TextInput
-                style={styles.input}
+                style={globalStyles.input}
                 placeholder="Password"
                 placeholderTextColor="#aaa"
                 autoCapitalize="none"
@@ -47,72 +50,21 @@ export default function LoginScreen() {
                 onChangeText={setPassword}
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
+            <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
+                <Text style={globalStyles.buttonText}>Login</Text>
             </TouchableOpacity>
 
-            <View style={styles.linkContainer}>
-                <Text style={styles.text}>Not registered?</Text>
+            <View style={globalStyles.linkContainer}>
+                <Text style={globalStyles.text}>Not registered?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Sign up")}>
-                    <Text style={styles.linkText}>Sign up</Text>
+                    <Text style={globalStyles.linkText}>Sign up</Text>
                 </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
-                <Text style={styles.forgotPassword}>Forgot password</Text>
+                <Text style={globalStyles.forgotPassword}>Forgot password</Text>
             </TouchableOpacity>
+            </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#222831",
-    },
-    title: {
-        fontSize: 20,
-        color: "#fff",
-        marginBottom: 20,
-    },
-    input: {
-        width: "80%",
-        height: 40,
-        backgroundColor: "#393E46",
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        color: "#fff",
-        marginBottom: 10,
-    },
-    button: {
-        width: "80%",
-        backgroundColor: "#00ADB5",
-        paddingVertical: 10,
-        borderRadius: 5,
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-    },
-    linkContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    text: {
-        color: "#fff",
-    },
-    linkText: {
-        color: "#00ADB5",
-        fontWeight: "bold",
-        marginLeft: 5,
-    },
-    forgotPassword: {
-        color: "#00ADB5",
-        fontWeight: "bold",
-    },
-});
