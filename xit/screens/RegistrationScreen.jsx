@@ -3,7 +3,7 @@ import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 're
 import { useAuth } from '../context/AuthContext';
 import globalStyles from '../theme/globalStyles';
 
-export default function RegistrationScreen({ navigation }){
+export default function RegistrationScreen({ navigation }) {
 
     const { register } = useAuth();
 
@@ -41,82 +41,84 @@ export default function RegistrationScreen({ navigation }){
 
     return (
         <SafeAreaView style={globalStyles.safeArea}>
-            <View style={globalStyles.container}>
-        <Text style={globalStyles.title}>Register</Text>
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Email"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Password"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Confirm Password"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            autoCapitalize="none"
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Username"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="First Name"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={firstName}
-            onChangeText={setFirstName}
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Last Name"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={lastName}
-            onChangeText={setLastName}
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Phone Number"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-        />
-        <TextInput
-            style={globalStyles.input}
-            placeholder="Date of Birth (DD.MM.YYYY)"
-            placeholderTextColor={globalStyles.placeholderTextColor}
-            value={dateOfBirth}
-            onChangeText={setDateOfBirth}
-        />
-        <TouchableOpacity 
-            style={globalStyles.button}
-            onPress={handleRegister}>
-                <Text style={globalStyles.buttonText}>Register</Text>
-            </TouchableOpacity>
-
-            <View style={globalStyles.linkContainer}>
-                <Text style={[globalStyles.text, { marginRight: 5 }]}>Already have an account?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                    <Text style={globalStyles.link}>Login</Text>
+            <View style={globalStyles.mainContainer}>
+                <View style={globalStyles.titleContainer}>
+                    <Text style={globalStyles.title}>Register</Text>
+                </View>
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Email"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Password"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Confirm Password"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Username"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={username}
+                    onChangeText={setUsername}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="First Name"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={firstName}
+                    onChangeText={setFirstName}
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Last Name"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={lastName}
+                    onChangeText={setLastName}
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Phone Number"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Date of Birth (DD.MM.YYYY)"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    value={dateOfBirth}
+                    onChangeText={setDateOfBirth}
+                />
+                <TouchableOpacity
+                    style={globalStyles.button}
+                    onPress={handleRegister}>
+                    <Text style={globalStyles.buttonText}>Register</Text>
                 </TouchableOpacity>
-            </View>
+
+                <View style={globalStyles.linkContainer}>
+                    <Text style={[globalStyles.text, { marginRight: 5 }]}>Already have an account?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                        <Text style={globalStyles.link}>Login</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );

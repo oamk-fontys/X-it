@@ -17,9 +17,7 @@ export default function App() {
     <AuthProvider>
       <RoomProvider>
         <SafeAreaView style={globalStyles.safeArea}>
-          <View style={globalStyles.content}>
-            <AppNavigation />
-          </View>
+          <AppNavigation />
         </SafeAreaView>
       </RoomProvider>
     </AuthProvider>

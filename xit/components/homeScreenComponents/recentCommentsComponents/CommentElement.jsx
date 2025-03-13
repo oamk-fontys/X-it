@@ -33,62 +33,58 @@ export default function CommentElement({
 
     return (
         <View
-            style={globalStyles.container}
+            style={[globalStyles.cardContainer, globalStyles.safeArea]}
         >
             <View
-                style={styles.body}
+                style={globalStyles.cardHeader}
+            >
+                <Text
+                    style={globalStyles.subTitle}
+                >
+                    {roomName}
+                </Text>
+                <Text
+                    style={globalStyles.subTitleSmall}
+                >
+                    {city}
+                </Text>
+            </View>
+            <View
+                style={globalStyles.cardBody}
             >
                 <View
-                    style={styles.titleView}
+                    style={globalStyles.cardSubHeader}
                 >
                     <Text
-                        style={styles.titleText}
+                        style={globalStyles.subTitleSmall}
                     >
-                        {roomName}
+                        {username}
                     </Text>
                     <Text
-                        style={styles.titleText}
+                        style={globalStyles.subTitleSmall}
                     >
-                        {city}
+                        {formatDate(date)}
                     </Text>
                 </View>
                 <View
-                    style={styles.content}
+                    style={globalStyles.cardItem}
                 >
                     <View
-                        style={styles.commentHead}
+                        style={globalStyles.cardItemImage}
                     >
-                        <Text
-                            style={styles.commentHeadText}
-                        >
-                            {username}
-                        </Text>
-                        <Text
-                            style={styles.commentHeadText}
-                        >
-                            {formatDate(date)}
-                        </Text>
+                        <Image
+                            style={globalStyles.imageRound}
+                            source={{ uri: pfp || 'https://tr.rbxcdn.com/38c6edcb50633730ff4cf39ac8859840/420/420/Hat/Png' }}
+                        />
                     </View>
                     <View
-                        style={styles.commentBody}
+                        style={globalStyles.cardItemContent}
                     >
-                        <View
-                            style={styles.pfpView}
+                        <Text
+                            style={globalStyles.textSmall}
                         >
-                            <Image
-                                style={styles.pfp}
-                                source={{uri: pfp || 'https://tr.rbxcdn.com/38c6edcb50633730ff4cf39ac8859840/420/420/Hat/Png'}}
-                            />
-                        </View>
-                        <View
-                            style={styles.commentTextView}
-                        >
-                            <Text
-                                style={styles.commentText}
-                            >
-                                {text}
-                            </Text>
-                        </View>
+                            {text}
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -97,12 +93,6 @@ export default function CommentElement({
 }
 
 const styles = new StyleSheet.create({
-    container: {
-        width: '100%',
-        padding: 10,
-        paddingTop: 0,
-        paddingBlock: 5,
-    },
     body: {
         width: '100%',
         flexDirection: 'column',
@@ -110,7 +100,7 @@ const styles = new StyleSheet.create({
         borderRadius: 10,
         shadowOpacity: 0.4,
         shadowRadius: 6,
-        shadowOffset: {width: 4, height: 2}
+        shadowOffset: { width: 4, height: 2 }
     },
     titleView: {
         width: '100%',
