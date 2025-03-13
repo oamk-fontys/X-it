@@ -20,49 +20,51 @@ export default function LoginScreen() {
         }
 
         try {
-          await login(email, password);
+            await login(email, password);
         } catch (error) {
-          alert('Login failed: ' + error.message);
+            alert('Login failed: ' + error.message);
         }
     };
 
     return (
         <View style={globalStyles.safeArea}>
-            <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>Log in</Text>
+            <View style={globalStyles.mainContainer}>
+                <View style={globalStyles.titleContainer}>
+                    <Text style={globalStyles.title}>Log in</Text>
+                </View>
 
-            <TextInput
-                style={globalStyles.input}
-                placeholder="Email"
-                placeholderTextColor={globalStyles.placeholderTextColor}
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={globalStyles.input}
-                placeholder="Password"
-                placeholderTextColor={globalStyles.placeholderTextColor}
-                autoCapitalize="none"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Email"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    autoCapitalize="none"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Password"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
+                    autoCapitalize="none"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                />
 
-            <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
-                <Text style={globalStyles.buttonText}>Login</Text>
-            </TouchableOpacity>
-
-            <View style={globalStyles.linkContainer}>
-                <Text style={[globalStyles.text, { marginRight: 5 }]}>Not registered?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Sign up")}>
-                    <Text style={globalStyles.link}>Sign up</Text>
+                <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
+                    <Text style={globalStyles.buttonText}>Login</Text>
                 </TouchableOpacity>
-            </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
-                <Text style={globalStyles.link}>Forgot password</Text>
-            </TouchableOpacity>
+                <View style={globalStyles.linkContainer}>
+                    <Text style={[globalStyles.text, { marginRight: 5 }]}>Not registered?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("Sign up")}>
+                        <Text style={globalStyles.link}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
+                    <Text style={globalStyles.link}>Forgot password</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

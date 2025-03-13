@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import Rating from "./Rating";
 import { useNavigation } from "@react-navigation/native";
+import globalStyles from "../../../theme/globalStyles";
 
 export default function RoomElement({
     id,
@@ -14,134 +15,59 @@ export default function RoomElement({
 
     return (
         <View
-            style={styles.container}
+            style={globalStyles.container}
         >
             <TouchableOpacity
-                style={styles.body}
+                style={globalStyles.cardItem}
                 onPress={() => {
-                    navigation.navigate('Room Details', {id: id});
+                    navigation.navigate('Room Details', { id: id });
                 }}
             >
                 <View
-                    style={styles.imageView}
+                    style={globalStyles.cardItemImage}
                 >
                     {
                         img
-                        ?
-                        <Image
-                            style={styles.image}
-                            source={{uri: img}}
-                        />
-                        :
-                        <View
-                            style={styles.noImage}
-                        >
-                            <Text
-                                style={styles.noImageText}
+                            ?
+                            <Image
+                                style={globalStyles.image}
+                                source={{ uri: img }}
+                            />
+                            :
+                            <View
+                                style={globalStyles.noImage}
                             >
-                                No Image
-                            </Text>
-                        </View>
+                                <Text
+                                    style={globalStyles.textError}
+                                >
+                                    No Image
+                                </Text>
+                            </View>
                     }
                 </View>
                 <View
-                    style={styles.info}
+                    style={globalStyles.cardItemContent}
                 >
                     <View
-                        style={styles.top}
+                        style={globalStyles.horizontalAlignContainer}
                     >
                         <Rating
                             rating={rating}
-                            size={16}
+                            size={14}
                         />
                         <Text
-                            style={styles.city}
+                            style={globalStyles.textSmall}
                         >
                             {city}
                         </Text>
                     </View>
-                    <View
-                        style={styles.bottom}
+                    <Text
+                        style={globalStyles.subTitle}
                     >
-                        <Text
-                            style={styles.roomName}
-                        >
-                            {roomName}
-                        </Text>
-                    </View>
+                        {roomName}
+                    </Text>
                 </View>
             </TouchableOpacity>
         </View>
     )
 }
-
-const styles = new StyleSheet.create({
-    container: {
-        flex: 1,
-        width: '100%',
-        padding: 10,
-        paddingTop: 0,
-        paddingBottom: 5,
-    },
-    body: {
-        backgroundColor: '#222831',
-        flex: 1,
-        borderRadius: 10,
-        flexDirection: 'row',
-        paddingStart: 10,
-        paddingEnd: 10,
-        paddingTop: 5,
-        paddingBottom: 5,
-        shadowOpacity: 0.4,
-        shadowRadius: 6,
-        shadowOffset: {width: 4, height: 2}
-    },
-    imageView: {
-        height: '100%',
-        flex: 1
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 5
-    },
-    noImage: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: '#EEEEEE',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    noImageText: {
-        textAlign: 'center',
-        color: '#EEEEEE',
-        fontStyle: 'italic'
-    },
-    info: {
-        flex: 5,
-        flexDirection: 'column'
-    },
-    top: {
-        flex: 4,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    city: {
-        color: '#EEEEEE',
-        fontSize: 16,
-        fontWeight: 'bold',
-
-    },
-    bottom: {
-        flex: 5,
-        justifyContent: 'center'
-    },
-    roomName: {
-        color: '#EEEEEE',
-        fontWeight: 'bold',
-        fontSize: 22,
-        marginStart: 5
-    }
-})

@@ -41,7 +41,7 @@ export default function RegistrationScreen({ navigation }){
 
     return (
         <SafeAreaView style={globalStyles.safeArea}>
-            <View style={globalStyles.container}>
+            <View style={globalStyles.mainContainer}>
         <Text style={globalStyles.title}>Register</Text>
         <TextInput
             style={globalStyles.input}

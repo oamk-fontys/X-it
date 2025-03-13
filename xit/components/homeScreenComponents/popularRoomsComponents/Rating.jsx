@@ -1,5 +1,6 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import globalStyles from "../../../theme/globalStyles";
 
 export default function Rating({ rating, size }) {
     let stars = [];
@@ -22,27 +23,16 @@ export default function Rating({ rating, size }) {
 
     return (
         <View
-            style={styles.container}
+            style={globalStyles.horizontalAlignContainer}
         >
             {stars.map((e, i) => (
                 <FontAwesome
+                    style={globalStyles.iconPrimary}
                     key={i}
                     name={e}
                     size={size}
-                    color='#00ADB5'
-                    style={styles.star}
                 />
             ))}
         </View>
     )
 }
-
-const styles = new StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    star: {
-        marginStart: 5
-    }
-})
