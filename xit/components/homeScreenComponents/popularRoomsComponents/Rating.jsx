@@ -2,7 +2,7 @@ import { View } from "react-native";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import globalStyles from "../../../theme/globalStyles";
 
-export default function Rating({ rating, size }) {
+export default function Rating({ rating, size, color }) {
     let stars = [];
 
     for (let i = 0; i < 5; i++) {

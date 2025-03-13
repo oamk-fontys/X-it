@@ -32,19 +32,19 @@ export const RoomProvider = ({ children }) => {
         let out = [];
 
         out = rooms.filter(e =>(
-            e.name.includes(query)
+            e.name.toLowerCase().includes(query)
         ));
 
         out.push(...rooms.filter(e => (
             !out.includes(e)
             &&
-            e.description.includes(query)
+            e.description.toLowerCase().includes(query)
         )));
 
         out.push(...rooms.filter(e => (
             !out.includes(e)
             &&
-            e.companyId.includes(query)
+            e.companyId.toLowerCase().includes(query)
         )));
 
         return out;
@@ -64,6 +64,7 @@ export const RoomProvider = ({ children }) => {
 
     const filteredRooms = (rooms, filters) => {
         const { company } = filters;
+        const { rating } = filters;
 
         let filtered = [];
         if (company && company.length !== 0) {
@@ -72,6 +73,10 @@ export const RoomProvider = ({ children }) => {
             ))
         } else {
             filtered = rooms
+        }
+
+        if (rating && rating.length !== 0) {
+            filtered = filtered.filter(() => false)
         }
 
         return filtered

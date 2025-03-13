@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useRooms } from "../../context/RoomProvider";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import CompanyFilters from "./filterComponents/CompanyFilters";
+import RatingFilters from "./filterComponents/RatingFilters";
 
 export default function Filters({
     hide,
@@ -9,11 +9,12 @@ export default function Filters({
     setFilters
 }) {
     const [companyFilters, setCompanyFilters] = useState([])
-    const { getCompanies } = useRooms();
+    const [ratingFilters, setRatingFilters] = useState([])
 
     const submit = () => {
         setFilters({
-            company: companyFilters
+            company: companyFilters,
+            rating: ratingFilters
         })
         setHide(true)
     }
@@ -35,50 +36,21 @@ export default function Filters({
                 >
                     Filters
                 </Text>
-                <View
-                    style={styles.companyFilters}
-                >
-                    <Text
-                        style={styles.companyFiltersTitle}
-                    >
-                        Company
-                    </Text>
-                    {
-                        getCompanies().map((e, i) => (
-                            <View
-                                key={i}
-                                style={styles.companyFilterElement}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setCompanyFilters(prevFilters =>
-                                            prevFilters.includes(e)
-                                                ? prevFilters.filter(element => element !== e)
-                                                : [...prevFilters, e]
-                                        );
-                                    }}
-                                >
-                                    <FontAwesome
-                                        name={
-                                            companyFilters.includes(e)
-                                            ?
-                                            'check-square'
-                                            :
-                                            'square-o'
-                                        }
-                                        size={32}
-                                        color="#00ADB5"
-                                    />
-                                </TouchableOpacity>
-                                <Text
-                                    style={styles.companyName}
-                                >
-                                    {e}
-                                </Text>
-                            </View>
-                        ))
-                    }
-                </View>
+                <RatingFilters
+                    ratingFilters={ratingFilters}
+                    setRatingFilters={setRatingFilters}
+                    section={styles.section}
+                    sectionTitle={styles.sectionTitle}
+                    sectionElement={styles.sectionElement}
+                />
+                <CompanyFilters
+                    companyFilters={companyFilters}
+                    setCompanyFilters={setCompanyFilters}
+                    section={styles.section}
+                    sectionTitle={styles.sectionTitle}
+                    sectionElement={styles.sectionElement}
+                    label={styles.label}
+                />
             </ScrollView>
             <View
                 style={styles.confirmView}
@@ -102,7 +74,7 @@ const styles = new StyleSheet.create({
     container: {
         paddingHorizontal: 20,
         width: '100%',
-        height: 350,
+        height: 400,
     },
     scrollable: {
         width: '100%'
@@ -114,21 +86,22 @@ const styles = new StyleSheet.create({
         width: '100%',
         textAlign: 'center'
     },
-    companyFilters: {
-        width: '100%'
+    section: {
+        width: '100%',
+        marginBottom: 10
     },
-    companyFiltersTitle: {
+    sectionTitle: {
         width: '100%',
         textAlign: 'center',
         color: '#EEEEEE',
         fontSize: 24
     },
-    companyFilterElement: {
+    sectionElement: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 5
     },
-    companyName: {
+    label: {
         fontSize: 16,
         color: '#EEEEEE',
         marginStart: 5
@@ -140,7 +113,8 @@ const styles = new StyleSheet.create({
     confirmButton: {
         backgroundColor: '#00ADB5',
         padding: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        marginVertical: 10
     },
     confirm: {
         color: '#EEEEEE',
