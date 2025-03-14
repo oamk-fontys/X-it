@@ -33,7 +33,17 @@ export default function RoomDetailsScreen({ id }) {
     }
 
     const bookingPress = () => {
-        navigation.navigate(navigationTarget);
+        if (navigationTarget === 'Calendar') {
+            navigation.navigate(
+                'Calendar',
+                {
+                    roomId: id,
+                    type: 'booking'
+                }
+            )
+        } else {
+            navigation.navigate(navigationTarget)
+        }
     }
 
     return(

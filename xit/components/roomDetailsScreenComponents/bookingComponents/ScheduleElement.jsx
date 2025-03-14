@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import React from "react";
 
 export default function ScheduleElement({
@@ -8,7 +8,8 @@ export default function ScheduleElement({
     getHour,
     selectedDate,
     book,
-    todayReservations
+    todayReservations,
+    type
 }) {
     const getMinute = (time) => {
         if (!time) {
@@ -53,7 +54,7 @@ export default function ScheduleElement({
                 e.type === 'pending'
             )
         ) {
-            available = 'booked';
+            available = e.type;
         } else if (
             e.type === 'canceled'
             &&
@@ -86,6 +87,8 @@ export default function ScheduleElement({
         ||
         (
             available === 'canceled'
+            &&
+            type === 'booking'
         )
     ) {
         return (
@@ -94,8 +97,42 @@ export default function ScheduleElement({
             ></View>
         )
     }
+    
+    if (
+        type === 'cancel'
+        &&
+        available === 'canceled'
+    ) {
+        return (
+            <View
+                style={styles.slot}
+            >
+                <Text
+                    style={styles.time}
+                >
+                    {`${hour}:${minute === 0 ? '00' : '30'}`}
+                </Text>
+                <Pressable
+                    style={[styles.bookButton, {
+                        backgroundColor: '#222831',
+                        borderColor: '#00ADB5',
+                        borderWidth: 1
+                    }]}
+                    onPress={() => {
+                        book(hour, minute)
+                    }}
+                >
+                    <Text
+                        style={styles.bookButtonText}
+                    >
+                        Canceled
+                    </Text>
+                </Pressable>
+            </View>
+        )
+    }
 
-    if (available === 'booked') {
+    if (available === 'booked' || available === 'pending') {
 
         return (
             <View
@@ -114,7 +151,13 @@ export default function ScheduleElement({
                     <Text
                         style={styles.bookButtonText}
                     >
-                        Booked
+                        {
+                            type === 'cancel'
+                            ?
+                            available
+                            :
+                            'Booked'
+                        }
                     </Text>
                 </View>
             </View>
@@ -159,7 +202,13 @@ export default function ScheduleElement({
                 <Text
                     style={styles.bookButtonText}
                 >
-                    Book
+                    {
+                        type === 'booking'
+                        ?
+                        'Book'
+                        :
+                        'Available'
+                    }
                 </Text>
             </Pressable>
         </View>

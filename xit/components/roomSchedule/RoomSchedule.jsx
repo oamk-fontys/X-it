@@ -240,7 +240,13 @@ export default function RoomSchedule() {
             >
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Schedule Calendar")
+                        navigation.navigate(
+                            'Calendar',
+                            {
+                                roomId: null,
+                                type: 'cancel'
+                            }
+                        )
                     }}
                 >
                     <Text
