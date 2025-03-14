@@ -16,6 +16,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
 import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import RoomSchedule from "../components/roomSchedule/RoomSchedule";
 
 export default function AppNavigation() {
 
@@ -89,6 +90,17 @@ export default function AppNavigation() {
           </Drawer.Screen>
         </>
       )}
+      <Drawer.Screen
+        name="Room Schedule(test)"
+      >
+        {(props) => (
+          <ScreenWrapper>
+            <RoomSchedule
+              {...props}
+            />
+          </ScreenWrapper>
+        )}
+      </Drawer.Screen>
     </Drawer.Navigator>
   );
 
@@ -108,9 +120,10 @@ export default function AppNavigation() {
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
-                <ScreenWrapper>
-                  <CalendarScreen {...props} />
-                </ScreenWrapper>
+                  <CalendarScreen
+                    key={props.route.params.roomId}
+                    {...props.route.params}
+                  />
               )}
             </RootStack.Screen>
           </RootStack.Group>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { time_slots, booking } from './testData'
 import ScheduleElement from "./ScheduleElement";
 
-export default function TimeSlots({ selectedDate }) {
+export default function TimeSlots({ selectedDate, type }) {
     const [reservations, setReservations] = useState([]);
     const [todaySchedule, setTodaySchedule] = useState([]);
 
@@ -29,61 +29,64 @@ export default function TimeSlots({ selectedDate }) {
         let start_time = `${hour}:${minute === 0 ? '00' : '30'}`;
         let end_time = `${hour + 1}:${minute === 0 ? '00' : '30'}`;
 
-        Alert.alert(
-            'Booking',
-            `Your game will take time from ${start_time} to ${end_time}.\nCreate booking?`,
-            [
-                {
-                    text: 'Cancel',
-                    style: 'default'
-                },
-                {
-                    text: 'Book',
-                    style: 'default',
-                    onPress: () => {
-                        if (start_time.split(':')[0].length === 1) {
-                            start_time += '0';
-                        }
-                
-                        if (minute === 0) {
-                            end_time = `${hour + 1}`;
-                            if (end_time.length === 1) {
-                                end_time = '0' + end_time;
-                            }
-                        } else {
-                            end_time = `${hour + 2}`;
-                            if (end_time.length === 1) {
-                                end_time = '0' + end_time;
-                            }
-                        }
-                        
-                        if (hour < 10) {
-                            start_time = `0${start_time}`
-                        }
-                        end_time += `:${minute === 0 ? '30' : '00'}`;
-
-                        //imitating posting to db
-                        booking.push({
-                            weekday: new Date(selectedDate).getDay().toString(),
-                            start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
-                            end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', ''))
-                        })
-
-                        setReservations([
-                            ...reservations,
-                            {
+        if (type === 'booking') {
+            Alert.alert(
+                'Booking',
+                `Your game will take time from ${start_time} to ${end_time}.\nCreate booking?`,
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'default'
+                    },
+                    {
+                        text: 'Book',
+                        style: 'default',
+                        onPress: () => {
+                            //imitating posting to db
+                            booking.push({
                                 weekday: new Date(selectedDate).getDay().toString(),
                                 start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
-                                end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', ''))
-                            }
-                        ])
+                                end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', '')),
+                                type: 'pending'
+                            })
+
+                            setReservations([
+                                ...reservations,
+                                {
+                                    weekday: new Date(selectedDate).getDay().toString(),
+                                    start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
+                                    end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', '')),
+                                    type: 'pending'
+                                }
+                            ])
+                        }
                     }
+                ],
+                {
+                    cancelable: false
                 }
-            ],
-            {
-                cancelable: false
-            }
-        )
+            )
+        } else if (type === 'cancel') {
+            setReservations(prev => {
+                let element = prev.filter(e => !(
+                    new Date(e.start_time).getMinutes() === minute
+                    &&
+                    new Date(e.start_time).getHours() === hour
+                ))
+
+                if (element.length === prev.length) {
+                    const start_time = `${hour}:${minute === 0 ? '00' : '30'}`;
+                    element.push({
+                        weekday: new Date(selectedDate).getDay().toString(),
+                        start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
+                        end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
+                        type: 'canceled'
+                    })
+                }
+
+                return [...element]
+            })
+        }
     }
 
     let setter = [];
@@ -100,6 +103,7 @@ export default function TimeSlots({ selectedDate }) {
                     selectedDate={selectedDate}
                     todayReservations={reservations}
                     book={book}
+                    type={type}
                 />
             )
         }

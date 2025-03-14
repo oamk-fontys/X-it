@@ -4,7 +4,7 @@ import { useState } from "react";
 import Calendar from "./Calendar";
 import TimeSlots from "./TimeSlots";
 
-export default function CalendarScreen() {
+export default function CalendarScreen({ roomId, type }) {
     const [calendarDisplay, setCalendarDisplay] = useState('none');
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -57,6 +57,7 @@ export default function CalendarScreen() {
                 <TimeSlots
                     key={selectedDate}
                     selectedDate={selectedDate}
+                    type={type}
                 />
                 <View
                     style={styles.spacer}
