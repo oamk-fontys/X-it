@@ -66,7 +66,8 @@ export default function TimeSlots({ selectedDate }) {
                         booking.push({
                             weekday: new Date(selectedDate).getDay().toString(),
                             start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
-                            end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', ''))
+                            end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', '')),
+                            type: 'pending'
                         })
 
                         setReservations([
@@ -74,7 +75,8 @@ export default function TimeSlots({ selectedDate }) {
                             {
                                 weekday: new Date(selectedDate).getDay().toString(),
                                 start_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, start_time).replace('Z', '')),
-                                end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', ''))
+                                end_time: new Date(new Date(selectedDate).toISOString().replaceAll(/[0-9]+:[0-9]+/g, end_time).replace('Z', '')),
+                                type: 'pending'
                             }
                         ])
                     }

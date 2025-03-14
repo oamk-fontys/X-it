@@ -17,6 +17,7 @@ import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
 import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
+import ScheduleCalendar from "../components/roomSchedule/ScheduleCalendar";
 
 export default function AppNavigation() {
 
@@ -115,14 +116,17 @@ export default function AppNavigation() {
         <RootStack.Screen name="Drawer" options={{ headerShown: false }}>
           {() => <DrawerNavigator />}
         </RootStack.Screen>
+        <RootStack.Screen
+          name="Schedule Calendar"
+        >
+          {(props) => <ScheduleCalendar {...props} />}
+        </RootStack.Screen>
         {user ? (
           // authenticated screen
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
-                <ScreenWrapper>
                   <CalendarScreen {...props} />
-                </ScreenWrapper>
               )}
             </RootStack.Screen>
           </RootStack.Group>

@@ -20,7 +20,7 @@ export default function ScheduleElement({
         return +minute;
     }
 
-    let available = true;
+    let available = 'available';
 
     todayReservations.forEach(e => {
         const start = new Date(e.start_time);
@@ -28,24 +28,40 @@ export default function ScheduleElement({
 
         if (
             (
-                start.getHours() - 1 < hour
-                &&
-                end.getHours() > hour
+                (
+                    start.getHours() - 1 < hour
+                    &&
+                    end.getHours() > hour
+                )
+                ||
+                (
+                    start.getHours() - 1 === hour
+                    &&
+                    start.getMinutes() <= minute
+                )
+                ||
+                (
+                    end.getHours() === hour
+                    &&
+                    end.getMinutes() >= minute
+                )
             )
-            ||
+            &&
             (
-                start.getHours() - 1 === hour
-                &&
-                start.getMinutes() <= minute
-            )
-            ||
-            (
-                end.getHours() === hour
-                &&
-                end.getMinutes() >= minute
+                e.type === 'booked'
+                ||
+                e.type === 'pending'
             )
         ) {
-            available = false;
+            available = 'booked';
+        } else if (
+            e.type === 'canceled'
+            &&
+            start.getHours() === hour
+            &&
+            start.getMinutes() === minute
+        ) {
+            available = 'canceled'
         }
     })
 
@@ -67,6 +83,10 @@ export default function ScheduleElement({
             &&
             getMinute(todaySchedule.end_time) === 0
         )
+        ||
+        (
+            available === 'canceled'
+        )
     ) {
         return (
             <View
@@ -75,7 +95,7 @@ export default function ScheduleElement({
         )
     }
 
-    if (!available) {
+    if (available === 'booked') {
 
         return (
             <View
