@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNotification } from './NotificationContext';
 import * as SecureStore from 'expo-secure-store';
 
 export const AuthContext = createContext();
@@ -6,6 +7,9 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
+    
+    const { showNotification } = useNotification();
 
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +29,7 @@ export const AuthProvider = ({ children }) => {
 
             if (isExpired) {
                 await SecureStore.deleteItemAsync('authToken');
+                showNotification('Session expired', 'error');
             } else {
                 setUser({
                     id: decodedToken.id,
@@ -41,6 +46,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Failed to load user:', error);
+        showNotification('Internal error occured!', 'error');
       } finally {
         setIsLoading(false);
       }
@@ -57,29 +63,31 @@ export const AuthProvider = ({ children }) => {
             body: JSON.stringify({ email: email, password: password })
         });
 
-        if (!response.ok) {
-            throw new Error('Login failed');
+        if (response.ok) {
+          const { access_token } = await response.json();
+
+          await SecureStore.setItemAsync('authToken', access_token);
+
+          const decodedToken = JSON.parse(atob(access_token.split('.')[1]));
+          setUser({
+              id: decodedToken.id,
+              email: decodedToken.email,
+              username: decodedToken.username,
+              firstName: decodedToken.firstName,
+              lastName: decodedToken.lastName,
+              phoneNumber: decodedToken.phoneNumber,
+              dateOfBirth: decodedToken.dateOfBirth,
+              role: decodedToken.role,
+              companyId: decodedToken.companyId
+          });
         }
 
-        const { access_token } = await response.json();
-
-        await SecureStore.setItemAsync('authToken', access_token);
-
-        const decodedToken = JSON.parse(atob(access_token.split('.')[1]));
-        setUser({
-            id: decodedToken.id,
-            email: decodedToken.email,
-            username: decodedToken.username,
-            firstName: decodedToken.firstName,
-            lastName: decodedToken.lastName,
-            phoneNumber: decodedToken.phoneNumber,
-            dateOfBirth: decodedToken.dateOfBirth,
-            role: decodedToken.role,
-            companyId: decodedToken.companyId
-        });
+        if (response.status === 400 || response.status === 401) {
+            showNotification('Invalid credentials', 'error');
+        }
     } catch (error) {
       console.error('Login error:', error);
-      throw error;
+      showNotification('Internal error occured!', 'error');
     }
   };
 
@@ -110,11 +118,15 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Registration failed');
+          const data = await response.json();
+          showNotification(data.message, 'error');
+          return false;
       }
+
+      return true;
     } catch (error) {
       console.error('Registration error:', error);
-      throw error;
+      showNotification('Internal error occured!', 'error');
     }
   };
 
@@ -124,6 +136,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
+      showNotification('Internal error occured!', 'error');
     }
   };
 

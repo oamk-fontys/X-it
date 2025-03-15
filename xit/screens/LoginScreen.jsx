@@ -3,11 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import globalStyles from "../theme/globalStyles";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
-
+    
+    const { showNotification } = useNotification();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth();
@@ -15,14 +17,13 @@ export default function LoginScreen() {
     const handleLogin = async () => {
 
         if (!email || !password) {
-            Alert.alert("Error", "Email and password are required.");
-            return;
+            showNotification('Email and password required', 'error');
         }
 
         try {
             await login(email, password);
         } catch (error) {
-            alert('Login failed: ' + error.message);
+            console.error(error);
         }
     };
 
