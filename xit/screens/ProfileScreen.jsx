@@ -1,6 +1,8 @@
-import React from "react";
-import { StyleSheet, ScrollView, View, Text, Image, Button } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, ScrollView, View, Text, Image, Button, TouchableOpacity, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import QRCode from 'react-native-qrcode-svg';
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { useAuth } from '../context/AuthContext';
 
@@ -9,8 +11,11 @@ import StatCard from "../components/profile/StatCard";
 import BookingItem from "../components/profile/BookingItem";
 
 export default function ProfileScreen() {
+  const { user, token, logout } = useAuth();
+  const [isTokenModalVisible, setIsTokenModalVisible] = useState(false);
 
-  const { user, logout } = useAuth();
+  const openTokenModal = () => setIsTokenModalVisible(true);
+  const closeTokenModal = () => setIsTokenModalVisible(false);
 
   // remove test data
   const userMock = {
@@ -63,6 +68,32 @@ export default function ProfileScreen() {
           ))}
         </View>
 
+        {/* Token QR Code Button */}
+        <TouchableOpacity onPress={openTokenModal} style={styles.tokenButton}>
+          <MaterialIcons name="qr-code" size={24} color="#EEEEEE" />
+          <Text style={styles.tokenButtonText}>Show Token QR Code</Text>
+        </TouchableOpacity>
+
+        {/* Token QR Code Modal */}
+        <Modal
+          visible={isTokenModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={closeTokenModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <QRCode
+                value={token}
+                size={200}
+                color="black"
+                backgroundColor="white"
+              />
+              <Button title="Close" onPress={closeTokenModal} />
+            </View>
+          </View>
+        </Modal>
+
         {/* Logout */}
         <Button title="Logout" onPress={logout} />
       </ScrollView>
@@ -109,5 +140,30 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-  }
+  },
+  tokenButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#00ADB5",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  tokenButtonText: {
+    color: "#EEEEEE",
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#222831",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
 });
