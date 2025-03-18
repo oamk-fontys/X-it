@@ -7,10 +7,10 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     
     const API_URL = process.env.EXPO_PUBLIC_API_URL;
-
     
     const { showNotification } = useNotification();
 
+    const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -19,18 +19,18 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         // get token from storage
-        const token = await SecureStore.getItemAsync('authToken');
+        const tok = await SecureStore.getItemAsync('authToken');
 
-        if (token) {
-
+        if (tok) {
             // parse token and check expiration date
-            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            const decodedToken = JSON.parse(atob(tok.split('.')[1]));
             const isExpired = decodedToken.exp * 1000 < Date.now();
 
             if (isExpired) {
                 await SecureStore.deleteItemAsync('authToken');
                 showNotification('Session expired', 'error');
             } else {
+                setToken(tok);
                 setUser({
                     id: decodedToken.id,
                     email: decodedToken.email,
@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
           await SecureStore.setItemAsync('authToken', access_token);
 
           const decodedToken = JSON.parse(atob(access_token.split('.')[1]));
+          setToken(access_token);
           setUser({
               id: decodedToken.id,
               email: decodedToken.email,
@@ -141,7 +142,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
