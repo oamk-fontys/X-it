@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import globalStyles from '../theme/globalStyles';
 
 export default function RegistrationScreen({ navigation }) {
 
     const { register } = useAuth();
+    const { showNotification } = useNotification();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,12 +20,11 @@ export default function RegistrationScreen({ navigation }) {
 
     const handleRegister = async () => {
         if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match');
-            return;
+            showNotification('Email and password required', 'error');
         }
 
         try {
-            await register(
+            const succeed = await register(
                 email,
                 password,
                 confirmPassword,
@@ -33,9 +34,10 @@ export default function RegistrationScreen({ navigation }) {
                 phoneNumber,
                 dateOfBirth,
             );
-            navigation.navigate('Login');
+            succeed && navigation.navigate('Login');
+            succeed && showNotification('Registration success', 'success');
         } catch (error) {
-            Alert.alert('Error', error.message);
+            console.error(error);
         }
     };
 
