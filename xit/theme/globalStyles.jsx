@@ -195,6 +195,26 @@ const globalStyles = StyleSheet.create({
         margin: 2
     },
 
+    // picker styles
+    pickerContainer: {
+        width: "100%",
+        height: 40,
+        backgroundColor: theme.colors.containerBackground,
+        borderRadius: 5,
+        justifyContent: "center",
+        paddingHorizontal: 10,
+        marginBottom: 10,
+        borderColor: theme.colors.textMuted,
+        borderWidth: 1,
+        position: "relative",
+    },
+
+    picker: {
+        color: theme.colors.text,
+        width: "100%",
+        height: 40,
+    },
+
 
     //Header and footer styles
     headerContainer: {

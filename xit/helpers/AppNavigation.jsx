@@ -17,6 +17,8 @@ import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
 import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
+import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
+import AddRoomScreen from "../screens/AddRoomScreen";
 
 export default function AppNavigation() {
 
@@ -101,6 +103,15 @@ export default function AppNavigation() {
           </ScreenWrapper>
         )}
       </Drawer.Screen>
+
+        <Drawer.Screen name="Company Rooms (Test)">
+            {(props) => (
+                <ScreenWrapper>
+                    <CompanyRoomListScreen {...props} />
+                </ScreenWrapper>
+            )}
+        </Drawer.Screen>
+
     </Drawer.Navigator>
   );
 
@@ -144,6 +155,21 @@ export default function AppNavigation() {
                 </ScreenWrapper>
               )}
             </RootStack.Screen>
+              {/* add room function, just for testing now, it should under authenticated screen*/}
+              <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
+                  {(props) => (
+                      <ScreenWrapper>
+                          <AddRoomScreen {...props} />
+                      </ScreenWrapper>
+                  )}
+              </RootStack.Screen>
+              <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
+                  {(props) => (
+                      <ScreenWrapper>
+                          <CompanyRoomListScreen {...props} />
+                      </ScreenWrapper>
+                  )}
+              </RootStack.Screen>
           </RootStack.Group>
         )}
       </RootStack.Navigator>
