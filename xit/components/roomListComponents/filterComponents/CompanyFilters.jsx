@@ -10,7 +10,7 @@ export default function CompanyFilters({
     sectionElement,
     label
 }) {
-    const { getCompanies } = useRooms();
+    const { getCompanyNames } = useRooms();
 
     return (
         <View
@@ -22,7 +22,7 @@ export default function CompanyFilters({
                 Company
             </Text>
             {
-                getCompanies().map((e, i) => (
+                getCompanyNames().map((e, i) => (
                     <View
                         key={i}
                         style={sectionElement}

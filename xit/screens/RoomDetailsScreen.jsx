@@ -20,7 +20,7 @@ export default function RoomDetailsScreen({ id }) {
     const title = room.name;
     const description = room.description;
     const ratings = [];
-    const companyName = room.companyId
+    const companyName = room.company.name
 
     const average = (arr) => {
         let sum = 0;

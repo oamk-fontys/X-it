@@ -1,9 +1,11 @@
 import React from "react";
 import { useEffect, useState, useContext, createContext } from "react";
+import { useNotification } from "./NotificationContext";
 
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
+    const { showNotification } = useNotification();
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -16,7 +18,7 @@ export const RoomProvider = ({ children }) => {
             setRooms(json)
         })
         .catch(e => {
-            alert(e.message)
+            showNotification(e.message)
         })
     }, [])
 
@@ -50,12 +52,12 @@ export const RoomProvider = ({ children }) => {
         return out;
     }
 
-    const getCompanies = () => {
+    const getCompanyNames = () => {
         let out = [];
 
         rooms.forEach(e => {
-            if (!out.includes(e.companyId)) {
-                out.push(e.companyId)
+            if (!out.includes(e.company.name)) {
+                out.push(e.company.name)
             }
         });
 
@@ -69,7 +71,7 @@ export const RoomProvider = ({ children }) => {
         let filtered = [];
         if (company && company.length !== 0) {
             filtered = rooms.filter(e => (
-                company.includes(e.companyId)
+                company.includes(e.company.name)
             ))
         } else {
             filtered = rooms
@@ -88,7 +90,7 @@ export const RoomProvider = ({ children }) => {
                 rooms,
                 getRoomById,
                 searchForRoom,
-                getCompanies,
+                getCompanyNames,
                 filteredRooms
             }}
         >
