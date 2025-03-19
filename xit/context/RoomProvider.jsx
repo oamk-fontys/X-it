@@ -64,9 +64,22 @@ export const RoomProvider = ({ children }) => {
         return out;
     }
 
+    const getCities = () => {
+        let out = [];
+
+        rooms.forEach(e => {
+            if (!out.includes(e.company.city)) {
+                out.push(e.company.city)
+            }
+        });
+
+        return out
+    }
+
     const filteredRooms = (rooms, filters) => {
         const { company } = filters;
         const { rating } = filters;
+        const { city } = filters;
 
         let filtered = [];
         if (company && company.length !== 0) {
@@ -81,6 +94,12 @@ export const RoomProvider = ({ children }) => {
             filtered = filtered.filter(() => false)
         }
 
+        if (city && city.length !== 0) {
+            filtered = filtered.filter(e => (
+                city.includes(e.company.city)
+            ))
+        }
+
         return filtered
     }
 
@@ -91,6 +110,7 @@ export const RoomProvider = ({ children }) => {
                 getRoomById,
                 searchForRoom,
                 getCompanyNames,
+                getCities,
                 filteredRooms
             }}
         >
