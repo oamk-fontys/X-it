@@ -6,17 +6,22 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { useAuth } from '../context/AuthContext';
 
-import LoginScreen from "../screens/LoginScreen";
-import RegistrationScreen from "../screens/RegistrationScreen";
+
 import Header from "../components/Header";
-import secondaryHeader from "./secondaryHeaderOptions";
 import Footer from "../components/Footer";
+
+/*  PLEASE KEEP THE SCREENS ALPHABETICALLY ORGANIZED  */
+import AdminPendingCompaniesScreen from "../screens/AdminPendingCompaniesScreen";
+import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import CompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
 import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import RegistrationScreen from "../screens/RegistrationScreen";
 import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
-import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
+import secondaryHeader from "./secondaryHeaderOptions";
 
 export default function AppNavigation() {
 
@@ -42,6 +47,18 @@ export default function AppNavigation() {
           </ScreenWrapper>
         )}
       </Drawer.Screen>
+
+      {user?.role === "ADMIN" && (
+        //Only for Admins to see
+        <Drawer.Screen name="Pending Companies">
+          {(props) => (
+            <ScreenWrapper>
+              <AdminPendingCompaniesScreen {...props} />
+            </ScreenWrapper>
+          )}
+        </Drawer.Screen>
+      )}
+
       <Drawer.Screen name="Rooms">
         {(props) => (
           <ScreenWrapper>
@@ -71,6 +88,19 @@ export default function AppNavigation() {
           )}
         </Drawer.Screen>
       )}
+
+      {user && (
+        //Company registration screen
+        <Drawer.Screen name="Company registration">
+          {(props) => (
+            <ScreenWrapper>
+              <CompanyRegistrationScreen {...props} />
+            </ScreenWrapper>
+          )}
+        </Drawer.Screen>
+      )}
+
+
       {!user && (
         // Unauthenticated screens
         <>
@@ -120,10 +150,10 @@ export default function AppNavigation() {
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
-                  <CalendarScreen
-                    key={props.route.params.roomId}
-                    {...props.route.params}
-                  />
+                <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
               )}
             </RootStack.Screen>
           </RootStack.Group>

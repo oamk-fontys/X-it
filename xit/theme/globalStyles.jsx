@@ -55,6 +55,13 @@ const globalStyles = StyleSheet.create({
         color: theme.colors.text,
         fontSize: theme.fontSizes.small
     },
+    textMini: {
+        color: theme.colors.text,
+        fontSize: theme.fontSizes.mini
+    },
+    textMuted: {
+        color: theme.colors.textMuted,
+    },
     textError: {
         color: theme.colors.textMuted,
         fontStyle: "italic",
@@ -103,6 +110,10 @@ const globalStyles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 5
     },
+    singleCardBody: {
+        flex: 1,
+        padding: 10
+    },
     cardBody: {
         flex: 5,
         width: '100%',
@@ -116,9 +127,12 @@ const globalStyles = StyleSheet.create({
         borderRadius: 5,
         flexDirection: 'row',
         padding: 5,
-        alignItems: 'center'
     },
     cardItemImage: {
+        flex: 1,
+        aspectRatio: 1,
+    },
+    cardItemLeft: {
         flex: 1,
         aspectRatio: 1,
     },
