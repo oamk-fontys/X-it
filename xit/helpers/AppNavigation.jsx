@@ -7,20 +7,23 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { useAuth } from '../context/AuthContext';
 
-import LoginScreen from "../screens/LoginScreen";
-import RegistrationScreen from "../screens/RegistrationScreen";
 import Header from "../components/Header";
-import secondaryHeader from "./secondaryHeaderOptions";
 import Footer from "../components/Footer";
+
+/*  PLEASE KEEP THE SCREENS ALPHABETICALLY ORGANIZED  */
+import AddRoomScreen from "../screens/AddRoomScreen";
+import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import CCompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
+import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import RegistrationScreen from "../screens/RegistrationScreen";
 import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
-import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
-import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
-import AddRoomScreen from "../screens/AddRoomScreen";
 import RoomManagementScreen from "../screens/RoomManagementScreen";
+import secondaryHeader from "../helpers/secondaryHeaderOptions"
 import UpdateRoomScreen from "../screens/UpdateRoomScreen";
 
 export default function AppNavigation() {
@@ -63,7 +66,7 @@ export default function AppNavigation() {
     const DrawerItem = useCallback(({ route, index }) => {
       const { options } = props.descriptors[route.key];
       const isFocused = props.state.index === index;
-      
+
       if (options.drawerItemStyle?.height === 0) return null;
 
       return (
@@ -75,10 +78,10 @@ export default function AppNavigation() {
           ]}
           onPress={() => props.navigation.navigate(route.name)}
         >
-          <Icon 
-            name={getIconForRoute(route.name)} 
-            size={22} 
-            color={isFocused ? "#00ADB5" : "#EEEEEE"} 
+          <Icon
+            name={getIconForRoute(route.name)}
+            size={22}
+            color={isFocused ? "#00ADB5" : "#EEEEEE"}
             style={styles.icon}
           />
           <Text style={[
@@ -92,21 +95,21 @@ export default function AppNavigation() {
     }, [props.state.index]);
 
     return (
-      <DrawerContentScrollView 
-        {...props} 
+      <DrawerContentScrollView
+        {...props}
         contentContainerStyle={styles.drawerContainer}
         scrollEnabled={false}
       >
         {/* Simplified Header Animation */}
         <Animated.View style={[
-          styles.drawerHeader, 
-          { 
+          styles.drawerHeader,
+          {
             opacity,
-            transform: [{ scale }] 
+            transform: [{ scale }]
           }
         ]}>
-          <Image 
-            source={require('../assets/profile-placeholder.jpeg')} 
+          <Image
+            source={require('../assets/profile-placeholder.jpeg')}
             style={styles.profileImage}
           />
           <View style={styles.userInfo}>
@@ -128,7 +131,7 @@ export default function AppNavigation() {
 
         {/* Sign Out Button */}
         {user && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.signOutButton}
             onPress={logout}
           >
@@ -154,7 +157,7 @@ export default function AppNavigation() {
   }, []);
 
   const DrawerNavigator = React.memo(() => (
-    <Drawer.Navigator 
+    <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: styles.drawer,
@@ -177,7 +180,10 @@ export default function AppNavigation() {
         options={{ drawerItemStyle: { height: 0 } }}
       />
       {user && (
-        <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+        <>
+          <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
+        </>
       )}
       {!user && (
         <>
@@ -195,43 +201,49 @@ export default function AppNavigation() {
       <HomeScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomListScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomDetailsScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomDetailsScreen key={props.route.params.id} id={props.route.params.id} />
     </ScreenWrapper>
   ));
-  
+
   const ProfileScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <ProfileScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
+  const CompanyRegistrationScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <CCompanyRegistrationScreen {...props} />
+    </ScreenWrapper>
+  ));
+
   const LoginScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <LoginScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RegistrationScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RegistrationScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomScheduleWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomSchedule {...props} />
     </ScreenWrapper>
   ));
-  
+
   const CompanyRoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
@@ -254,10 +266,10 @@ export default function AppNavigation() {
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
-                  <CalendarScreen
-                    key={props.route.params.roomId}
-                    {...props.route.params}
-                  />
+                <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
               )}
             </RootStack.Screen>
           </RootStack.Group>
@@ -278,38 +290,38 @@ export default function AppNavigation() {
                 </ScreenWrapper>
               )}
             </RootStack.Screen>
-              {/* add room function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <AddRoomScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* room list, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <CompanyRoomListScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* room management function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Room Management" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <RoomManagementScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* update room info function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <UpdateRoomScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
+            {/* add room function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <AddRoomScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* room list, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <CompanyRoomListScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* room management function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="Room Management" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <RoomManagementScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* update room info function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <UpdateRoomScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
           </RootStack.Group>
         )}
       </RootStack.Navigator>
