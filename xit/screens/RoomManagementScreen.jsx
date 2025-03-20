@@ -21,7 +21,7 @@ export default function RoomManagementScreen() {
         <View style={globalStyles.safeArea}>
             <View style={{ paddingHorizontal: 20, flex: 1 }}>
                 <RoomDetails room={room} />
-                <RoomActions roomId={roomId} />
+                <RoomActions roomId={roomId} room={room} />
             </View>
         </View>
     );

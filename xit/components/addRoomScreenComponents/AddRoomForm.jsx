@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Picker } from "@react-native-picker/picker";
 import {useNavigation} from "@react-navigation/native";
 import globalStyles from "../../theme/globalStyles";
+import DropdownSelector from "../DropdownSelector";
 
 
 export default function AddRoomForm() {
@@ -80,26 +81,11 @@ export default function AddRoomForm() {
             />
 
             {/* Level Dropdown */}
-            <Text style={[globalStyles.subTitleSmall, { marginBottom: 3 }]}>Choose Level</Text>
-            <TouchableOpacity
-                style={[
-                    globalStyles.pickerContainer,
-                    {
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingHorizontal: 10,
-                    },
-                ]}
-                onPress={() => setModalVisible(true)}
-            >
-                <Text style={{ color: globalStyles.text.color, paddingVertical: 10 }}>
-                    {level === "None" ? "Choose a level" : level}
-                </Text>
-                <Ionicons name="chevron-down" size={20} color={globalStyles.text.color} />
-            </TouchableOpacity>
+            <DropdownSelector
+                label="Choose Level"
+                selectedValue={level}
+                onValueChange={setLevel}
+            />
 
             <Modal visible={modalVisible} transparent animationType="slide">
                 <View style={{ flex: 1, justifyContent: "center", backgroundColor: "rgba(0,0,0,0.5)" }}>
@@ -167,7 +153,7 @@ export default function AddRoomForm() {
                 }}
             >
                 <TouchableOpacity
-                    style={[globalStyles.button, {width: 150, marginHorizontal: 25 }, { backgroundColor: "green" }]}
+                    style={[globalStyles.button, , { backgroundColor: "green" }]}
                     onPress={handleSave}
                 >
                     <Text style={globalStyles.buttonText}>Save</Text>

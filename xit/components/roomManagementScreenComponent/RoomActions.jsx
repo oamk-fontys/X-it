@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../../theme/globalStyles";
 
-export default function RoomActions({ roomId }) {
+export default function RoomActions({ roomId, room }) {
     const navigation = useNavigation();
 
     const handleDelete = () => {
@@ -28,7 +28,7 @@ export default function RoomActions({ roomId }) {
 
             <TouchableOpacity
                 style={[globalStyles.button, { backgroundColor: "blue", flex: 0.32 }]}
-                onPress={() => navigation.navigate("Update Room", { roomId })}
+                onPress={() => navigation.navigate("Update Room", { room })}
             >
                 <Text style={globalStyles.buttonText}>Update</Text>
             </TouchableOpacity>
