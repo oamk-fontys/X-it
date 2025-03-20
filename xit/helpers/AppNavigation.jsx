@@ -19,6 +19,7 @@ import CalendarScreen from "../components/roomDetailsScreenComponents/bookingCom
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
 import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import AddRoomScreen from "../screens/AddRoomScreen";
+import RoomManagementScreen from "../screens/RoomManagementScreen";
 
 export default function AppNavigation() {
 
@@ -163,10 +164,19 @@ export default function AppNavigation() {
                       </ScreenWrapper>
                   )}
               </RootStack.Screen>
+              {/* room list, just for testing now, it should under authenticated screen*/}
               <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
                   {(props) => (
                       <ScreenWrapper>
                           <CompanyRoomListScreen {...props} />
+                      </ScreenWrapper>
+                  )}
+              </RootStack.Screen>
+              {/* room management function, just for testing now, it should under authenticated screen*/}
+              <RootStack.Screen name="Room Management" options={{ headerShown: false }}>
+                  {(props) => (
+                      <ScreenWrapper>
+                          <RoomManagementScreen {...props} />
                       </ScreenWrapper>
                   )}
               </RootStack.Screen>
