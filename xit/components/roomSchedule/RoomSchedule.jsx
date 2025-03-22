@@ -83,7 +83,7 @@ export default function RoomSchedule() {
         <View
             style={[
                 globalStyles.safeArea,
-                globalStyles.container
+                globalStyles.mainContainer
             ]}
         >
             <View
@@ -208,7 +208,7 @@ export default function RoomSchedule() {
                 </Text>
             </View>
             <View
-                style={globalStyles.container}
+                style={globalStyles.mainContainer}
             >
                 <Text
                     style={[

@@ -71,8 +71,9 @@ export default function RoomListScreen() {
                         <RoomElement
                             key={i}
                             title={e.name}
-                            companyName={e.companyId}
-                            id={e.id}                        
+                            companyName={e.company.name}
+                            id={e.id}
+                            city={e.company.city}                     
                         />
                     ))
                 }

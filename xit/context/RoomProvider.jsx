@@ -1,9 +1,11 @@
 import React from "react";
 import { useEffect, useState, useContext, createContext } from "react";
+import { useNotification } from "./NotificationContext";
 
 const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
+    const { showNotification } = useNotification();
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -16,7 +18,7 @@ export const RoomProvider = ({ children }) => {
             setRooms(json)
         })
         .catch(e => {
-            alert(e.message)
+            showNotification(e.message)
         })
     }, [])
 
@@ -50,26 +52,39 @@ export const RoomProvider = ({ children }) => {
         return out;
     }
 
-    const getCompanies = () => {
+    const getCompanyNames = () => {
         let out = [];
 
         rooms.forEach(e => {
-            if (!out.includes(e.companyId)) {
-                out.push(e.companyId)
+            if (!out.includes(e.company.name)) {
+                out.push(e.company.name)
             }
         });
 
         return out;
     }
 
+    const getCities = () => {
+        let out = [];
+
+        rooms.forEach(e => {
+            if (!out.includes(e.company.city)) {
+                out.push(e.company.city)
+            }
+        });
+
+        return out
+    }
+
     const filteredRooms = (rooms, filters) => {
         const { company } = filters;
         const { rating } = filters;
+        const { city } = filters;
 
         let filtered = [];
         if (company && company.length !== 0) {
             filtered = rooms.filter(e => (
-                company.includes(e.companyId)
+                company.includes(e.company.name)
             ))
         } else {
             filtered = rooms
@@ -77,6 +92,12 @@ export const RoomProvider = ({ children }) => {
 
         if (rating && rating.length !== 0) {
             filtered = filtered.filter(() => false)
+        }
+
+        if (city && city.length !== 0) {
+            filtered = filtered.filter(e => (
+                city.includes(e.company.city)
+            ))
         }
 
         return filtered
@@ -88,7 +109,8 @@ export const RoomProvider = ({ children }) => {
                 rooms,
                 getRoomById,
                 searchForRoom,
-                getCompanies,
+                getCompanyNames,
+                getCities,
                 filteredRooms
             }}
         >

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import CompanyFilters from "./filterComponents/CompanyFilters";
 import RatingFilters from "./filterComponents/RatingFilters";
+import CityFilters from "./filterComponents/CityFilters";
 
 export default function Filters({
     hide,
@@ -10,11 +11,13 @@ export default function Filters({
 }) {
     const [companyFilters, setCompanyFilters] = useState([])
     const [ratingFilters, setRatingFilters] = useState([])
+    const [cityFilters, setCityFilters] = useState([])
 
     const submit = () => {
         setFilters({
             company: companyFilters,
-            rating: ratingFilters
+            rating: ratingFilters,
+            city: cityFilters
         })
         setHide(true)
     }
@@ -42,6 +45,14 @@ export default function Filters({
                     section={styles.section}
                     sectionTitle={styles.sectionTitle}
                     sectionElement={styles.sectionElement}
+                />
+                <CityFilters
+                    cityFilters={cityFilters}
+                    setCityFilters={setCityFilters}
+                    section={styles.section}
+                    sectionTitle={styles.sectionTitle}
+                    sectionElement={styles.sectionElement}
+                    label={styles.label}
                 />
                 <CompanyFilters
                     companyFilters={companyFilters}

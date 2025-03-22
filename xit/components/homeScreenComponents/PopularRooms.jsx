@@ -32,6 +32,7 @@ export default function PopularRooms() {
                         key={i}
                         id={e.id}
                         roomName={e.name}
+                        city={e.company.city}
                     />
                 )
             }

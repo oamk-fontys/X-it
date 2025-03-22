@@ -2,15 +2,15 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useRooms } from "../../../context/RoomProvider";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export default function CompanyFilters({
-    companyFilters,
-    setCompanyFilters,
+export default function CityFilters({
+    cityFilters,
+    setCityFilters,
     section,
     sectionTitle,
     sectionElement,
     label
 }) {
-    const { getCompanyNames } = useRooms();
+    const { getCities } = useRooms();
 
     return (
         <View
@@ -22,14 +22,14 @@ export default function CompanyFilters({
                 Company
             </Text>
             {
-                getCompanyNames().map((e, i) => (
+                getCities().map((e, i) => (
                     <View
                         key={i}
                         style={sectionElement}
                     >
                         <TouchableOpacity
                             onPress={() => {
-                                setCompanyFilters(prevFilters =>
+                                setCityFilters(prevFilters =>
                                     prevFilters.includes(e)
                                         ? prevFilters.filter(element => element !== e)
                                         : [...prevFilters, e]
@@ -38,7 +38,7 @@ export default function CompanyFilters({
                         >
                             <FontAwesome
                                 name={
-                                    companyFilters.includes(e)
+                                    cityFilters.includes(e)
                                     ?
                                     'check-square'
                                     :
