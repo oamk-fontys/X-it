@@ -1,25 +1,35 @@
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useState } from 'react';
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from '../../context/AuthContext';
 
 export default function WriteComment({ roomId, playedSection, comments, setComments }) {
     const [text, setText] = useState('');
 
+    const navigation = useNavigation();
+    const { user } = useAuth();
+
     const postComment = () => {
-        if (text) {
-            setComments([
-                {
-                    text: text,
-                    userName: 'unnamed',
-                    date: new Date().toISOString(),
-                    pfp: '',
-                    played: playedSection
-                },
-                ...comments
-            ])
+        // unauthorized users are navigated to login page
+        if (user) {
+            if (text) {
+                setComments([
+                    {
+                        text: text,
+                        userName: 'unnamed',
+                        date: new Date().toISOString(),
+                        pfp: '',
+                        played: playedSection
+                    },
+                    ...comments
+                ])
+            }
+            setText('');
+        } else {
+            navigation.navigate('Login');
         }
-        setText('');
     }
 
     return (
