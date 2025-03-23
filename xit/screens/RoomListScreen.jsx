@@ -28,7 +28,7 @@ export default function RoomListScreen() {
                     }}
                 >
                     <MaterialIcons
-                        name="menu"
+                        name="tune"
                         size={32}
                         color="#EEEEEE"
                         style={styles.filtersIcon}
