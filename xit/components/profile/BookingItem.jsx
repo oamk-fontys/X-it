@@ -30,7 +30,11 @@ export default function BookingItem({ booking, token }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <QRCode
-              value={`booking_id: ${booking.id}, token: ${token}`}
+              value={JSON.stringify({
+                booking_id: booking.id,
+                user_id: user_id,
+                token: token
+              })}
               size={200}
               color="black"
               backgroundColor="white"
