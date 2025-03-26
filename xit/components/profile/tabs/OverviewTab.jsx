@@ -2,13 +2,13 @@ import React from "react";
 import { FlatList, Text, StyleSheet, View } from "react-native";
 import BookingItem from "../BookingItem";
 
-export default function OverviewTab({ bookings, token }) {
+export default function OverviewTab({ bookings, token, user_id }) {
   return (
     <FlatList
       data={bookings}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <BookingItem booking={item} token={token} />
+        <BookingItem booking={item} token={token} user_id={user_id} />
       )}
       contentContainerStyle={styles.container}
       ListHeaderComponent={

@@ -9,7 +9,7 @@ import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
 import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
-  const { user, token, logout } = useAuth();
+  const { user, token, user_id, logout } = useAuth();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'bookingsTab', title: 'Bookings', icon: 'dashboard' },
@@ -42,7 +42,7 @@ export default function ProfileScreen() {
     };
 
   const renderScene = SceneMap({
-    bookingsTab: () => <OverviewTab bookings={userMock.bookings} user={user} token={token} />,
+    bookingsTab: () => <OverviewTab bookings={userMock.bookings} user_id={user?.id} token={token} />,
     visitedRooms: () => <VisitedRoomsTab />,
     stats: () => <StatsTab roomStats={userMock.roomStats} />,
   });
