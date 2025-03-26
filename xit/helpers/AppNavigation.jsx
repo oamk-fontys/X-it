@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
-import { View, SafeAreaView } from "react-native";
+import React, { useContext, useRef, useEffect, useCallback } from "react";
+import { View, SafeAreaView, Animated, Easing, StyleSheet, Text, Image, TouchableOpacity, I18nManager } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -24,98 +25,218 @@ import UpdateRoomScreen from "../screens/UpdateRoomScreen";
 
 export default function AppNavigation() {
 
-  const { user, isLoading } = useAuth();
-
+  const { user, isLoading, logout } = useAuth();
   const Drawer = createDrawerNavigator();
   const RootStack = createNativeStackNavigator();
 
-  const ScreenWrapper = ({ children }) => (
+  // Memoized ScreenWrapper to prevent unnecessary re-renders
+  const ScreenWrapper = React.memo(({ children }) => (
     <SafeAreaView style={{ flex: 1 }}>
       <Header />
       <View style={{ flex: 1 }}>{children}</View>
       <Footer />
     </SafeAreaView>
-  );
+  ));
 
-  const DrawerNavigator = () => (
-    <Drawer.Navigator screenOptions={{ headerShown: false }}>
-      <Drawer.Screen name="Home">
-        {(props) => (
-          <ScreenWrapper>
-            <HomeScreen {...props} />
-          </ScreenWrapper>
+  // Custom Drawer Content Component
+  const CustomDrawerContent = React.memo((props) => {
+    const scale = useRef(new Animated.Value(0.95)).current;
+    const opacity = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+      // Simplified animation for better performance
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, []);
+
+    // Memoized drawer item component
+    const DrawerItem = useCallback(({ route, index }) => {
+      const { options } = props.descriptors[route.key];
+      const isFocused = props.state.index === index;
+      
+      if (options.drawerItemStyle?.height === 0) return null;
+
+      return (
+        <TouchableOpacity
+          key={route.key}
+          style={[
+            styles.drawerItem,
+            isFocused && styles.activeItem,
+          ]}
+          onPress={() => props.navigation.navigate(route.name)}
+        >
+          <Icon 
+            name={getIconForRoute(route.name)} 
+            size={22} 
+            color={isFocused ? "#00ADB5" : "#EEEEEE"} 
+            style={styles.icon}
+          />
+          <Text style={[
+            styles.label,
+            isFocused && styles.activeLabel
+          ]}>
+            {options.drawerLabel || route.name}
+          </Text>
+        </TouchableOpacity>
+      );
+    }, [props.state.index]);
+
+    return (
+      <DrawerContentScrollView 
+        {...props} 
+        contentContainerStyle={styles.drawerContainer}
+        scrollEnabled={false}
+      >
+        {/* Simplified Header Animation */}
+        <Animated.View style={[
+          styles.drawerHeader, 
+          { 
+            opacity,
+            transform: [{ scale }] 
+          }
+        ]}>
+          <Image 
+            source={require('../assets/profile-placeholder.jpeg')} 
+            style={styles.profileImage}
+          />
+          <View style={styles.userInfo}>
+            <Text style={styles.headerText} numberOfLines={1}>
+              {user ? user.username : 'Welcome Guest'}
+            </Text>
+            <Text style={styles.userEmail} numberOfLines={1}>
+              {user ? user.email : 'Sign in to access features'}
+            </Text>
+          </View>
+        </Animated.View>
+
+        {/* Optimized Drawer Items Rendering */}
+        <View style={styles.drawerItems}>
+          {props.state.routes.map((route, index) => (
+            <DrawerItem key={route.key} route={route} index={index} />
+          ))}
+        </View>
+
+        {/* Sign Out Button */}
+        {user && (
+          <TouchableOpacity 
+            style={styles.signOutButton}
+            onPress={logout}
+          >
+            <Icon name="logout" size={20} color="#FF2E63" />
+            <Text style={styles.signOutLabel}>Sign Out</Text>
+          </TouchableOpacity>
         )}
-      </Drawer.Screen>
-      <Drawer.Screen name="Rooms">
-        {(props) => (
-          <ScreenWrapper>
-            <RoomListScreen {...props} />
-          </ScreenWrapper>
-        )}
-      </Drawer.Screen>
+      </DrawerContentScrollView>
+    );
+  });
+
+  const getIconForRoute = React.useCallback((routeName) => {
+    const icons = {
+      'Home': 'home',
+      'Rooms': 'meeting-room',
+      'Profile': 'person',
+      'Login': 'login',
+      'Sign up': 'person-add',
+      'Company Rooms (Test)': 'business',
+      'Room Schedule(test)': 'schedule',
+    };
+    return icons[routeName] || 'help-outline';
+  }, []);
+
+  const DrawerNavigator = React.memo(() => (
+    <Drawer.Navigator 
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: styles.drawer,
+        drawerType: "front",
+        overlayColor: "rgba(0, 0, 0, 0.5)",
+        sceneContainerStyle: styles.sceneContainer,
+        headerShown: false,
+        swipeEdgeWidth: 30,
+        swipeEnabled: true,
+        drawerHideStatusBarOnOpen: false,
+        drawerStatusBarAnimation: 'fade',
+        lazy: true, // Enable lazy loading of screens
+      }}
+    >
+      <Drawer.Screen name="Home" component={HomeScreenWrapper} />
+      <Drawer.Screen name="Rooms" component={RoomListScreenWrapper} />
       <Drawer.Screen
         name="Room Details"
-        options={{
-          drawerItemStyle: { height: 0 },
-        }}
-      >
-        {(props) => (
-          <ScreenWrapper>
-            <RoomDetailsScreen key={props.route.params.id} id={props.route.params.id} />
-          </ScreenWrapper>
-        )}
-      </Drawer.Screen>
+        component={RoomDetailsScreenWrapper}
+        options={{ drawerItemStyle: { height: 0 } }}
+      />
       {user && (
-        // Authenticated screens
-        <Drawer.Screen name="Profile">
-          {(props) => (
-            <ScreenWrapper>
-              <ProfileScreen {...props} />
-            </ScreenWrapper>
-          )}
-        </Drawer.Screen>
+        <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
       )}
       {!user && (
-        // Unauthenticated screens
         <>
-          <Drawer.Screen name="Login" options={{ headerShown: false }}>
-            {(props) => (
-              <ScreenWrapper>
-                <LoginScreen {...props} />
-              </ScreenWrapper>
-            )}
-          </Drawer.Screen>
-          <Drawer.Screen name="Sign up" options={{ headerShown: false }}>
-            {(props) => (
-              <ScreenWrapper>
-                <RegistrationScreen {...props} />
-              </ScreenWrapper>
-            )}
-          </Drawer.Screen>
+          <Drawer.Screen name="Login" component={LoginScreenWrapper} options={{ headerShown: false }} />
+          <Drawer.Screen name="Sign up" component={RegistrationScreenWrapper} options={{ headerShown: false }} />
         </>
       )}
-      <Drawer.Screen
-        name="Room Schedule(test)"
-      >
-        {(props) => (
-          <ScreenWrapper>
-            <RoomSchedule
-              {...props}
-            />
-          </ScreenWrapper>
-        )}
-      </Drawer.Screen>
-
-        <Drawer.Screen name="Company Rooms (Test)">
-            {(props) => (
-                <ScreenWrapper>
-                    <CompanyRoomListScreen {...props} />
-                </ScreenWrapper>
-            )}
-        </Drawer.Screen>
-
+      <Drawer.Screen name="Room Schedule(test)" component={RoomScheduleWrapper} />
+      <Drawer.Screen name="Company Rooms (Test)" component={CompanyRoomListScreenWrapper} />
     </Drawer.Navigator>
-  );
+  ));
+
+  const HomeScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <HomeScreen {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const RoomListScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomListScreen {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const RoomDetailsScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomDetailsScreen key={props.route.params.id} id={props.route.params.id} />
+    </ScreenWrapper>
+  ));
+  
+  const ProfileScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <ProfileScreen {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const LoginScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <LoginScreen {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const RegistrationScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RegistrationScreen {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const RoomScheduleWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomSchedule {...props} />
+    </ScreenWrapper>
+  ));
+  
+  const CompanyRoomListScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <CompanyRoomListScreen {...props} />
+    </ScreenWrapper>
+  ));
 
   // add loading spinner animation
   // if (isLoading) {
@@ -195,3 +316,89 @@ export default function AppNavigation() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  drawer: {
+    width: 300, // Slightly reduced width
+    backgroundColor: "#222831",
+  },
+  drawerContainer: {
+    flex: 1,
+    paddingTop: 20, // Reduced padding
+  },
+  drawerHeader: {
+    padding: 15, // Reduced padding
+    paddingBottom: 20,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "rgba(57, 62, 70, 0.3)",
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 50, // Smaller image
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+    borderWidth: 1, // Thinner border
+    borderColor: '#00ADB5',
+  },
+  userInfo: {
+    flex: 1,
+  },
+  headerText: {
+    color: "#EEEEEE",
+    fontSize: 16, // Smaller font
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  userEmail: {
+    color: "rgba(238, 238, 238, 0.6)",
+    fontSize: 12, // Smaller font
+  },
+  drawerItems: {
+    flex: 1,
+    paddingTop: 10,
+    paddingHorizontal: 5,
+  },
+  drawerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 6,
+    marginBottom: 4,
+  },
+  activeItem: {
+    backgroundColor: 'rgba(0, 173, 181, 0.1)',
+  },
+  icon: {
+    marginRight: 12,
+    width: 22,
+  },
+  label: {
+    color: "#EEEEEE",
+    fontSize: 14, // Smaller font
+    fontWeight: '500',
+  },
+  activeLabel: {
+    color: "#00ADB5",
+    fontWeight: '600',
+  },
+  signOutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 'auto',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "rgba(57, 62, 70, 0.3)",
+  },
+  signOutLabel: {
+    color: "#FF2E63",
+    fontWeight: '600',
+    marginLeft: 12,
+    fontSize: 14,
+  },
+  sceneContainer: {
+    backgroundColor: "#222831",
+  },
+});
