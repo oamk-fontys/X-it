@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Modal, Button } from "react-n
 import { MaterialIcons } from "@expo/vector-icons";
 import QRCode from 'react-native-qrcode-svg';
 
-export default function BookingItem({ booking, token }) {
+export default function BookingItem({ booking, token, user_id }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const openModal = () => setIsModalVisible(true);
