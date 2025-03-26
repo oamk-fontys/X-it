@@ -19,7 +19,7 @@ export default function CityFilters({
             <Text
                 style={sectionTitle}
             >
-                Company
+                City
             </Text>
             {
                 getCities().map((e, i) => (

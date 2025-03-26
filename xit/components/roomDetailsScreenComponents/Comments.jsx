@@ -1,6 +1,8 @@
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from '../../context/AuthContext';
 import CommentElement from "./CommentElement";
 import WriteComment from "./WriteComment";
 
@@ -8,6 +10,9 @@ export default function Comments({ roomId }) {
     const [spoilerMode, setSpoilerMode] = useState(false);
     const [playedSection, setPlayedSection] = useState(false);
     const [comments, setComments] = useState([]);
+
+    const navigation = useNavigation();
+    const { user } = useAuth();
 
     useEffect(() => {
         let setter = [];
@@ -160,30 +165,35 @@ export default function Comments({ roomId }) {
                     </Text>
                     <TouchableOpacity
                         onPress={() => {
-                            if (!spoilerMode) {
-                                Alert.alert(
-                                    'Spoiler Alert',
-                                    'This section contains comments, posted by people who alredy played the room. If you choose to continue, you might encounter spoilers. Are you sure you want to continue?',
-                                    [
-                                        {
-                                            text: 'Cancel',
-                                            style: 'cancel'
-                                        },
-                                        {
-                                            text: 'Continue',
-                                            onPress: () => {
-                                                setSpoilerMode(true);
-                                                setPlayedSection(true);
+                            // unauthorized users are navigated to login page
+                            if (user) {
+                                if (!spoilerMode) {
+                                    Alert.alert(
+                                        'Spoiler Alert',
+                                        'This section contains comments, posted by people who alredy played the room. If you choose to continue, you might encounter spoilers. Are you sure you want to continue?',
+                                        [
+                                            {
+                                                text: 'Cancel',
+                                                style: 'cancel'
                                             },
-                                            style: 'default'
+                                            {
+                                                text: 'Continue',
+                                                onPress: () => {
+                                                    setSpoilerMode(true);
+                                                    setPlayedSection(true);
+                                                },
+                                                style: 'default'
+                                            }
+                                        ],
+                                        {
+                                            cancelable: false
                                         }
-                                    ],
-                                    {
-                                        cancelable: false
-                                    }
-                                )
+                                    )
+                                } else {
+                                    setPlayedSection(true);
+                                }
                             } else {
-                                setPlayedSection(true);
+                                navigation.navigate('Login');
                             }
                         }}
                         style={styles.headerView}
