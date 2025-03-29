@@ -9,6 +9,7 @@ import { RoomProvider } from "./context/RoomProvider";
 import AppNavigation from "./helpers/AppNavigation";
 
 import globalStyles from "./theme/globalStyles";
+import { TimeProvider } from "./context/TimeContext";
 
 export default function App() {
 
@@ -18,9 +19,11 @@ export default function App() {
     <NotificationProvider>
       <AuthProvider>
         <RoomProvider>
-          <SafeAreaView style={globalStyles.safeArea}>
-            <AppNavigation />
-          </SafeAreaView>
+          <TimeProvider>
+            <SafeAreaView style={globalStyles.safeArea}>
+              <AppNavigation />
+            </SafeAreaView>
+          </TimeProvider>
         </RoomProvider>
       </AuthProvider>
     </NotificationProvider>

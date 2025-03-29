@@ -31,7 +31,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.2",
     "react-native-tab-view": "^4.0.6",
-    "react-native-ui-datepicker": "^3.0.3"
+    "react-native-ui-datepicker": "^3.0.3",
+    "react-native-pager-view": "6.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -15,7 +15,11 @@ export const RoomProvider = ({ children }) => {
         fetch(apiUrl + '/room')
         .then(res => res.json())
         .then(json => {
-            setRooms(json)
+            if (Array.isArray(json)) {
+                setRooms(json)
+            } else {
+                throw new Error(JSON.stringify(json.message))
+            }
         })
         .catch(e => {
             showNotification(e.message)

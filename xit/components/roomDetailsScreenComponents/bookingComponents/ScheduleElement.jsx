@@ -1,90 +1,21 @@
 import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import React from "react";
+import { useTime } from "../../../context/TimeContext";
 
 export default function ScheduleElement({
-    todaySchedule,
-    hour,
-    minute,
-    getHour,
+    start_time,
+    end_time,
     selectedDate,
     book,
-    todayReservations,
-    type
+    type,
 }) {
-    const getMinute = (time) => {
-        if (!time) {
-            return;
-        }
-
-        let minute = time.split(':')[1];
-
-        return +minute;
-    }
+    const { getHour, getMinute } = useTime()
 
     let available = 'available';
-
-    todayReservations.forEach(e => {
-        const start = new Date(e.start_time);
-        const end = new Date(e.end_time);
-
-        if (
-            (
-                (
-                    start.getHours() - 1 < hour
-                    &&
-                    end.getHours() > hour
-                )
-                ||
-                (
-                    start.getHours() - 1 === hour
-                    &&
-                    start.getMinutes() <= minute
-                )
-                ||
-                (
-                    end.getHours() === hour
-                    &&
-                    end.getMinutes() >= minute
-                )
-            )
-            &&
-            (
-                e.type === 'booked'
-                ||
-                e.type === 'pending'
-            )
-        ) {
-            available = e.type;
-        } else if (
-            e.type === 'canceled'
-            &&
-            start.getHours() === hour
-            &&
-            start.getMinutes() === minute
-        ) {
-            available = 'canceled'
-        }
-    })
 
     const now = new Date();
 
     if (
-        (
-            hour === getHour(todaySchedule.start_time)
-            &&
-            minute === 0
-            &&
-            getMinute(todaySchedule.start_time) === 30
-        )
-        ||
-        (
-            hour === getHour(todaySchedule.end_time)
-            &&
-            minute === 30
-            &&
-            getMinute(todaySchedule.end_time) === 0
-        )
-        ||
         (
             available === 'canceled'
             &&
@@ -110,7 +41,17 @@ export default function ScheduleElement({
                 <Text
                     style={styles.time}
                 >
-                    {`${hour}:${minute === 0 ? '00' : '30'}`}
+                    {start_time}
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    -
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    {end_time}
                 </Text>
                 <Pressable
                     style={[styles.bookButton, {
@@ -119,7 +60,7 @@ export default function ScheduleElement({
                         borderWidth: 1
                     }]}
                     onPress={() => {
-                        book(hour, minute)
+                        book(start_time, end_time)
                     }}
                 >
                     <Text
@@ -141,7 +82,17 @@ export default function ScheduleElement({
                 <Text
                     style={styles.time}
                 >
-                    {`${hour}:${minute === 0 ? '00' : '30'}`}
+                    {start_time}
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    -
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    {end_time}
                 </Text>
                 <View
                     style={[styles.bookButton, {
@@ -165,9 +116,9 @@ export default function ScheduleElement({
     }
 
     if (
-        ((now.getHours() > hour)
+        ((now.getHours() > getHour(start_time))
         ||
-        (now.getHours() === hour && now.getMinutes() >= minute))
+        (now.getHours() === getHour(start_time) && now.getMinutes() >= getMinute(start_time)))
         &&
         (new Date(selectedDate).getDate() === now.getDate())
     ) {
@@ -178,7 +129,17 @@ export default function ScheduleElement({
                 <Text
                     style={styles.time}
                 >
-                    {`${hour}:${minute === 0 ? '00' : '30'}`}
+                    {start_time}
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    -
+                </Text>
+                <Text
+                    style={styles.time}
+                >
+                    {end_time}
                 </Text>
             </View>
         )
@@ -191,12 +152,22 @@ export default function ScheduleElement({
             <Text
                 style={styles.time}
             >
-                {`${hour}:${minute === 0 ? '00' : '30'}`}
+                {start_time}
+            </Text>
+            <Text
+                style={styles.time}
+            >
+                -
+            </Text>
+            <Text
+                style={styles.time}
+            >
+                {end_time}
             </Text>
             <Pressable
                 style={styles.bookButton}
                 onPress={() => {
-                    book(hour, minute)
+                    book(start_time, end_time)
                 }}
             >
                 <Text
@@ -222,13 +193,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        height: 60
     },
     time: {
         marginEnd: 10,
         fontSize: 16,
         color: '#EEEEEE',
-
+        flex: 1,
+        textAlign: 'center'
     },
     bookButton: {
         backgroundColor: '#00ADB5',
@@ -236,7 +209,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        width: '60%'
+        flex: 3
     },
     bookButtonText: {
         color: '#EEEEEE',
