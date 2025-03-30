@@ -5,7 +5,6 @@ import { Dropdown } from "react-native-element-dropdown"
 import { useState } from "react"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native"
-import { time_slots } from "../roomDetailsScreenComponents/bookingComponents/testData"
 
 export default function RoomSchedule() {
     const navigation = useNavigation();
@@ -36,35 +35,35 @@ export default function RoomSchedule() {
     const weekdayChange = (value) => {
         setWeekday(value);
 
-        const slot = time_slots.find(e => (
+        const slot = [].find(e => (
             e.weekday === value.toString()
         ))
 
-        if (slot.start_time === 'Closed') {
+        if (slot?.start_time === 'Closed') {
             setUnavailable(true)
             return
         }
 
         setUnavailable(false)
         setFrom(times.find(e => (
-            e.label === slot.start_time
-        )).value);
+            e?.label === slot?.start_time
+        ))?.value);
         setTo(times.find(e => (
-            e.label === slot.end_time
-        )).value);
+            e?.label === slot?.end_time
+        ))?.value);
     }
 
     const submit = () => {
-        const modified = time_slots.map(e => {
+        const modified = [].map(e => {
             if (e.weekday === weekday.toString()) {
                 return {
                     weekday: e.weekday,
                     start_time: times.find(e => (
                         from === e.value
-                    )).label,
+                    ))?.label,
                     end_time: times.find(e => (
                         to === e.value
-                    )).label
+                    ))?.label
                 }
             }
 
@@ -204,7 +203,7 @@ export default function RoomSchedule() {
                 <Text
                     style={globalStyles.text}
                 >
-                    {`Make unavailable for ${weekdays.find(e => e.value === weekday).label}s`}
+                    {`Make unavailable for ${weekdays.find(e => e.value === weekday)?.label}s`}
                 </Text>
             </View>
             <View
@@ -219,9 +218,9 @@ export default function RoomSchedule() {
                     {
                         unavailable
                         ?
-                        `Your room will be unavailable for ${weekdays.find(e => e.value === weekday).label}s`
+                        `Your room will be unavailable for ${weekdays.find(e => e.value === weekday)?.label}s`
                         :
-                        `Your room will work from ${times.find(e => e.value === from).label} to ${times.find(e => e.value === to).label} on ${weekdays.find(e => e.value === weekday).label}s`
+                        `Your room will work from ${times.find(e => e.value === from)?.label} to ${times.find(e => e.value === to)?.label} on ${weekdays.find(e => e.value === weekday)?.label}s`
                     }
                 </Text>
                 <TouchableOpacity
