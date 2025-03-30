@@ -47,8 +47,6 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.error('Failed to load user:', error);
         showNotification('Internal error occured!', 'error');
-      } finally {
-        setIsLoading(false);
       }
     };
 
