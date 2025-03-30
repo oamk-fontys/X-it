@@ -1,21 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useAuth } from '../context/AuthContext';
+import { useBooking } from '../context/BookingContext';
+
 import OverviewTab from "../components/profile/tabs/OverviewTab";
 import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
 import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
-  const { user, token, user_id, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { getAllBookings } = useBooking();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'bookingsTab', title: 'Bookings', icon: 'dashboard' },
     { key: 'visitedRooms', title: 'Visited Rooms', icon: 'bar-chart' },
     { key: 'stats', title: 'Stats', icon: 'dashboard' },
   ]);
+  
+  const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  
+  // FETCH DATA THERE, BECAUSE USE EFFECT CAUSES COMPONENT RERENDERS
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        setIsLoading(true);
+        setError(false);
+        const bookingsData = await getAllBookings();
+        setBookings(bookingsData);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchBookings();
+  }, []);
 
     // Mock data
     const userMock = {
@@ -24,25 +49,11 @@ export default function ProfileScreen() {
         totalBookings: 15,
         upcoming: 2,
         favorites: 5
-      },
-      bookings: [
-        { id: 1, date: "2023-11-15", room: "Meeting Room A" },
-        { id: 2, date: "2023-11-20", room: "Conference Hall" },
-        { id: 3, date: "2023-11-20", room: "Conference Hall" },
-        { id: 4, date: "2023-11-20", room: "Conference Hall" },
-        { id: 5, date: "2023-11-20", room: "Conference Hall" },
-        { id: 6, date: "2023-11-20", room: "Conference Hall" },
-        { id: 7, date: "2023-11-20", room: "Conference Hall" },
-        { id: 8, date: "2023-11-20", room: "Conference Hall" },
-        { id: 9, date: "2023-11-20", room: "Conference Hall" },
-        { id: 10, date: "2023-11-20", room: "Conference Hall" },
-        { id: 11, date: "2023-11-20", room: "Conference Hall" },
-        { id: 12, date: "2023-11-20", room: "Conference Hall" },
-      ]
+      }
     };
 
   const renderScene = SceneMap({
-    bookingsTab: () => <OverviewTab bookings={userMock.bookings} user_id={user?.id} token={token} />,
+    bookingsTab: () => <OverviewTab bookings={bookings} />,
     visitedRooms: () => <VisitedRoomsTab />,
     stats: () => <StatsTab roomStats={userMock.roomStats} />,
   });

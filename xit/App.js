@@ -5,6 +5,7 @@ import { SafeAreaView as SafeAreaViewAndroid } from "react-native-safe-area-cont
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
 import { RoomProvider } from "./context/RoomProvider";
+import { BookingProvider } from './context/BookingContext';
 
 import AppNavigation from "./helpers/AppNavigation";
 
@@ -19,11 +20,13 @@ export default function App() {
     <NotificationProvider>
       <AuthProvider>
         <RoomProvider>
-          <TimeProvider>
-            <SafeAreaView style={globalStyles.safeArea}>
-              <AppNavigation />
-            </SafeAreaView>
-          </TimeProvider>
+          <BookingProvider>
+            <TimeProvider>
+              <SafeAreaView style={globalStyles.safeArea}>
+                <AppNavigation />
+              </SafeAreaView>
+            </TimeProvider>
+          </BookingProvider>
         </RoomProvider>
       </AuthProvider>
     </NotificationProvider>

@@ -97,7 +97,7 @@ export default function AppNavigation() {
         contentContainerStyle={styles.drawerContainer}
         scrollEnabled={false}
       >
-        {/* Simplified Header Animation */}
+        {/* Profile Header */}
         <Animated.View style={[
           styles.drawerHeader, 
           { 
@@ -119,7 +119,7 @@ export default function AppNavigation() {
           </View>
         </Animated.View>
 
-        {/* Optimized Drawer Items Rendering */}
+        {/* Drawer Items */}
         <View style={styles.drawerItems}>
           {props.state.routes.map((route, index) => (
             <DrawerItem key={route.key} route={route} index={index} />
