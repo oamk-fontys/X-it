@@ -13,8 +13,9 @@ export default function BookingItem({ booking, token, user_id }) {
     <View style={styles.bookingItem}>
       <MaterialIcons name="event" size={20} color="#EEEEEE" />
       <View style={styles.bookingDetails}>
-        <Text style={styles.bookingDate}>{booking.date}</Text>
-        <Text style={styles.bookingRoom}>{booking.room}</Text>
+        {/* REPLACE CREATED AT WITH REAL BOOKING SCHEDULE */}
+        <Text style={styles.bookingDate}>{booking?.createdAt}</Text>
+        <Text style={styles.bookingRoom}>{booking?.room.name}</Text>
       </View>
       <TouchableOpacity onPress={openModal} style={styles.qrButton}>
         <MaterialIcons name="qr-code" size={20} color="#EEEEEE" />
