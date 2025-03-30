@@ -1,62 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, Text, StyleSheet, View, ActivityIndicator } from "react-native";
-
+import { SectionList, Text, StyleSheet, View, ActivityIndicator } from "react-native";
 import { useAuth } from '../../../context/AuthContext';
 import { useBooking } from '../../../context/BookingContext';
-
 import BookingItem from "../BookingItem";
 
-export default function OverviewTab() {
+export default function OverviewTab({ bookings }) {
   const { user, token } = useAuth();
-  const { getAllBookings, loading, error } = useBooking();
 
-  const [bookings, setBookings] = useState([]);
-  // do not use global error and loading directly
-  const [localLoading, setLocalLoading] = useState(true);
-  const [localError, setLocalError] = useState(false);
+  const now = new Date();
+  /* REPLACE CREATED AT WITH REAL BOOKING SCHEDULE */
+  const futureBookings = bookings?.filter(booking => new Date(booking.createdAt) >= now);
+  const pastBookings = bookings?.filter(booking => new Date(booking.createdAt) < now);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        setLocalLoading(true);
-        setLocalError(false);
-        const bookingsData = await getAllBookings();
-        setBookings(bookingsData);
-      } catch (err) {
-        setLocalError(true);
-      } finally {
-        setLocalLoading(false);
-      }
-    };
+  const sections = [
+    {
+      title: 'Upcoming bookings',
+      data: futureBookings,
+      emptyText: 'No upcoming bookings'
+    },
+    {
+      title: 'Past bookings',
+      data: pastBookings,
+      emptyText: 'No past bookings'
+    }
+  ];
 
-    fetchBookings();
-  }, []);
+  // if (isLoading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
 
-  if (localLoading || loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-  if (localError || error) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>
-          Internal error occured
-        </Text>
-      </View>
-    );
-  }
-
-  const futureBookings = bookings.filter(
-    booking => new Date(booking.date) >= new Date()
-  );
+  // if (error) {
+  //   return (
+  //     <View style={styles.errorContainer}>
+  //       <Text style={styles.errorText}>Internal error occured</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
-    <FlatList
-      data={futureBookings}
+    <SectionList
+      sections={sections}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <BookingItem 
@@ -65,19 +52,22 @@ export default function OverviewTab() {
           user_id={user?.id}
         />
       )}
-      contentContainerStyle={styles.container}
-      ListHeaderComponent={
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Future Bookings</Text>
+      renderSectionHeader={({ section }) => (
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>{section.title}</Text>
         </View>
-      }
+      )}
+      renderSectionFooter={({ section }) => (
+        section.data.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>{section.emptyText}</Text>
+          </View>
+        )
+      )}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
+      contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
-      ListEmptyComponent={
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No upcoming bookings</Text>
-        </View>
-      }
+      stickySectionHeadersEnabled={false}
     />
   );
 }
@@ -86,8 +76,10 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
-  section: {
-    marginBottom: 16,
+  sectionHeader: {
+    paddingVertical: 8,
+    marginTop: 16,
+    marginBottom: 8,
   },
   sectionTitle: {
     color: '#EEEEEE',
@@ -96,81 +88,32 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#333333',
     marginVertical: 8,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#1E1E1E',
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#1E1E1E',
   },
   errorText: {
     color: 'red',
     textAlign: 'center',
   },
   emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
+    alignItems: 'center',
   },
   emptyText: {
-    color: '#EEEEEE',
+    color: '#AAAAAA',
     fontSize: 16,
   },
 });
-
-
-
-// import React from "react";
-// import { FlatList, Text, StyleSheet, View } from "react-native";
-// import BookingItem from "../BookingItem";
-
-// export default function OverviewTab({ bookings, token, user_id }) {
-//   return (
-//     <FlatList
-//       data={bookings}
-//       keyExtractor={(item) => item.id}
-//       renderItem={({ item }) => (
-//         <BookingItem booking={item} token={token} user_id={user_id} />
-//       )}
-//       contentContainerStyle={styles.container}
-//       ListHeaderComponent={
-//         <View style={styles.section}>
-//           <Text style={styles.sectionTitle}>Future Bookings</Text>
-//         </View>
-//       }
-//       ItemSeparatorComponent={() => <View style={styles.separator} />}
-//       showsVerticalScrollIndicator={false}
-//     />
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 20,
-//     paddingBottom: 40,
-//   },
-//   section: {
-//     marginBottom: 15,
-//   },
-//   sectionTitle: {
-//     color: "#EEEEEE",
-//     fontSize: 18,
-//     fontWeight: "600",
-//     borderBottomWidth: 1,
-//     borderBottomColor: "#393E46",
-//     paddingBottom: 8,
-//   },
-//   separator: {
-//     height: 1,
-//     backgroundColor: "#393E46",
-//     marginVertical: 10,
-//   },
-// });
