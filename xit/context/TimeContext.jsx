@@ -9,10 +9,13 @@ export const TimeProvider = ({ children }) => {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL
     const { token } = useAuth();
     const { showNotification } = useNotification();
+    const [ loading, setLoading ] = useState(false)
 
     const [timeSlots, setTimeSlots] = useState([])
 
     const getTimesByRoom = async(roomId) => {
+        setLoading(true)
+
         fetch(`${apiUrl}/time-slots/${roomId}`, {
             method: "GET",
             headers: {
@@ -30,6 +33,9 @@ export const TimeProvider = ({ children }) => {
         })
         .catch(e => {
             showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
         })
     }
 
@@ -93,7 +99,8 @@ export const TimeProvider = ({ children }) => {
                 timeSlots,
                 getTimeSlotsByDay,
                 getHour,
-                getMinute
+                getMinute,
+                loading
             }}
         >
             {children}

@@ -9,6 +9,7 @@ export const RoomProvider = ({ children }) => {
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
+    const [loading, setLoading] = useState(true)
     const [rooms, setRooms] = useState([])
 
     useEffect(() => {
@@ -23,6 +24,9 @@ export const RoomProvider = ({ children }) => {
         })
         .catch(e => {
             showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
         })
     }, [])
 
@@ -50,7 +54,7 @@ export const RoomProvider = ({ children }) => {
         out.push(...rooms.filter(e => (
             !out.includes(e)
             &&
-            e.companyId.toLowerCase().includes(query)
+            e.company.id.toLowerCase().includes(query)
         )));
 
         return out;
@@ -115,7 +119,8 @@ export const RoomProvider = ({ children }) => {
                 searchForRoom,
                 getCompanyNames,
                 getCities,
-                filteredRooms
+                filteredRooms,
+                loading
             }}
         >
             {children}
