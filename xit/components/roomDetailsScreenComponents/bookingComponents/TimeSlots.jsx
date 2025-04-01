@@ -1,15 +1,20 @@
 import { StyleSheet, View, Text, Alert } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ScheduleElement from "./ScheduleElement";
 import { useTime } from "../../../context/TimeContext";
 import globalStyles from "../../../theme/globalStyles";
+import { useBooking } from "../../../context/BookingContext";
+import { useRooms } from "../../../context/RoomProvider";
 
 export default function TimeSlots({ selectedDate, type, roomId }) {
-    const { getTimeSlotsByDay, getHour } = useTime()
+    const { getTimeSlotsByDay } = useTime()
+    const { getAllBookings, createBooking } = useBooking()
+    const { getRoomById } = useRooms()    
 
-    let slots = []
+    const todaySlots = getTimeSlotsByDay(new Date(selectedDate).getDay()) || []
+    let slots = [];
 
-    const book = (start_time, end_time) => {
+    const book = (start_time, end_time, slotId) => {
         if (type === 'booking') {
             Alert.alert(
                 'Booking',
@@ -23,7 +28,12 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
                         text: 'Book',
                         style: 'default',
                         onPress: () => {
-                            // Imitating posting to db
+                            createBooking({
+                                roomId: roomId,
+                                timeslotId: slotId,
+                                companyId: getRoomById(roomId).company.id,
+                                date: new Date(selectedDate)
+                            })
                         }
                     }
                 ],
@@ -38,7 +48,7 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
 
     let setter = [];
 
-    getTimeSlotsByDay(new Date(selectedDate).getDay()).forEach((e, i) => {
+    todaySlots.forEach((e, i) => {
         setter.push(
             <ScheduleElement
                 key={i}
@@ -47,6 +57,7 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
                 selectedDate={selectedDate}
                 book={book}
                 type={type}
+                slotId={e.id}
             />
         )
     });

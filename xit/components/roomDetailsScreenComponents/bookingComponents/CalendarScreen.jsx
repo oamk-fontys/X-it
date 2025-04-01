@@ -5,13 +5,15 @@ import Calendar from "./Calendar";
 import TimeSlots from "./TimeSlots";
 import { useTime } from "../../../context/TimeContext";
 import globalStyles from '../../../theme/globalStyles'
+import { useBooking } from "../../../context/BookingContext";
 
 export default function CalendarScreen({ roomId, type }) {
+    const { getTimesByRoom } = useTime()
+    const slotsLoading = useTime().loading
+    const bookingsLoading = useBooking().loading
+
     const [calendarDisplay, setCalendarDisplay] = useState('none');
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [isLoading, setIsLoading] = useState(true);
-
-    const { getTimesByRoom } = useTime()
 
     const formatDate = (date) => {
         const months = [
@@ -27,9 +29,7 @@ export default function CalendarScreen({ roomId, type }) {
 
     useEffect(() => {
         getTimesByRoom(roomId)
-        .then(() => {
-            setIsLoading(false)
-        })
+        // also add fetching bookings
     }, [])
 
     return(
@@ -67,7 +67,7 @@ export default function CalendarScreen({ roomId, type }) {
                     </TouchableOpacity>
                 </View>
                 {
-                    isLoading
+                    slotsLoading || bookingsLoading
                     ?
                     <Text
                         style={globalStyles.text}

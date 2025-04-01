@@ -8,6 +8,7 @@ export default function ScheduleElement({
     selectedDate,
     book,
     type,
+    slotId
 }) {
     const { getHour, getMinute } = useTime()
 
@@ -60,7 +61,7 @@ export default function ScheduleElement({
                         borderWidth: 1
                     }]}
                     onPress={() => {
-                        book(start_time, end_time)
+                        book(start_time, end_time, slotId)
                     }}
                 >
                     <Text
@@ -141,6 +142,9 @@ export default function ScheduleElement({
                 >
                     {end_time}
                 </Text>
+                <View
+                    style={styles.empty}
+                ></View>
             </View>
         )
     }
@@ -167,7 +171,7 @@ export default function ScheduleElement({
             <Pressable
                 style={styles.bookButton}
                 onPress={() => {
-                    book(start_time, end_time)
+                    book(start_time, end_time, slotId)
                 }}
             >
                 <Text
@@ -215,5 +219,8 @@ const styles = StyleSheet.create({
         color: '#EEEEEE',
         fontSize: 12,
         fontWeight: 'bold'
+    },
+    empty: {
+        flex: 3
     }
 })
