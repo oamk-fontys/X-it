@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
-import Rating from "../homeScreenComponents/popularRoomsComponents/Rating";
+import Rating from "../home/popularRooms/Rating";
 import { useNavigation } from "@react-navigation/native";
 
 export default function RoomElement({

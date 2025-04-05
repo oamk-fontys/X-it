@@ -48,6 +48,27 @@ export const CompanyProvider = ({ children }) => {
         }
     };
 
+    // WAIT FOR BACKEND IMPLEMENTATION. CHANGE URL
+    // const getCompanyByOwnerId = async (userId) => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await fetch(`${apiUrl}/company/user/${userId}`);
+
+    //         if (response.status === 404) {
+    //             showNotification('Company not found', 'error');
+    //         }
+
+    //         const data = await response.json();
+    //         return data;
+    //     } catch (err) {
+    //         console.error('Fetch company by id failed: ', err);
+    //         showNotification('Internal error occurred!', 'error');
+    //         setError(true);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const createCompany = async (companyData) => {
         try {
             setLoading(true);

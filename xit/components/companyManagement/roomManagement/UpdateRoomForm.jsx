@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import globalStyles from "../../theme/globalStyles";
-import DropdownSelector from "../DropdownSelector";
+import globalStyles from "../../../theme/globalStyles";
+import DropdownSelector from "../../DropdownSelector";
 
 export default function UpdateRoomForm() {
     const navigation = useNavigation();
