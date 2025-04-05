@@ -13,7 +13,8 @@ import Footer from "../components/Footer";
 /*  PLEASE KEEP THE SCREENS ALPHABETICALLY ORGANIZED  */
 import AddRoomScreen from "../screens/AddRoomScreen";
 import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
-import CCompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
+import CompanyPendingScreen from "../screens/CompanyPendingScreen";
+import CompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
 import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -28,7 +29,7 @@ import UpdateRoomScreen from "../screens/UpdateRoomScreen";
 
 export default function AppNavigation() {
 
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading, hasPendingCompany, logout } = useAuth();
   const Drawer = createDrawerNavigator();
   const RootStack = createNativeStackNavigator();
 
@@ -152,6 +153,7 @@ export default function AppNavigation() {
       'Sign up': 'person-add',
       'Company Rooms (Test)': 'business',
       'Room Schedule(test)': 'schedule',
+      'Pending Application': 'hourglass-empty',
     };
     return icons[routeName] || 'help-outline';
   }, []);
@@ -182,7 +184,15 @@ export default function AppNavigation() {
       {user && (
         <>
           <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
-          <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
+          {!hasPendingCompany ? (
+            <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
+          ) : (
+            <Drawer.Screen
+              name="Pending Application"
+              component={CompanyPendingScreenWrapper}
+              options={{ drawerLabel: "Pending Application" }}
+            />
+          )}
         </>
       )}
       {!user && (
@@ -222,7 +232,13 @@ export default function AppNavigation() {
 
   const CompanyRegistrationScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
-      <CCompanyRegistrationScreen {...props} />
+      <CompanyRegistrationScreen {...props} />
+    </ScreenWrapper>
+  ));
+
+  const CompanyPendingScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <CompanyPendingScreen {...props} />
     </ScreenWrapper>
   ));
 
@@ -251,9 +267,9 @@ export default function AppNavigation() {
   ));
 
   // add loading spinner animation
-  // if (isLoading) {
-  //   return null;
-  // }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <NavigationContainer>

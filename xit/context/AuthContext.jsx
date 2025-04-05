@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasPendingCompany, setHasPendingCompany] = useState(false);
 
   // check if user is logged in on app refresh
   useEffect(() => {
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
               role: decodedToken.role,
               companyId: decodedToken.companyId
             });
+            await checkPendingCompanyStatus(decodedToken.id);
           }
         }
       } catch (error) {
@@ -81,6 +83,7 @@ export const AuthProvider = ({ children }) => {
           role: decodedToken.role,
           companyId: decodedToken.companyId
         });
+        await checkPendingCompanyStatus(decodedToken.id);
       }
 
       if (response.status === 400 || response.status === 401) {
@@ -178,9 +181,40 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const checkPendingCompanyStatus = async (userId) => {
+    try {
+      const response = await fetch(`${API_URL}/company`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch companies");
+      }
+
+      const companies = await response.json();
+
+      // DEBUG LOGS
+      console.log("USER ID:", userId);
+      console.log("COMPANIES:", companies);
+
+      const pending = companies.find(
+        (company) => company.ownerId === userId && company.verified === false
+      );
+
+      setHasPendingCompany(!!pending);
+    } catch (error) {
+      console.error("Failed to check pending company:", error);
+      setHasPendingCompany(false);
+    }
+  };
+
+
+
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, registerCompany }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, registerCompany, hasPendingCompany }}>
       {children}
     </AuthContext.Provider>
   );
