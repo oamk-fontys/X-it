@@ -31,7 +31,7 @@ export default function ProfileScreen() {
         setIsLoading(true);
         setError(false);
         const bookingsData = await getAllBookings();
-        setBookings(bookingsData);
+        Array.isArray(bookingsData) && setBookings(bookingsData);
       } catch (err) {
         setError(true);
       } finally {
