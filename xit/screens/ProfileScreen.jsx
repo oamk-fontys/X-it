@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image } from "react-native";
+import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import QRCode from 'react-native-qrcode-svg';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 
@@ -11,7 +12,7 @@ import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
 import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const { getAllBookings } = useBooking();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -20,11 +21,14 @@ export default function ProfileScreen() {
     { key: 'stats', title: 'Stats', icon: 'dashboard' },
   ]);
   
+  const [isTokenModalVisible, setIsTokenModalVisible] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const openTokenModal = () => setIsTokenModalVisible(true);
+  const closeTokenModal = () => setIsTokenModalVisible(false);
   
-  // FETCH DATA THERE, BECAUSE USE EFFECT CAUSES COMPONENT RERENDERS
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -42,15 +46,15 @@ export default function ProfileScreen() {
     fetchBookings();
   }, []);
 
-    // Mock data
-    const userMock = {
-      profilePic: require("../assets/profile-placeholder.jpeg"),
-      roomStats: {
-        totalBookings: 15,
-        upcoming: 2,
-        favorites: 5
-      }
-    };
+  // Mock data
+  const userMock = {
+    profilePic: require("../assets/profile-placeholder.jpeg"),
+    roomStats: {
+      totalBookings: 15,
+      upcoming: 2,
+      favorites: 5
+    }
+  };
 
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} />,
@@ -61,32 +65,64 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Profile Header */}
-      <View style={styles.profileContainer}>
-        <View style={styles.profileSection}>
+      <View style={styles.headerContainer}>
+        {/* Left Container: Profile Image and Username */}
+        <View style={styles.leftContainer}>
           <Image
             source={userMock.profilePic}
             style={styles.profileImage}
             defaultSource={require("../assets/profile-placeholder.jpeg")}
           />
-          <View style={styles.profileDetails}>
-            <Text style={styles.name}>{user?.username}</Text>
+          <Text style={styles.name}>{user?.username}</Text>
+        </View>
+
+        {/* Right Container: Contact Info and Buttons */}
+        <View style={styles.rightContainer}>
+          {/* Contact Information */}
+          <View style={styles.contactSection}>
+            <View style={styles.contactItem}>
+              <MaterialIcons name="mail" size={20} color="#00ADB5" style={styles.contactIcon} />
+              <Text style={styles.contactText}>{user?.email}</Text>
+            </View>
+            <View style={styles.contactItem}>
+              <MaterialIcons name="phone" size={20} color="#00ADB5" style={styles.contactIcon} />
+              <Text style={styles.contactText}>{user?.phoneNumber}</Text>
+            </View>
+          </View>
+
+          {/* Buttons */}
+          <View style={styles.buttonsContainer}>
             <TouchableOpacity onPress={logout} style={styles.logoutButton}>
               <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-  
-        <View style={styles.contactSection}>
-          <View style={styles.contactItem}>
-            <MaterialIcons name="mail" size={20} color="#00ADB5" style={styles.contactIcon} />
-            <Text style={styles.contactText}>{user?.email}</Text>
-          </View>
-          <View style={styles.contactItem}>
-            <MaterialIcons name="phone" size={20} color="#00ADB5" style={styles.contactIcon} />
-            <Text style={styles.contactText}>{user?.phoneNumber}</Text>
+            
+            <TouchableOpacity onPress={openTokenModal} style={styles.qrCodeButton}>
+              <MaterialIcons name="qr-code" size={20} color="#EEEEEE" />
+              <Text style={styles.qrCodeButtonText}>QR Code</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
+
+      {/* Token QR Code Modal */}
+      <Modal
+        visible={isTokenModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={closeTokenModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <QRCode
+              value={token}
+              size={200}
+              color="black"
+              backgroundColor="white"
+            />
+            <Button title="Close" onPress={closeTokenModal} />
+          </View>
+        </View>
+      </Modal>
   
       {/* Tabs */}
       <TabView
@@ -103,96 +139,139 @@ export default function ProfileScreen() {
             inactiveColor="#EEEEEE"
           />
         )}
-        initialLayout={{ width: '100%' }}
+        initialLayout={{ width: Dimensions.get('window').width }}
         style={styles.tabView}
       />
     </SafeAreaView>
   );
 }
-  
+
 const styles = StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: "#222831",
-    },
-    profileContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: 24,
-      paddingBottom: 28,
-      borderBottomWidth: 1,
-      borderBottomColor: '#393E46',
-      backgroundColor: 'rgba(34, 40, 49, 0.9)',
-    },
-    profileSection: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 16,
-    },
-    profileImage: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      borderWidth: 2,
-      borderColor: '#00ADB5',
-    },
-    profileDetails: {
-      gap: 10,
-    },
-    name: {
-      color: "#EEEEEE",
-      fontSize: 22,
-      fontWeight: "600",
-    },
-    contactSection: {
-      justifyContent: 'center',
-      gap: 12,
-      maxWidth: '50%',
-    },
-    contactItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    contactIcon: {
-      marginRight: 4,
-    },
-    contactText: {
-      color: "#EEEEEE",
-      fontSize: 14,
-      fontWeight: '500',
-    },
-    logoutButton: {
-      backgroundColor: "rgba(57, 62, 70, 0.7)",
-      paddingVertical: 4,
-      paddingHorizontal: 20,
-      borderRadius: 16,
-      alignSelf: 'flex-start',
-    },
-    buttonText: {
-      color: "#EEEEEE",
-      fontSize: 14,
-      fontWeight: '500',
-    },
-    // Tab styles
-    tabBar: {
-      backgroundColor: '#222831',
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 1,
-      borderBottomColor: '#393E46',
-    },
-    tabIndicator: {
-      backgroundColor: '#00ADB5',
-      height: 3,
-    },
-    tabLabel: {
-      fontWeight: '600',
-      textTransform: 'none',
-      fontSize: 14,
-    },
-    tabView: {
-      flex: 1,
-      marginTop: 4,
-    },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#222831",
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#393E46',
+    backgroundColor: 'rgba(34, 40, 49, 0.9)',
+  },
+  leftContainer: {
+    flex: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 20,
+  },
+  rightContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: '#00ADB5',
+    marginBottom: 10,
+  },
+  name: {
+    color: "#EEEEEE",
+    fontSize: 20,
+    fontWeight: "600",
+    textAlign: 'center',
+  },
+  contactSection: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  contactIcon: {
+    marginRight: 8,
+  },
+  contactText: {
+    color: "#EEEEEE",
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  logoutButton: {
+    backgroundColor: "rgba(238, 238, 238, 0.1)",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    flex: 1,
+    marginRight: 8,
+    alignItems: 'center',
+  },
+  qrCodeButton: {
+    backgroundColor: "rgba(0, 173, 181, 0.2)",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#00ADB5',
+    flex: 1,
+    marginLeft: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: "#EEEEEE",
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  qrCodeButtonText: {
+    color: "#EEEEEE",
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 6,
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    backgroundColor: '#222831',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+  },
+  // Tab styles
+  tabBar: {
+    backgroundColor: '#222831',
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: '#393E46',
+  },
+  tabIndicator: {
+    backgroundColor: '#00ADB5',
+    height: 3,
+  },
+  tabLabel: {
+    fontWeight: '600',
+    textTransform: 'none',
+    fontSize: 14,
+  },
+  tabView: {
+    flex: 1,
+    marginTop: 4,
+  },
 });
