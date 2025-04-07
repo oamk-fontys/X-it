@@ -4,9 +4,8 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from "@react-native-picker/picker";
 import {useNavigation} from "@react-navigation/native";
-import globalStyles from "../../theme/globalStyles";
-import DropdownSelector from "../DropdownSelector";
-
+import globalStyles from "../../../../theme/globalStyles";
+import DropdownSelector from "../../../DropdownSelector";
 
 export default function AddRoomForm() {
     const navigation = useNavigation();

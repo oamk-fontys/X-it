@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Text, ScrollView, TextInput, TouchableOpacity } from "react-native"
-import RoomElement from "../components/roomListComponents/RoomElement";
+import RoomElement from "../components/roomList/RoomElement";
 import { useRooms } from "../context/RoomProvider";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from "react";
-import Filters from "../components/roomListComponents/Filters";
+import Filters from "../components/roomList/Filters";
 
 export default function RoomListScreen() {
     const { searchForRoom, filteredRooms, loading } = useRooms();

@@ -16,7 +16,7 @@ import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
-import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import CalendarScreen from "../components/roomDetails/booking/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
 import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import AddRoomScreen from "../screens/AddRoomScreen";
@@ -147,8 +147,8 @@ export default function AppNavigation() {
       'Profile': 'person',
       'Login': 'login',
       'Sign up': 'person-add',
-      'Company Rooms (Test)': 'business',
-      'Room Schedule(test)': 'schedule',
+      'Company management': 'business',
+      'Room schedule': 'schedule',
     };
     return icons[routeName] || 'help-outline';
   }, []);
@@ -185,8 +185,8 @@ export default function AppNavigation() {
           <Drawer.Screen name="Sign up" component={RegistrationScreenWrapper} options={{ headerShown: false }} />
         </>
       )}
-      <Drawer.Screen name="Room Schedule(test)" component={RoomScheduleWrapper} />
-      <Drawer.Screen name="Company Rooms (Test)" component={CompanyRoomListScreenWrapper} />
+      <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
+      <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
     </Drawer.Navigator>
   ));
 

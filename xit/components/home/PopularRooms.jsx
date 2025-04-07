@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text } from "react-native";
-import RoomElement from "./popularRoomsComponents/RoomElement";
+import RoomElement from "./popularRooms/RoomElement";
 import { useRooms } from "../../context/RoomProvider";
 import globalStyles from "../../theme/globalStyles";
-import Message from "./popularRoomsComponents/Message";
+import Message from "./popularRooms/Message";
 
 export default function PopularRooms() {
     const { rooms, loading } = useRooms()

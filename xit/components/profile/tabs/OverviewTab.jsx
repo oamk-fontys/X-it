@@ -9,8 +9,8 @@ export default function OverviewTab({ bookings }) {
 
   const now = new Date();
   /* REPLACE CREATED AT WITH REAL BOOKING SCHEDULE */
-  const futureBookings = bookings?.filter(booking => new Date(booking.createdAt) >= now);
-  const pastBookings = bookings?.filter(booking => new Date(booking.createdAt) < now);
+  const futureBookings = bookings && bookings.filter(booking => new Date(booking.createdAt) >= now);
+  const pastBookings = bookings && bookings.filter(booking => new Date(booking.createdAt) < now);
 
   const sections = [
     {

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Text, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import globalStyles from "../../theme/globalStyles";
+import globalStyles from "../../../theme/globalStyles";
 
 export default function RoomActions({ roomId, room }) {
     const navigation = useNavigation();

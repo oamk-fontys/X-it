@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import CommentElement from './recentCommentsComponents/CommentElement';
+import CommentElement from './recentComments/CommentElement';
 import globalStyles from '../../theme/globalStyles';
 
 export default function RecentComments() {
