@@ -5,129 +5,57 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../../context/AuthContext';
 import CommentElement from "./CommentElement";
 import WriteComment from "./WriteComment";
+import { useComments } from "../../context/CommentContext";
+import globalStyles from "../../theme/globalStyles";
 
 export default function Comments({ roomId }) {
     const [spoilerMode, setSpoilerMode] = useState(false);
     const [playedSection, setPlayedSection] = useState(false);
-    const [comments, setComments] = useState([]);
 
+    const {
+        spoiler,
+        noSpoiler,
+        getCommentsByRoom,
+        loading
+    } = useComments()
     const navigation = useNavigation();
     const { user } = useAuth();
 
+    const content = (
+        <View
+            style={styles.content}
+        >
+            <ScrollView
+                contentContainerStyle={styles.contentScrollable}
+            >
+                {(playedSection ? spoiler : noSpoiler).map((e, i) => (
+                    <CommentElement
+                        key={i}
+                        username={e.user?.username}
+                        text={e.content}
+                        date={e.updatedAt}
+                        pfp={null}
+                    />
+                ))}
+            </ScrollView>
+        </View>
+    )
+
+    const loadingView = (
+        <View
+            style={styles.content}
+        >
+            <Text
+                style={globalStyles.text}
+            >
+                Loading...
+            </Text>
+        </View>
+    )
+
     useEffect(() => {
-        let setter = [];
-
-        [
-            {
-                text: "Thanks for the detailed walkthrough. It helped me understand the concept much better.",
-                userName: "escaper_01",
-                date: "2025-02-14T14:32:28.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "Great experience! The puzzles were challenging but so much fun. Highly recommend this escape room!",
-                userName: "mysteryFan99",
-                date: "2025-02-13T11:20:45.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "A bit confusing at first, but once we got the hang of it, everything made sense. Would love to come back!",
-                userName: "timeTraveler",
-                date: "2025-02-12T18:45:00.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "The attention to detail was amazing! Felt like we were truly transported to another world.",
-                userName: "adventureSeeker",
-                date: "2025-02-11T09:15:32.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "The staff was super friendly and helpful. The hints were perfectly timed, and we had a blast!",
-                userName: "ghostHunter",
-                date: "2025-02-10T16:22:18.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "Amazing escape room! The final puzzle was a real brain-teaser, but we managed to escape with minutes to spare.",
-                userName: "codeBreaker",
-                date: "2025-02-09T14:12:10.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "The storyline was so immersive, and the set design was incredible. Felt like being in a movie!",
-                userName: "deepDiver",
-                date: "2025-02-08T12:30:55.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "Not too easy, not too hard—just right! The whole team had a fantastic time solving the puzzles.",
-                userName: "detectiveWannabe",
-                date: "2025-02-07T19:41:39.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "The theme was super creative, and I loved how the puzzles connected to the story. Highly engaging!",
-                userName: "galaxyExplorer",
-                date: "2025-02-06T08:55:25.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "We got stuck a couple of times, but the staff gave just enough hints to keep us moving. Great experience!",
-                userName: "scienceNerd",
-                date: "2025-02-05T21:14:05.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "Challenging but super rewarding once you solve everything. Would definitely recommend to escape room enthusiasts!",
-                userName: "questMaster",
-                date: "2025-02-04T17:38:12.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "The clues were clever, and the overall atmosphere was so intense! Had a blast from start to finish.",
-                userName: "stealthMode",
-                date: "2025-02-03T13:05:48.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "I’ve been to several escape rooms, and this one is by far the best. Will be bringing more friends next time!",
-                userName: "dragonTamer",
-                date: "2025-02-02T10:25:55.000Z",
-                pfp: "",
-                played: false
-            },
-            {
-                text: "Some puzzles were pretty tough, but we loved the challenge. The teamwork required made it even better.",
-                userName: "teamPlayer",
-                date: "2025-02-01T15:49:23.000Z",
-                pfp: "",
-                played: true
-            },
-            {
-                text: "The ending was such a surprise! Really well thought out. Can’t wait to try another room from this company.",
-                userName: "escapeArtist",
-                date: "2025-01-31T20:00:00.000Z",
-                pfp: "",
-                played: false
-            }
-        ].forEach(e => {
-            setter.push(e);
-        })
-
-        setComments(setter);
+        getCommentsByRoom(roomId, false)
+        getCommentsByRoom(roomId, true)
     }, [])
 
     return (
@@ -211,30 +139,16 @@ export default function Comments({ roomId }) {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <View
-                    style={styles.content}
-                >
-                    <ScrollView
-                        contentContainerStyle={styles.contentScrollable}
-                    >
-                        {comments.filter(
-                            e => playedSection === e.played
-                        ).map((e, i) => (
-                            <CommentElement
-                                key={i}
-                                username={e.userName}
-                                text={e.text}
-                                date={e.date}
-                                pfp={e.pfp}
-                            />
-                        ))}
-                    </ScrollView>
-                </View>
+                {
+                    loading
+                    ?
+                    loadingView
+                    :
+                    content
+                }
                 <WriteComment
                     roomId={roomId}
                     playedSection={playedSection}
-                    comments={comments}
-                    setComments={setComments}
                 />
             </View>
         </View>
@@ -281,7 +195,9 @@ const styles = new StyleSheet.create({
     },
     content: {
         width: '100%',
-        flex: 1
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     contentScrollable: {
         alignItems: 'center',
