@@ -8,73 +8,13 @@ export default function ScheduleElement({
     selectedDate,
     book,
     type,
-    slotId
+    slotId,
+    available
 }) {
     const { getHour, getMinute } = useTime()
-
-    let available = 'available';
-
     const now = new Date();
 
-    if (
-        (
-            available === 'canceled'
-            &&
-            type === 'booking'
-        )
-    ) {
-        return (
-            <View
-                style={styles.slot}
-            ></View>
-        )
-    }
-    
-    if (
-        type === 'cancel'
-        &&
-        available === 'canceled'
-    ) {
-        return (
-            <View
-                style={styles.slot}
-            >
-                <Text
-                    style={styles.time}
-                >
-                    {start_time}
-                </Text>
-                <Text
-                    style={styles.time}
-                >
-                    -
-                </Text>
-                <Text
-                    style={styles.time}
-                >
-                    {end_time}
-                </Text>
-                <Pressable
-                    style={[styles.bookButton, {
-                        backgroundColor: '#222831',
-                        borderColor: '#00ADB5',
-                        borderWidth: 1
-                    }]}
-                    onPress={() => {
-                        book(start_time, end_time, slotId)
-                    }}
-                >
-                    <Text
-                        style={styles.bookButtonText}
-                    >
-                        Canceled
-                    </Text>
-                </Pressable>
-            </View>
-        )
-    }
-
-    if (available === 'booked' || available === 'pending') {
+    if (!available) {
 
         return (
             <View
@@ -96,22 +36,8 @@ export default function ScheduleElement({
                     {end_time}
                 </Text>
                 <View
-                    style={[styles.bookButton, {
-                        backgroundColor: '#222831'
-                    }]}
-                >
-                    <Text
-                        style={styles.bookButtonText}
-                    >
-                        {
-                            type === 'cancel'
-                            ?
-                            available
-                            :
-                            'Booked'
-                        }
-                    </Text>
-                </View>
+                    style={styles.empty}
+                ></View>
             </View>
         )
     }

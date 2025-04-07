@@ -7,14 +7,14 @@ import { useBooking } from "../../../context/BookingContext";
 import { useRooms } from "../../../context/RoomProvider";
 
 export default function TimeSlots({ selectedDate, type, roomId }) {
-    const { getTimeSlotsByDay } = useTime()
-    const { getAllBookings, createBooking } = useBooking()
-    const { getRoomById } = useRooms()    
+    const { getTimeSlotsByDay, getTimesByRoom } = useTime()
+    const { createBooking } = useBooking()
+    const { getRoomById } = useRooms()
 
     const todaySlots = getTimeSlotsByDay(new Date(selectedDate).getDay()) || []
     let slots = [];
 
-    const book = (start_time, end_time, slotId) => {
+    const book = async (start_time, end_time, slotId) => {
         if (type === 'booking') {
             Alert.alert(
                 'Booking',
@@ -31,8 +31,10 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
                             createBooking({
                                 roomId: roomId,
                                 timeslotId: slotId,
-                                companyId: getRoomById(roomId).company.id,
                                 date: new Date(selectedDate)
+                            })
+                            .then(() => {
+                                getTimesByRoom(roomId, new Date(selectedDate))
                             })
                         }
                     }
@@ -58,6 +60,7 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
                 book={book}
                 type={type}
                 slotId={e.id}
+                available={e.isAvailable}
             />
         )
     });

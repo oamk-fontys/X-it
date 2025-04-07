@@ -13,10 +13,22 @@ export const TimeProvider = ({ children }) => {
 
     const [timeSlots, setTimeSlots] = useState([])
 
-    const getTimesByRoom = async(roomId) => {
-        setLoading(true)
+    const getTimesByRoom = async(roomId, date) => {
+        const getQueryDate = (date) => {
+            const dateObject = new Date(date);
+            return `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`
+        }
 
-        fetch(`${apiUrl}/time-slots/${roomId}`, {
+        setLoading(true)
+        const query = (
+            date
+            ?
+            `${apiUrl}/time-slots/${roomId}?date=${getQueryDate(date)}`
+            :
+            `${apiUrl}/time-slots/${roomId}`
+        )
+
+        fetch(query, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -39,12 +51,8 @@ export const TimeProvider = ({ children }) => {
         })
     }
 
-    const getTimeSlotsByDay = (day) => {
-        const weekday = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"][day];
-
-        let slots =  timeSlots.filter(e => (
-            e.day === weekday
-        )) || [];
+    const sortTimeSlots = (slotsArray) => {
+        let slots = slotsArray || [];
 
         for (let n = 0; n < slots.length; n++) {
             for (let m = 0; m < slots.length - n - 1 ; m++) {
@@ -66,7 +74,29 @@ export const TimeProvider = ({ children }) => {
             }
         }
 
-        return slots
+        return slots;
+    }
+
+    const getTimeSlotsByDay = (day) => {
+        const weekday = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"][day];
+
+        const slots =  timeSlots.filter(e => (
+            e.day === weekday
+        )) || [];
+
+        return sortTimeSlots(slots)
+    }
+
+    const getFirstSlotByDay = (day) => {
+        const start = sortTimeSlots(getTimeSlotsByDay(day))[0]?.start
+
+        return getHour(start) + getMinute(start) / 60
+    }
+
+    const getLastSlotByDay = (day) => {
+        const start =  sortTimeSlots(getTimeSlotsByDay(day)).at(-1)?.start
+
+        return getHour(start) + getMinute(start) / 60
     }
 
     const getHour = (time) => {
@@ -100,7 +130,9 @@ export const TimeProvider = ({ children }) => {
                 getTimeSlotsByDay,
                 getHour,
                 getMinute,
-                loading
+                loading,
+                getFirstSlotByDay,
+                getLastSlotByDay
             }}
         >
             {children}

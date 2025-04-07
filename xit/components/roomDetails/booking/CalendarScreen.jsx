@@ -10,7 +10,6 @@ import { useBooking } from "../../../context/BookingContext";
 export default function CalendarScreen({ roomId, type }) {
     const { getTimesByRoom } = useTime()
     const slotsLoading = useTime().loading
-    const bookingsLoading = useBooking().loading
 
     const [calendarDisplay, setCalendarDisplay] = useState('none');
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -28,9 +27,11 @@ export default function CalendarScreen({ roomId, type }) {
     }
 
     useEffect(() => {
-        getTimesByRoom(roomId)
-        // also add fetching bookings
-    }, [])
+        getTimesByRoom(
+            roomId,
+            selectedDate
+        )
+    }, [selectedDate])
 
     return(
         <View
@@ -67,7 +68,7 @@ export default function CalendarScreen({ roomId, type }) {
                     </TouchableOpacity>
                 </View>
                 {
-                    slotsLoading || bookingsLoading
+                    slotsLoading
                     ?
                     <Text
                         style={globalStyles.text}
