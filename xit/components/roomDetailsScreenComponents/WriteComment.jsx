@@ -4,29 +4,28 @@ import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../../context/AuthContext';
+import { useComments } from '../../context/CommentContext';
 
-export default function WriteComment({ roomId, playedSection, comments, setComments }) {
+export default function WriteComment({ roomId, playedSection }) {
     const [text, setText] = useState('');
 
     const navigation = useNavigation();
     const { user } = useAuth();
+    const { loading, postComment, getCommentsByRoom } = useComments()
+    
 
-    const postComment = () => {
+    const postCommentPress = async () => {
         // unauthorized users are navigated to login page
         if (user) {
-            if (text) {
-                setComments([
-                    {
-                        text: text,
-                        userName: 'unnamed',
-                        date: new Date().toISOString(),
-                        pfp: '',
-                        played: playedSection
-                    },
-                    ...comments
-                ])
-            }
-            setText('');
+            postComment(
+                text.trim(),
+                roomId,
+                playedSection
+            )
+            .then(() => {
+                getCommentsByRoom(roomId, playedSection)
+                setText('')
+            })
         } else {
             navigation.navigate('Login');
         }
@@ -53,11 +52,13 @@ export default function WriteComment({ roomId, playedSection, comments, setComme
                     onChangeText={val => {
                         setText(val);
                     }}
+                    editable={!loading}
                 />
             </View>
             <TouchableOpacity
                 style={styles.postCommentView}
-                onPress={postComment}
+                onPress={postCommentPress}
+                disabled={loading}
             >
                 <Ionicons
                     name="arrow-up-circle"

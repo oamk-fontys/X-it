@@ -35,6 +35,10 @@ export default function Comments({ roomId }) {
                         text={e.content}
                         date={e.updatedAt}
                         pfp={null}
+                        commentId={e.id}
+                        userId={e.user?.id}
+                        roomId={roomId}
+                        isSpoiler={playedSection}
                     />
                 ))}
             </ScrollView>
