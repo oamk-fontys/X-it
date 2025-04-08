@@ -1,17 +1,18 @@
 import React from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import RoomElement from "./RoomElement";
-import globalStyles from "../../theme/globalStyles";
 
 export default function RoomListCard({ rooms, onRoomPress, emptyMessage }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Room List</Text>
+                <Text style={styles.count}>{rooms.length} {rooms.length === 1 ? 'room' : 'rooms'}</Text>
             </View>
+            
             <View style={styles.body}>
                 {rooms.length > 0 ? (
-                    <ScrollView>
+                    <ScrollView contentContainerStyle={styles.scrollContent}>
                         {rooms.map(room => (
                             <RoomElement 
                                 key={room.id}
@@ -21,37 +22,58 @@ export default function RoomListCard({ rooms, onRoomPress, emptyMessage }) {
                         ))}
                     </ScrollView>
                 ) : (
-                    <Text style={styles.emptyMessage}>{emptyMessage}</Text>
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyMessage}>{emptyMessage}</Text>
+                    </View>
                 )}
             </View>
         </View>
     );
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
-        borderRadius: 8,
+        backgroundColor: 'rgba(34, 40, 49, 0.9)',
+        borderRadius: 12,
         flex: 1,
-        ...globalStyles.shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 3,
     },
     header: {
         padding: 16,
         borderBottomWidth: 1,
-        borderBottomColor: globalStyles.borderColor
+        borderBottomColor: '#rgba(34, 40, 49, 0.9)',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     title: {
         fontSize: 18,
-        fontWeight: 'bold',
-        color: globalStyles.primaryColor
+        fontWeight: '600',
+        color: '#fff',
+    },
+    count: {
+        fontSize: 14,
+        color: '#fff',
     },
     body: {
         flex: 1,
-        padding: 8
+    },
+    scrollContent: {
+        paddingVertical: 8,
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
     emptyMessage: {
         textAlign: 'center',
-        padding: 20,
-        color: globalStyles.secondaryTextColor
+        color: '#rgba(34, 40, 49, 0.9)',
+        fontSize: 16,
     }
-};
+});
