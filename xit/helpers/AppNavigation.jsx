@@ -22,6 +22,7 @@ import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import AddRoomScreen from "../screens/AddRoomScreen";
 import RoomManagementScreen from "../screens/RoomManagementScreen";
 import UpdateRoomScreen from "../screens/UpdateRoomScreen";
+import MapScreen from "../screens/MapScreen";
 
 export default function AppNavigation() {
 
@@ -149,6 +150,7 @@ export default function AppNavigation() {
       'Sign up': 'person-add',
       'Company management': 'business',
       'Room schedule': 'schedule',
+      'Map': 'map',
     };
     return icons[routeName] || 'help-outline';
   }, []);
@@ -187,6 +189,7 @@ export default function AppNavigation() {
       )}
       <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
       <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+      <Drawer.Screen name="Map" component={MapScreenWrapper}/>
     </Drawer.Navigator>
   ));
 
@@ -236,6 +239,12 @@ export default function AppNavigation() {
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
     </ScreenWrapper>
+  ));
+
+  const MapScreenWrapper = React.memo((props) => (
+      <ScreenWrapper>
+        <MapScreen {...props} />
+      </ScreenWrapper>
   ));
 
   // add loading spinner animation
