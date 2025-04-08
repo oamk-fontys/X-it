@@ -1,14 +1,23 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useCallback } from "react"
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import globalStyles from "../../theme/globalStyles"
 import { Dropdown } from "react-native-element-dropdown"
 import { useState } from "react"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native"
-import { time_slots } from "../roomDetailsScreenComponents/bookingComponents/testData"
+import { useTime } from "../../context/TimeContext"
 
-export default function RoomSchedule() {
+export default function RoomSchedule({
+    roomId
+}) {
     const navigation = useNavigation();
+
+    const {
+        getFirstSlotByDay,
+        getLastSlotByDay,
+        loading,
+        getTimesByRoom
+    } = useTime()
 
     const weekdays = [
         { label: 'Monday', value: 1 },
@@ -20,15 +29,14 @@ export default function RoomSchedule() {
         { label: 'Sunday', value: 0 },
     ];
 
-    const times = Array.from({ length: 48 }, (_, i) => {
-        const hours = Math.floor(i / 2);
-        const minutes = i % 2 === 0 ? '00' : '30';
-        const time = `${hours}:${minutes}`;
-        return { label: time, value: (hours + ((i % 2) / 2)) };
+    const times = Array.from({ length: 96 }, (_, i) => {
+        const hours = Math.floor(i / 4);
+        const minutes = i % 4 * 15;
+        const time = `${hours}:${minutes === 0 ? '00' : minutes}`;
+        return { label: time, value: (hours + (minutes / 60)) };
     });
 
     const [weekday, setWeekday] = useState(1);
-    //starting data must be fetched
     const [from, setFrom] = useState(0);
     const [to, setTo] = useState(0);
     const [unavailable, setUnavailable] = useState(true);
@@ -36,50 +44,31 @@ export default function RoomSchedule() {
     const weekdayChange = (value) => {
         setWeekday(value);
 
-        const slot = time_slots.find(e => (
-            e.weekday === value.toString()
-        ))
+        const start = getFirstSlotByDay(value);
+        //console.log(timeSlots);
 
-        if (slot.start_time === 'Closed') {
+        if (start) {
+            setUnavailable(false)
+            setFrom(start)
+            setTo(getLastSlotByDay(value))
+        } else {
             setUnavailable(true)
-            return
+            setFrom(0)
+            setTo(0)
         }
-
-        setUnavailable(false)
-        setFrom(times.find(e => (
-            e.label === slot.start_time
-        )).value);
-        setTo(times.find(e => (
-            e.label === slot.end_time
-        )).value);
     }
 
     const submit = () => {
-        const modified = time_slots.map(e => {
-            if (e.weekday === weekday.toString()) {
-                return {
-                    weekday: e.weekday,
-                    start_time: times.find(e => (
-                        from === e.value
-                    )).label,
-                    end_time: times.find(e => (
-                        to === e.value
-                    )).label
-                }
-            }
-
-            return e;
-        })
-
-        console.log(modified);
     }
 
     useEffect(() => {
-        console.log('fetching')
-        weekdayChange(1);
+        getTimesByRoom(roomId)
     }, [])
+    useEffect(() => {
+        weekdayChange(1)
+    }, [loading])
 
-    return (
+    const content = (
         <View
             style={[
                 globalStyles.safeArea,
@@ -144,7 +133,7 @@ export default function RoomSchedule() {
                             selectedTextStyle={globalStyles.text}
                             containerStyle={styles.containerStyle}
                             itemContainerStyle={styles.itemContainerStyle}
-                            maxHeight={200}
+                            maxHeight={300}
                             autoScroll={false}
                             iconColor="#EEEEEE"
                         />
@@ -171,7 +160,7 @@ export default function RoomSchedule() {
                             selectedTextStyle={globalStyles.text}
                             containerStyle={styles.containerStyle}
                             itemContainerStyle={styles.itemContainerStyle}
-                            maxHeight={200}
+                            maxHeight={300}
                             autoScroll={false}
                             iconColor="#EEEEEE"
                         />
@@ -204,7 +193,7 @@ export default function RoomSchedule() {
                 <Text
                     style={globalStyles.text}
                 >
-                    {`Make unavailable for ${weekdays.find(e => e.value === weekday).label}s`}
+                    {`Make unavailable for ${weekdays.find(e => e.value === weekday)?.label}s`}
                 </Text>
             </View>
             <View
@@ -219,9 +208,9 @@ export default function RoomSchedule() {
                     {
                         unavailable
                         ?
-                        `Your room will be unavailable for ${weekdays.find(e => e.value === weekday).label}s`
+                        `Your room will be unavailable for ${weekdays.find(e => e.value === weekday)?.label}s`
                         :
-                        `Your room will work from ${times.find(e => e.value === from).label} to ${times.find(e => e.value === to).label} on ${weekdays.find(e => e.value === weekday).label}s`
+                        `Your room will work from ${times.find(e => e.value === from)?.label} to ${times.find(e => e.value === to)?.label} on ${weekdays.find(e => e.value === weekday)?.label}s`
                     }
                 </Text>
                 <TouchableOpacity
@@ -243,7 +232,7 @@ export default function RoomSchedule() {
                         navigation.navigate(
                             'Calendar',
                             {
-                                roomId: null,
+                                roomId: roomId,
                                 type: 'cancel'
                             }
                         )
@@ -262,6 +251,22 @@ export default function RoomSchedule() {
                 </TouchableOpacity>
             </View>
         </View>
+    )
+
+    return (
+        <>
+            {
+                loading
+                ?
+                <Text
+                    style={globalStyles.text}
+                >
+                    Loading...
+                </Text>
+                :
+                content
+            }
+        </>
     )
 }
 

@@ -9,16 +9,24 @@ export const RoomProvider = ({ children }) => {
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
+    const [loading, setLoading] = useState(true)
     const [rooms, setRooms] = useState([])
 
     useEffect(() => {
         fetch(apiUrl + '/room')
         .then(res => res.json())
         .then(json => {
-            setRooms(json)
+            if (Array.isArray(json)) {
+                setRooms(json)
+            } else {
+                throw new Error(JSON.stringify(json.message))
+            }
         })
         .catch(e => {
             showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
         })
     }, [])
 
@@ -46,7 +54,7 @@ export const RoomProvider = ({ children }) => {
         out.push(...rooms.filter(e => (
             !out.includes(e)
             &&
-            e.companyId.toLowerCase().includes(query)
+            e.company.id.toLowerCase().includes(query)
         )));
 
         return out;
@@ -103,6 +111,26 @@ export const RoomProvider = ({ children }) => {
         return filtered
     }
 
+    const getRoomsByCompanyId = async (companyId) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${apiUrl}/room/company/${companyId}`);
+
+            // if (response.status == 404) {
+            //     showNotification('Company not found', 'error');
+            // }
+
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Fetch rooms by company id failed: ', err);
+            showNotification('Internal error occured!', 'error');
+            // setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <RoomContext.Provider
             value={{
@@ -111,7 +139,9 @@ export const RoomProvider = ({ children }) => {
                 searchForRoom,
                 getCompanyNames,
                 getCities,
-                filteredRooms
+                filteredRooms,
+                getRoomsByCompanyId,
+                loading
             }}
         >
             {children}

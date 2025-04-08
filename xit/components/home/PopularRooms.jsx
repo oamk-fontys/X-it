@@ -1,24 +1,14 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import RoomElement from "./popularRoomsComponents/RoomElement";
+import { View, Text } from "react-native";
+import RoomElement from "./popularRooms/RoomElement";
 import { useRooms } from "../../context/RoomProvider";
 import globalStyles from "../../theme/globalStyles";
+import Message from "./popularRooms/Message";
 
 export default function PopularRooms() {
-    const { rooms } = useRooms()
+    const { rooms, loading } = useRooms()
 
-    let popularRoomList = [
-        <View
-            key={0}
-            style={globalStyles.cardContainer}
-        >
-            <Text
-                style={[globalStyles.title, globalStyles.textError]}
-            >
-                Loading...
-            </Text>
-        </View>
-    ];
+    let popularRoomList = [];
 
     if (rooms.length !== 0) {
         popularRoomList = [];
@@ -37,6 +27,12 @@ export default function PopularRooms() {
                 )
             }
         }
+    } else {
+        popularRoomList = (
+            <Message
+                text='No Results'
+            />
+        )
     }
 
     return (
@@ -55,7 +51,15 @@ export default function PopularRooms() {
             <View
                 style={globalStyles.cardBody}
             >
-                {popularRoomList}
+                {
+                    loading
+                    ?
+                    <Message
+                        text='Loading...'
+                    />
+                    :
+                    popularRoomList
+                }
             </View>
         </View>
     )

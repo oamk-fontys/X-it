@@ -1,19 +1,48 @@
 import React from "react";
 import { View, StyleSheet, Text, ScrollView, TextInput, TouchableOpacity } from "react-native"
-import RoomElement from "../components/roomListComponents/RoomElement";
+import RoomElement from "../components/roomList/RoomElement";
 import { useRooms } from "../context/RoomProvider";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from "react";
-import Filters from "../components/roomListComponents/Filters";
+import Filters from "../components/roomList/Filters";
 
 export default function RoomListScreen() {
-    const { searchForRoom, filteredRooms } = useRooms();
+    const { searchForRoom, filteredRooms, loading } = useRooms();
     const [query, setQuery] = useState('');
     const [hideFilters, setHideFilters] = useState(true);
     const [filters, setFilters] = useState({});
 
     const result = filteredRooms(searchForRoom(query.trim().toLowerCase()), filters)
+
+    let content;
+    if (loading) {
+        content = (
+            <Text
+                style={styles.noResults}
+            >
+                Loading...
+            </Text>
+        )
+    } else if (result.length === 0) {
+        content = (
+            <Text
+                style={styles.noResults}
+            >
+                No Results
+            </Text>
+        )
+    } else {
+        content = result.map((e, i) => (
+            <RoomElement
+                key={i}
+                title={e.name}
+                companyName={e.company.name}
+                id={e.id}
+                city={e.company.city}                     
+            />
+        ))
+    }
 
     return (
         <View
@@ -58,25 +87,7 @@ export default function RoomListScreen() {
             <ScrollView
                 style={styles.containerScrollable}
             >
-                {
-                    result.length === 0
-                    ?
-                    <Text
-                        style={styles.noResults}
-                    >
-                        No Results
-                    </Text>
-                    :
-                    result.map((e, i) => (
-                        <RoomElement
-                            key={i}
-                            title={e.name}
-                            companyName={e.company.name}
-                            id={e.id}
-                            city={e.company.city}                     
-                        />
-                    ))
-                }
+                {content}
             </ScrollView>
         </View>
     )

@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import Rating from "../../homeScreenComponents/popularRoomsComponents/Rating";
+import Rating from "../../home/popularRooms/Rating";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function RatingFilters({

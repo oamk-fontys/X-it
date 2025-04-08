@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useState } from "react";
 import Calendar from "./Calendar";
 import TimeSlots from "./TimeSlots";
+import { useTime } from "../../../context/TimeContext";
+import globalStyles from '../../../theme/globalStyles'
+import { useBooking } from "../../../context/BookingContext";
 
 export default function CalendarScreen({ roomId, type }) {
+    const { getTimesByRoom } = useTime()
+    const slotsLoading = useTime().loading
+
     const [calendarDisplay, setCalendarDisplay] = useState('none');
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -19,6 +25,13 @@ export default function CalendarScreen({ roomId, type }) {
 
         return `${day} ${month} ${year}`
     }
+
+    useEffect(() => {
+        getTimesByRoom(
+            roomId,
+            selectedDate
+        )
+    }, [selectedDate])
 
     return(
         <View
@@ -54,11 +67,22 @@ export default function CalendarScreen({ roomId, type }) {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <TimeSlots
-                    key={selectedDate}
-                    selectedDate={selectedDate}
-                    type={type}
-                />
+                {
+                    slotsLoading
+                    ?
+                    <Text
+                        style={globalStyles.text}
+                    >
+                        Loading...
+                    </Text>
+                    :
+                    <TimeSlots
+                        key={selectedDate}
+                        selectedDate={selectedDate}
+                        type={type}
+                        roomId={roomId}
+                    />
+                }
                 <View
                     style={styles.spacer}
                 ></View>
