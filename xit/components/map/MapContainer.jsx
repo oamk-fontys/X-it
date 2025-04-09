@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     markerLabelText: {
-        fontSize: 12,
+        fontSize: 20,
         fontWeight: "bold",
         color: "#333",
     },

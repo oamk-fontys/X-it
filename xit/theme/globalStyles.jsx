@@ -246,8 +246,9 @@ const globalStyles = StyleSheet.create({
     // map styles
     mapWrapper: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingBottom: 10,
+        paddingHorizontal: 15,
+        paddingBottom: 20,
+        paddingTop: 20,
     },
 
 })
