@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     header: {
         padding: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#rgba(34, 40, 49, 0.9)',
+        borderBottomColor: 'rgba(34, 40, 49, 0.9)',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     emptyMessage: {
         textAlign: 'center',
-        color: '#rgba(34, 40, 49, 0.9)',
+        color: '#6C757D',
         fontSize: 16,
     }
 });
