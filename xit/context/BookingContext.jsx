@@ -99,6 +99,31 @@ export const BookingProvider = ({ children }) => {
         }
     };
 
+    const validateBooking = async (booking_id) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${apiUrl}/booking`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({'booking_id':booking_id}),
+            });
+
+            if (response.status == 401) {
+                showNotification('Not authorized', 'error');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Booking validation failed: ', err);
+            showNotification('Internal error occured!', 'error');
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const updateBooking = async (id, bookingData) => {
         try {
             setLoading(true);
