@@ -125,10 +125,13 @@ export default function RegistrationScreen({ navigation }) {
                     onChangeText={setLastName}
                 />
 
-                {/*<PhoneCountryCode
+                <TextInput
+                    style={globalStyles.input}
+                    placeholder="Phone number"
+                    placeholderTextColor={globalStyles.placeholderTextColor}
                     value={phoneNumber}
-                    onChange={setPhoneNumber}
-                />*/}
+                    onChangeText={setPhoneNumber}
+                />
 
                 <View style={[globalStyles.verticalAlignContainer, { width: '80%' }]}>
                     <Text style={globalStyles.textMuted}>Birthday</Text>
