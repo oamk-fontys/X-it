@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+/*import React, { useRef } from 'react';
 import PhoneInput from 'react-native-phone-number-input';
 import { View } from 'react-native';
 import globalStyles from '../theme/globalStyles';
@@ -26,3 +26,5 @@ export default function PhoneCountryCode({ value, onChange }) {
         </View>
     );
 }
+    
+*/

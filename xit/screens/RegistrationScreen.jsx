@@ -3,7 +3,7 @@ import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 're
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import CustomDropdown from '../components/CustomDropdown';
-import PhoneCountryCode from '../components/PhoneCountryCodes';
+//import PhoneCountryCode from '../components/PhoneCountryCodes';
 import globalStyles from '../theme/globalStyles';
 
 import { LogBox } from 'react-native';
@@ -125,10 +125,10 @@ export default function RegistrationScreen({ navigation }) {
                     onChangeText={setLastName}
                 />
 
-                <PhoneCountryCode
+                {/*<PhoneCountryCode
                     value={phoneNumber}
                     onChange={setPhoneNumber}
-                />
+                />*/}
 
                 <View style={[globalStyles.verticalAlignContainer, { width: '80%' }]}>
                     <Text style={globalStyles.textMuted}>Birthday</Text>
