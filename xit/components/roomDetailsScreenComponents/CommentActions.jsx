@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { View, Modal, Text, StyleSheet, Pressable, TouchableOpacity, Alert, TextInput } from "react-native"
-import globalStyles from "../../theme/globalStyles"
 import { useAuth } from "../../context/AuthContext"
 import { useComments } from "../../context/CommentContext"
 
@@ -144,33 +143,21 @@ export default function CommentActions({
                         style={[
                             styles.contentContainer,
                             {
-                                flex: 1,
                                 paddingTop: 60
                             }
                         ]}
                     >
                         <View
-                            style={[
-                                styles.body,
-                                {
-                                    flex: 1
-                                }
-                            ]}
+                            style={styles.body}
                         >
-                            <View
-                                style={{
-                                    flex: 1
+                            <TextInput
+                                style={styles.editInput}
+                                value={edited}
+                                onChangeText={text => {
+                                    setEdited(text)
                                 }}
-                            >
-                                <TextInput
-                                    style={styles.editInput}
-                                    value={edited}
-                                    onChangeText={text => {
-                                        setEdited(text)
-                                    }}
-                                    multiline={true}
-                                />
-                            </View>
+                                multiline={true}
+                            />
                             <View
                                 style={styles.buttonsView}
                             >
@@ -266,6 +253,7 @@ const styles = new StyleSheet.create({
         width: '100%',
         color: '#393E46',
         borderColor: '#393E46',
+        marginBottom: 20
 
     },
     buttonsView: {
