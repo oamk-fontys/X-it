@@ -1,7 +1,11 @@
-import { StyleSheet, View, Text, Image } from "react-native";
-import React from "react";
+import { StyleSheet, View, Text, Image, Pressable, Modal } from "react-native";
+import React, { useState } from "react";
+import globalStyles from "../../../theme/globalStyles";
+import CommentActions from "./CommentActions";
 
-export default function CommentElement({ username, text, pfp, date }) {
+export default function CommentElement({ username, text, pfp, date, commentId, userId, roomId, isSpoiler }) {
+    const [modalVisible, setModalVisible] = useState(false);
+
     const formatDate = (date) => {
         const months = [
             "Jan",
@@ -35,8 +39,11 @@ export default function CommentElement({ username, text, pfp, date }) {
         <View
             style={styles.container}
         >
-            <View
+            <Pressable
                 style={styles.body}
+                onPress={() => {
+                    setModalVisible(true)
+                }}
             >
                 <View
                     style={styles.pfpView}
@@ -73,7 +80,16 @@ export default function CommentElement({ username, text, pfp, date }) {
                         </Text>
                     </View>
                 </View>
-            </View>
+            </Pressable>
+            <CommentActions
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                commentId={commentId}
+                userId={userId}
+                text={text}
+                roomId={roomId}
+                isSpoiler={isSpoiler}
+            />
         </View>
     )
 }
@@ -116,5 +132,5 @@ const styles = new StyleSheet.create({
     text: {
         color: '#EEEEEE',
         fontSize: 18
-    }
+    },
 })
