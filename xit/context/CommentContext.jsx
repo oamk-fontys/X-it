@@ -19,7 +19,7 @@ export const CommentProvider = ({ children }) => {
         fetch(`${apiUrl}/comment/${roomId}?isSpoiler=${isSpoiler}`)
         .then(res => {
             if (res => {
-                if (!res.ok || !res) {
+                if (!res.ok) {
                     throw new Error(res.statusText)
                 }
             })
