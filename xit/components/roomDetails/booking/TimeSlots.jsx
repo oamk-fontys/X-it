@@ -4,14 +4,12 @@ import ScheduleElement from "./ScheduleElement";
 import { useTime } from "../../../context/TimeContext";
 import globalStyles from "../../../theme/globalStyles";
 import { useBooking } from "../../../context/BookingContext";
-import { useRooms } from "../../../context/RoomProvider";
 
 export default function TimeSlots({ selectedDate, type, roomId }) {
-    const { getTimeSlotsByDay, getTimesByRoom } = useTime()
+    const { getTimesByRoom, timeSlots } = useTime()
     const { createBooking } = useBooking()
-    const { getRoomById } = useRooms()
 
-    const todaySlots = getTimeSlotsByDay(new Date(selectedDate).getDay()) || []
+    const todaySlots = timeSlots || []
     let slots = [];
 
     const book = async (start_time, end_time, slotId) => {
