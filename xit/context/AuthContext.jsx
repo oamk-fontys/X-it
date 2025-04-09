@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Login error:', error);
       showNotification('Internal error occured!', 'error');
-    }
+    } 
   };
 
   const register = async (

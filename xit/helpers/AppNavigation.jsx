@@ -12,7 +12,7 @@ import Footer from "../components/Footer";
 
 /*  PLEASE KEEP THE SCREENS ALPHABETICALLY ORGANIZED  */
 import AddRoomScreen from "../screens/AddRoomScreen";
-import CalendarScreen from "../components/roomDetailsScreenComponents/bookingComponents/CalendarScreen";
+import CalendarScreen from "../components/roomDetails/booking/CalendarScreen";
 import CompanyPendingScreen from "../screens/CompanyPendingScreen";
 import CompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
 import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
