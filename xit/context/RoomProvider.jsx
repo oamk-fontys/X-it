@@ -111,6 +111,26 @@ export const RoomProvider = ({ children }) => {
         return filtered
     }
 
+    const getRoomsByCompanyId = async (companyId) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${apiUrl}/room/company/${companyId}`);
+
+            // if (response.status == 404) {
+            //     showNotification('Company not found', 'error');
+            // }
+
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Fetch rooms by company id failed: ', err);
+            showNotification('Internal error occured!', 'error');
+            // setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <RoomContext.Provider
             value={{
@@ -120,6 +140,7 @@ export const RoomProvider = ({ children }) => {
                 getCompanyNames,
                 getCities,
                 filteredRooms,
+                getRoomsByCompanyId,
                 loading
             }}
         >

@@ -6,6 +6,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
 import { RoomProvider } from "./context/RoomProvider";
 import { BookingProvider } from './context/BookingContext';
+import { CompanyProvider } from './context/CompanyContext';
 
 import AppNavigation from "./helpers/AppNavigation";
 
@@ -20,17 +21,19 @@ export default function App() {
   return (
     <NotificationProvider>
       <AuthProvider>
-        <RoomProvider>
-          <BookingProvider>
-            <TimeProvider>
-              <CommentProvider>
-                <SafeAreaView style={globalStyles.safeArea}>
-                  <AppNavigation />
-                </SafeAreaView>
-              </CommentProvider>
-            </TimeProvider>
-          </BookingProvider>
-        </RoomProvider>
+        <CompanyProvider>
+          <RoomProvider>
+            <BookingProvider>
+              <TimeProvider>
+                <CommentProvider>
+                  <SafeAreaView style={globalStyles.safeArea}>
+                    <AppNavigation />
+                  </SafeAreaView>
+                </CommentProvider>
+              </TimeProvider>
+            </BookingProvider>
+          </RoomProvider>
+        </CompanyProvider>
       </AuthProvider>
     </NotificationProvider>
   );

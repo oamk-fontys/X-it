@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
-import CompanyFilters from "./filterComponents/CompanyFilters";
-import RatingFilters from "./filterComponents/RatingFilters";
-import CityFilters from "./filterComponents/CityFilters";
+import CompanyFilters from "./filter/CompanyFilters";
+import RatingFilters from "./filter/RatingFilters";
+import CityFilters from "./filter/CityFilters";
 
 export default function Filters({
     hide,

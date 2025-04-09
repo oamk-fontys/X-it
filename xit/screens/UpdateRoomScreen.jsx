@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import UpdateRoomForm from "../components/roomManagementScreenComponent/UpdateRoomForm";
+import UpdateRoomForm from "../components/companyManagement/roomManagement/UpdateRoomForm";
 import globalStyles from "../theme/globalStyles";
 
 export default function UpdateRoomScreen({ route }) {
