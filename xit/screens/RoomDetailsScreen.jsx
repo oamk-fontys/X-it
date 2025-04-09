@@ -3,7 +3,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import Rating from "../components/home/popularRooms/Rating";
-import Comments from "../components/roomDetails/Comments";
+import Comments from "../components/roomDetails/comments/Comments";
 import { useRooms } from "../context/RoomProvider";
 import { useAuth } from '../context/AuthContext';
 

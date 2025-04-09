@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useTime } from "../../context/TimeContext"
 
 export default function RoomSchedule({
-    roomId
+    roomId = '322372ea-7f35-4176-b424-546d21667020'
 }) {
     const navigation = useNavigation();
 
