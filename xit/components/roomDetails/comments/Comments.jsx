@@ -2,11 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import CommentElement from "./CommentElement";
 import WriteComment from "./WriteComment";
-import { useComments } from "../../context/CommentContext";
-import globalStyles from "../../theme/globalStyles";
+import { useComments } from "../../../context/CommentContext";
+import globalStyles from "../../../theme/globalStyles";
 
 export default function Comments({ roomId }) {
     const [spoilerMode, setSpoilerMode] = useState(false);

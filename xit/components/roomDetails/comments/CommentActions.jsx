@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { View, Modal, Text, StyleSheet, Pressable, TouchableOpacity, Alert, TextInput } from "react-native"
-import { useComments } from "../../context/CommentContext"
-import { useAuth } from "../../context/AuthContext"
+import { useComments } from "../../../context/CommentContext"
+import { useAuth } from "../../../context/AuthContext"
 
 export default function CommentActions({
     modalVisible,

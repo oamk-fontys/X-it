@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Image, Pressable, Modal } from "react-native";
 import React, { useState } from "react";
-import globalStyles from "../../theme/globalStyles";
+import globalStyles from "../../../theme/globalStyles";
 import CommentActions from "./CommentActions";
 
 export default function CommentElement({ username, text, pfp, date, commentId, userId, roomId, isSpoiler }) {

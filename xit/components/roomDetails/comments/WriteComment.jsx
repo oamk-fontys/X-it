@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from '../../context/AuthContext';
-import { useComments } from '../../context/CommentContext';
+import { useAuth } from '../../../context/AuthContext';
+import { useComments } from '../../../context/CommentContext';
 
 export default function WriteComment({ roomId, playedSection }) {
     const [text, setText] = useState('');
