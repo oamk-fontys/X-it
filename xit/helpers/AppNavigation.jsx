@@ -177,7 +177,11 @@ export default function AppNavigation() {
         options={{ drawerItemStyle: { height: 0 } }}
       />
       {user && (
-        <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+        <>
+          <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
+          <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+        </>
       )}
       {!user && (
         <>
@@ -185,8 +189,6 @@ export default function AppNavigation() {
           <Drawer.Screen name="Sign up" component={RegistrationScreenWrapper} options={{ headerShown: false }} />
         </>
       )}
-      <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
-      <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
     </Drawer.Navigator>
   ));
 
@@ -254,10 +256,42 @@ export default function AppNavigation() {
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
-                  <CalendarScreen
-                    key={props.route.params.roomId}
-                    {...props.route.params}
-                  />
+                <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
+              )}
+            </RootStack.Screen>
+            {/* add room function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <AddRoomScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* room list, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <CompanyRoomListScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* room management function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="RoomManagement" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <RoomManagementScreen {...props} />
+                </ScreenWrapper>
+              )}
+            </RootStack.Screen>
+            {/* update room info function, just for testing now, it should under authenticated screen*/}
+            <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
+              {(props) => (
+                <ScreenWrapper>
+                  <UpdateRoomScreen {...props} />
+                </ScreenWrapper>
               )}
             </RootStack.Screen>
           </RootStack.Group>
@@ -278,38 +312,6 @@ export default function AppNavigation() {
                 </ScreenWrapper>
               )}
             </RootStack.Screen>
-              {/* add room function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <AddRoomScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* room list, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <CompanyRoomListScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* room management function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Room Management" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <RoomManagementScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
-              {/* update room info function, just for testing now, it should under authenticated screen*/}
-              <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
-                  {(props) => (
-                      <ScreenWrapper>
-                          <UpdateRoomScreen {...props} />
-                      </ScreenWrapper>
-                  )}
-              </RootStack.Screen>
           </RootStack.Group>
         )}
       </RootStack.Navigator>

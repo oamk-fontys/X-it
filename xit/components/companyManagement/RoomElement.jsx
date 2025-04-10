@@ -37,7 +37,7 @@ export default function RoomElement({ room, onPress }) {
                         size={16} 
                         color="#EEEEEE" 
                     />
-                    <Text style={styles.roomLevel}>Level {room.level}</Text>
+                    <Text style={styles.roomLevel}>Level {room.difficulty}</Text>
                 </View>
             </View>
         </TouchableOpacity>
