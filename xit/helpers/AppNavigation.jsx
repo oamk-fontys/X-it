@@ -177,7 +177,11 @@ export default function AppNavigation() {
         options={{ drawerItemStyle: { height: 0 } }}
       />
       {user && (
-        <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+        <>
+          <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
+          <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+        </>
       )}
       {!user && (
         <>
@@ -185,8 +189,6 @@ export default function AppNavigation() {
           <Drawer.Screen name="Sign up" component={RegistrationScreenWrapper} options={{ headerShown: false }} />
         </>
       )}
-      <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
-      <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
     </Drawer.Navigator>
   ));
 

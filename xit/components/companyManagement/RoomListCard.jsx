@@ -18,7 +18,6 @@ export default function RoomListCard({ rooms, onRoomPress, emptyMessage }) {
                                 key={room.id}
                                 room={room}
                                 onPress={() => onRoomPress(room.id)}
-                                // onPress={onRoomPress(room.id)}
                             />
                         ))}
                     </ScrollView>
