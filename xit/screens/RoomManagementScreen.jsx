@@ -67,6 +67,75 @@ const styles = StyleSheet.create({
     },
 });
 
+// import React, { useState, useEffect } from "react";
+// import { View, StyleSheet, ActivityIndicator } from "react-native";
+// import { useRoute } from "@react-navigation/native";
+
+// import { useRooms } from '../context/RoomProvider';
+// import { useNotification } from "../context/NotificationContext";
+
+// import RoomDetails from "../components/companyManagement/roomManagement/RoomDetails";
+// import RoomActions from "../components/companyManagement/roomManagement/RoomActions";
+
+// export default function RoomManagementScreen() {
+//     const route = useRoute();
+//     const { roomId } = route.params;
+//     const { getRoomById } = useRooms();
+//     const { showNotification } = useNotification();
+    
+//     const [room, setRoom] = useState(null);
+//     const [isLoading, setIsLoading] = useState(true);
+//     const [error, setError] = useState(false);
+
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 setIsLoading(true);
+//                 setError(false);
+//                 const roomData = await getRoomById(roomId);
+//                 setRoom(roomData);
+//             } catch (err) {
+//                 setError(true);
+//                 showNotification("Error fetching room data");
+//                 console.error("Fetch error:", err);
+//             } finally {
+//                 setIsLoading(false);
+//             }
+//         };
+          
+//         fetchData();
+//     }, []);
+
+//     if (isLoading) {
+//         return (
+//             <View style={styles.loadingContainer}>
+//                 <ActivityIndicator size="large" color="#00ADB5" />
+//             </View>
+//         );
+//     }
+
+//     return (
+//         <View style={styles.container}>
+//             <RoomDetails room={room} />
+//             <RoomActions roomId={roomId} room={room} />
+//         </View>
+//     );
+// }
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         backgroundColor: '#222831',
+//         padding: 20,
+//     },
+//     loadingContainer: {
+//         flex: 1,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         backgroundColor: '#222831',
+//     },
+// });
+
 // import React from "react";
 // import { View } from "react-native";
 // import { useRoute } from "@react-navigation/native";
