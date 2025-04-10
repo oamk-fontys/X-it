@@ -25,23 +25,35 @@ export default function Comments({ roomId }) {
         <View
             style={styles.content}
         >
-            <ScrollView
-                contentContainerStyle={styles.contentScrollable}
-            >
-                {(playedSection ? spoiler : noSpoiler).map((e, i) => (
-                    <CommentElement
-                        key={i}
-                        username={e.user?.username}
-                        text={e.content}
-                        date={e.updatedAt}
-                        pfp={null}
-                        commentId={e.id}
-                        userId={e.user?.id}
-                        roomId={roomId}
-                        isSpoiler={playedSection}
-                    />
-                ))}
-            </ScrollView>
+            {
+                (playedSection && spoiler.length === 0)
+                ||
+                (!playedSection && noSpoiler.length === 0)
+                ?
+                <Text
+                    style={globalStyles.text}
+                >
+                    No comments
+                </Text>
+                :
+                <ScrollView
+                    contentContainerStyle={styles.contentScrollable}
+                >
+                    {(playedSection ? spoiler : noSpoiler).map((e, i) => (
+                        <CommentElement
+                            key={i}
+                            username={e.user?.username}
+                            text={e.content}
+                            date={e.updatedAt}
+                            pfp={null}
+                            commentId={e.id}
+                            userId={e.user?.id}
+                            roomId={roomId}
+                            isSpoiler={playedSection}
+                        />
+                    ))}
+                </ScrollView>
+            }
         </View>
     )
 
