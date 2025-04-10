@@ -1,9 +1,10 @@
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import CommentElement from './recentComments/CommentElement';
 import globalStyles from '../../theme/globalStyles';
 import { useComments } from '../../context/CommentContext'
+import Message from "./popularRooms/Message";
 
 export default function RecentComments() {
     const { loading, recent } = useComments()
@@ -31,17 +32,17 @@ export default function RecentComments() {
 
     if (loading) {
         commentsList = [
-            <Text
-                style={globalStyles.text}
+            <Message
                 key={0}
-            >Loading...</Text>
+                text='Loading...'
+            />
         ]
     } else if (setter.length === 0) {
         commentsList = [
-            <Text
+            <Message
                 key={0}
-                style={globalStyles.text}
-            >No Comments</Text>
+                text='No comments'
+            />
         ]
     } else {
         commentsList = [...setter]
