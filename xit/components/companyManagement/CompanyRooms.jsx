@@ -15,7 +15,7 @@ export default function CompanyRooms() {
     const navigation = useNavigation();
     const { user } = useAuth();
     const { showNotification } = useNotification();
-    const { getAllCompanies } = useCompany();
+    const { getCompanyById } = useCompany();
     const { getRoomsByCompanyId } = useRooms();
     
     const [company, setCompany] = useState(null);
@@ -29,12 +29,11 @@ export default function CompanyRooms() {
                 setIsLoading(true);
                 setError(false);
 
-                const companies = await getAllCompanies();
-                const userCompany = companies[0];
-
-                if (userCompany) {
+                if (user.companyId) {
+                    const userCompany = await getCompanyById(user.companyId);
                     setCompany(userCompany);
-                    const roomsData = await getRoomsByCompanyId("12a69198-40c2-40f4-81ba-d9add30435ae");
+
+                    const roomsData = await getRoomsByCompanyId(user.companyId);
                     setRooms(roomsData);
                 } else {
                     setCompany(null);
@@ -54,7 +53,7 @@ export default function CompanyRooms() {
     }, []);
 
     const handleAddRoom = () => navigation.navigate("Add Room");
-    const handleRoomPress = (roomId) => navigation.navigate("Room Management", { roomId });
+    const handleRoomPress = (roomId) => navigation.navigate("RoomManagement", { roomId });
 
     if (isLoading) {
         return (
@@ -67,9 +66,14 @@ export default function CompanyRooms() {
     return (
         <View style={styles.container}>
             <CompanyHeader 
-                name={company?.name} 
-                address={company?.address} 
-                phone={company?.phone} 
+                name={company?.name}
+                address={company?.address}
+                city={company?.city}
+                postalCode={company?.postalCode}
+                phone={company?.phone}
+                vat={company?.vat}
+                description={company?.description}
+                verified={company?.verified}
             />            
             <AddRoomButton onPress={handleAddRoom} />            
             <RoomListCard 
