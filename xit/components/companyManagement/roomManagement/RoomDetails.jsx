@@ -5,54 +5,85 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const placeholderImage = require("../../../assets/profile-placeholder.jpeg");
 
 export default function RoomDetails({ room }) {
+    if (!room) return null;
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{room?.name}</Text>
+            <Text style={styles.title}>{room.name}</Text>
             
             <View style={styles.imageContainer}>
                 <Image
-                    source={placeholderImage}
+                    source={room.image ? { uri: room.image } : placeholderImage}
                     style={styles.image}
                     resizeMode="cover"
                 />
             </View>
 
-            <View style={styles.infoCard}>
-                <View style={styles.cardHeader}>
-                    <MaterialCommunityIcons 
-                        name="information-outline" 
-                        size={24} 
-                        color="#00ADB5" 
-                    />
-                    <Text style={styles.cardTitle}>Room Information</Text>
-                </View>
-                
-                <View style={styles.cardBody}>
-                    <InfoRow 
-                        icon="door" 
-                        label="Name" 
-                        value={room?.name} 
-                    />
-                    <InfoRow 
-                        icon="map-marker" 
-                        label="Address" 
-                        value={room?.address || "Not specified"} 
-                    />
-                    <InfoRow 
-                        icon="floor-plan" 
-                        label="Level" 
-                        value={room?.difficulty || "Not specified"} 
-                    />
-                    <InfoRow 
-                        icon="text-box-outline" 
-                        label="Description" 
-                        value={room?.description || "No description"} 
-                    />
-                </View>
-            </View>
+            {/* Basic Information Card */}
+            <InfoCard 
+                icon="information-outline"
+                title="Room Information"
+                items={[
+                    { icon: "door", label: "Name", value: room.name },
+                    { icon: "map-marker", label: "Address", value: room.address || "Not specified" },
+                    { icon: "floor-plan", label: "Level", value: room.difficulty || "Not specified" },
+                    { icon: "text-box-outline", label: "Description", value: room.description || "No description" }
+                ]}
+            />
+
+            {/* Timing Information Card */}
+            <InfoCard 
+                icon="clock-outline"
+                title="Timing Information"
+                items={[
+                    { icon: "timer-outline", label: "Duration", value: room.duration ? `${room.duration} mins` : "Not specified" },
+                    { icon: "broom", label: "Clean-up Time", value: room.cleanUpTime ? `${room.cleanUpTime} mins` : "Not specified" }
+                ]}
+            />
+
+            {/* Location Information Card */}
+            <InfoCard 
+                icon="earth"
+                title="Location Details"
+                items={[
+                    { icon: "city", label: "City", value: room.city || "Not specified" },
+                    { icon: "post", label: "Postal Code", value: room.postalCode || "Not specified" },
+                    { icon: "flag", label: "Country", value: room.country || "Not specified" }
+                ]}
+            />
+
+            {/* Contact Information Card */}
+            <InfoCard 
+                icon="phone"
+                title="Contact Information"
+                items={[
+                    { icon: "phone-outline", label: "Phone Number", value: room.phoneNumber || "Not specified" }
+                ]}
+                lastCard
+            />
         </View>
     );
 }
+
+const InfoCard = ({ icon, title, items, lastCard = false }) => (
+    <View style={[styles.infoCard, lastCard && { marginBottom: 0 }]}>
+        <View style={styles.cardHeader}>
+            <MaterialCommunityIcons name={icon} size={24} color="#00ADB5" />
+            <Text style={styles.cardTitle}>{title}</Text>
+        </View>
+        
+        <View style={styles.cardBody}>
+            {items.map((item, index) => (
+                <InfoRow 
+                    key={`${title}-${index}`}
+                    icon={item.icon}
+                    label={item.label}
+                    value={item.value}
+                />
+            ))}
+        </View>
+    </View>
+);
 
 const InfoRow = ({ icon, label, value }) => (
     <View style={styles.infoRow}>
@@ -71,7 +102,7 @@ const InfoRow = ({ icon, label, value }) => (
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        paddingBottom: 10,
     },
     title: {
         fontSize: 24,
