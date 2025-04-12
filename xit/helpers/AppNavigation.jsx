@@ -181,6 +181,15 @@ export default function AppNavigation() {
           <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
           <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+          <Drawer.Screen
+            name="RoomManagement"
+            component={RoomManagementScreenWrapper}
+            options={{
+              // hide item from drawer menu
+              drawerItemStyle: { height: 0 },
+              drawerLabel: () => null,
+            }}
+          />
         </>
       )}
       {!user && (
@@ -240,6 +249,12 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
 
+  const RoomManagementScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomManagementScreen {...props} />
+    </ScreenWrapper>
+  ));
+
   // add loading spinner animation
   // if (isLoading) {
   //   return null;
@@ -247,10 +262,12 @@ export default function AppNavigation() {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="Drawer">
+      {/* <RootStack.Navigator initialRouteName="Drawer">
         <RootStack.Screen name="Drawer" options={{ headerShown: false }}>
           {() => <DrawerNavigator />}
-        </RootStack.Screen>
+        </RootStack.Screen> */}
+      <RootStack.Navigator>
+        <RootStack.Screen name="Main" component={DrawerNavigator} options={{ headerShown: false }} />
         {user ? (
           // authenticated screen
           <RootStack.Group>
@@ -262,7 +279,6 @@ export default function AppNavigation() {
                 />
               )}
             </RootStack.Screen>
-            {/* add room function, just for testing now, it should under authenticated screen*/}
             <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
               {(props) => (
                 <ScreenWrapper>
@@ -270,7 +286,6 @@ export default function AppNavigation() {
                 </ScreenWrapper>
               )}
             </RootStack.Screen>
-            {/* room list, just for testing now, it should under authenticated screen*/}
             <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
               {(props) => (
                 <ScreenWrapper>
@@ -278,15 +293,6 @@ export default function AppNavigation() {
                 </ScreenWrapper>
               )}
             </RootStack.Screen>
-            {/* room management function, just for testing now, it should under authenticated screen*/}
-            <RootStack.Screen name="RoomManagement" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <RoomManagementScreen {...props} />
-                </ScreenWrapper>
-              )}
-            </RootStack.Screen>
-            {/* update room info function, just for testing now, it should under authenticated screen*/}
             <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
               {(props) => (
                 <ScreenWrapper>
@@ -321,15 +327,15 @@ export default function AppNavigation() {
 
 const styles = StyleSheet.create({
   drawer: {
-    width: 300, // Slightly reduced width
+    width: 300,
     backgroundColor: "#222831",
   },
   drawerContainer: {
     flex: 1,
-    paddingTop: 20, // Reduced padding
+    paddingTop: 20,
   },
   drawerHeader: {
-    padding: 15, // Reduced padding
+    padding: 15,
     paddingBottom: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "rgba(57, 62, 70, 0.3)",
@@ -337,11 +343,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImage: {
-    width: 50, // Smaller image
+    width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 12,
-    borderWidth: 1, // Thinner border
+    borderWidth: 1,
     borderColor: '#00ADB5',
   },
   userInfo: {
@@ -349,13 +355,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "#EEEEEE",
-    fontSize: 16, // Smaller font
+    fontSize: 16,
     fontWeight: '600',
     marginBottom: 2,
   },
   userEmail: {
     color: "rgba(238, 238, 238, 0.6)",
-    fontSize: 12, // Smaller font
+    fontSize: 12,
   },
   drawerItems: {
     flex: 1,
@@ -379,7 +385,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#EEEEEE",
-    fontSize: 14, // Smaller font
+    fontSize: 14,
     fontWeight: '500',
   },
   activeLabel: {
