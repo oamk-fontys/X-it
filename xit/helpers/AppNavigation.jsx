@@ -174,7 +174,10 @@ export default function AppNavigation() {
       <Drawer.Screen
         name="Room Details"
         component={RoomDetailsScreenWrapper}
-        options={{ drawerItemStyle: { height: 0 } }}
+        options={{
+          drawerItemStyle: { height: 0 },
+          drawerLabel: () => null,
+        }}
       />
       {user && (
         <>
@@ -188,6 +191,23 @@ export default function AppNavigation() {
               // hide item from drawer menu
               drawerItemStyle: { height: 0 },
               drawerLabel: () => null,
+            }}
+          />
+          <Drawer.Screen
+            name="ADD_ROOM"
+            component={AddRoomScreenWrapper}
+            options={{
+              drawerItemStyle: { height: 0 },
+              drawerLabel: () => null,
+            }}
+          />
+          <Drawer.Screen
+            name="UPDATE_ROOM"
+            component={UpdateRoomScreenWrapper}
+            options={{
+              drawerItemStyle: { height: 0 },
+              drawerLabel: () => null,
+              headerShown: false
             }}
           />
         </>
@@ -255,6 +275,18 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
 
+  const AddRoomScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <AddRoomScreen {...props} />
+    </ScreenWrapper>
+  ));
+
+  const UpdateRoomScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <UpdateRoomScreen {...props} />
+    </ScreenWrapper>
+  ));
+
   // add loading spinner animation
   // if (isLoading) {
   //   return null;
@@ -262,13 +294,9 @@ export default function AppNavigation() {
 
   return (
     <NavigationContainer>
-      {/* <RootStack.Navigator initialRouteName="Drawer">
-        <RootStack.Screen name="Drawer" options={{ headerShown: false }}>
-          {() => <DrawerNavigator />}
-        </RootStack.Screen> */}
       <RootStack.Navigator>
         <RootStack.Screen name="Main" component={DrawerNavigator} options={{ headerShown: false }} />
-        {user ? (
+        {user && (
           // authenticated screen
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
@@ -277,45 +305,6 @@ export default function AppNavigation() {
                   key={props.route.params.roomId}
                   {...props.route.params}
                 />
-              )}
-            </RootStack.Screen>
-            <RootStack.Screen name="Add Room" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <AddRoomScreen {...props} />
-                </ScreenWrapper>
-              )}
-            </RootStack.Screen>
-            <RootStack.Screen name="CompanyRoomListScreen" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <CompanyRoomListScreen {...props} />
-                </ScreenWrapper>
-              )}
-            </RootStack.Screen>
-            <RootStack.Screen name="Update Room" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <UpdateRoomScreen {...props} />
-                </ScreenWrapper>
-              )}
-            </RootStack.Screen>
-          </RootStack.Group>
-        ) : (
-          // unauthenticated screen
-          <RootStack.Group>
-            <RootStack.Screen name="Login" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <LoginScreen {...props} />
-                </ScreenWrapper>
-              )}
-            </RootStack.Screen>
-            <RootStack.Screen name="Register" options={{ headerShown: false }}>
-              {(props) => (
-                <ScreenWrapper>
-                  <RegistrationScreen {...props} />
-                </ScreenWrapper>
               )}
             </RootStack.Screen>
           </RootStack.Group>

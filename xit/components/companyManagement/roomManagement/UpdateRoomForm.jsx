@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, Alert, Modal, StyleSheet, ScrollView, Dimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from '@expo/vector-icons';
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import globalStyles from "../../../theme/globalStyles";
 import DropdownSelector from "../../DropdownSelector";
 
 export default function UpdateRoomForm() {
@@ -15,8 +16,9 @@ export default function UpdateRoomForm() {
     const [phone, setPhone] = useState(room.phone);
     const [level, setLevel] = useState(room.level);
     const [description, setDescription] = useState(room.description);
-    const [image, setImage] = useState(null);
-    const [imageName, setImageName] = useState(null);
+    const [image, setImage] = useState(room.image || null);
+    const [imageName, setImageName] = useState(room.image ? "Current image" : null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,64 +43,389 @@ export default function UpdateRoomForm() {
 
     const handleCancel = () => {
         Alert.alert(
-            "Cancel Update",
-            "Are you sure you want to discard changes?",
+            "Discard Changes",
+            "Are you sure you want to discard all changes?",
             [
-                { text: "No" },
+                { text: "No", style: "cancel" },
                 { text: "Yes", onPress: () => navigation.goBack() }
             ]
         );
     };
 
     return (
-        <View style={{ paddingHorizontal: 20, flex: 1, marginTop: 20 }}>
+        <ScrollView 
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+        >
+            {/* Header */}
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Update room</Text>
+                <View style={styles.headerDivider} />
+            </View>
+
             {/* Room Name */}
-            <Text style={[globalStyles.subTitleSmall, { marginBottom: 3 }]}>Room Name</Text>
-            <TextInput style={[globalStyles.input, { width: "100%"}]} value={roomName} onChangeText={setRoomName} />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Room Name</Text>
+                <TextInput
+                    style={styles.input}
+                    value={roomName}
+                    onChangeText={setRoomName}
+                    placeholder="Enter room name"
+                    placeholderTextColor="#777"
+                />
+            </View>
 
             {/* Address */}
-            <Text style={[globalStyles.subTitleSmall, { marginBottom: 3 }]}>Address</Text>
-            <TextInput style={[globalStyles.input, { width: "100%"}]} value={address} onChangeText={setAddress} />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Address</Text>
+                <TextInput
+                    style={styles.input}
+                    value={address}
+                    onChangeText={setAddress}
+                    placeholder="Enter address"
+                    placeholderTextColor="#777"
+                />
+            </View>
 
             {/* Phone */}
-            <Text style={[globalStyles.subTitleSmall, { marginBottom: 3 }]}>Phone</Text>
-            <TextInput style={[globalStyles.input, { width: "100%"}]} keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Phone</Text>
+                <TextInput
+                    style={styles.input}
+                    keyboardType="phone-pad"
+                    value={phone}
+                    onChangeText={setPhone}
+                    placeholder="Enter phone number"
+                    placeholderTextColor="#777"
+                />
+            </View>
 
             {/* Level Dropdown */}
             <DropdownSelector
-                label="Choose Level"
+                label="Difficulty Level"
                 selectedValue={level}
                 onValueChange={setLevel}
+                containerStyle={styles.dropdownContainer}
+                textColor="#EEEEEE"
+                backgroundColor="#393E46"
+                accentColor="#00ADB5"
+                iconColor="#00ADB5"
             />
+
+            <Modal visible={modalVisible} transparent animationType="slide">
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Select Difficulty Level</Text>
+                        <Picker
+                            selectedValue={level}
+                            onValueChange={(itemValue) => setLevel(itemValue)}
+                            style={styles.picker}
+                            dropdownIconColor="#00ADB5"
+                        >
+                            <Picker.Item label="Easy" value="Easy" style={styles.pickerItem} />
+                            <Picker.Item label="Medium" value="Medium" style={styles.pickerItem} />
+                            <Picker.Item label="Hard" value="Hard" style={styles.pickerItem} />
+                        </Picker>
+
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.cancelButton]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.buttonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.confirmButton]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.buttonText}>Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             {/* Description */}
-            <Text style={[globalStyles.subTitleSmall, { marginBottom: 3 }]}>Description</Text>
-            <TextInput
-                style={[globalStyles.input, { height: 80, width: "100%" }]}
-                multiline
-                value={description}
-                onChangeText={setDescription}
-            />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Description</Text>
+                <TextInput
+                    style={[styles.input, styles.descriptionInput]}
+                    multiline
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Enter room description..."
+                    placeholderTextColor="#777"
+                />
+            </View>
 
-            {/* Upload Image */}
-            <TouchableOpacity style={[globalStyles.button, {width: "100%", marginTop: 20, marginBottom: 5}]} onPress={pickImage}>
-                <Text style={globalStyles.buttonText}>Upload Image</Text>
-            </TouchableOpacity>
-            {imageName && (
-                <Text style={{ color: "red", fontSize: 12, marginBottom: 15 }}>
-                    {`Selected file: ${imageName}`}
-                </Text>
+            {/* Upload Image Section */}
+            <View style={styles.uploadSection}>
+                <Text style={styles.sectionTitle}>Room Image</Text>
+                <View style={styles.uploadContainer}>
+                    <TouchableOpacity 
+                        style={styles.uploadButton} 
+                        onPress={pickImage}
+                        activeOpacity={0.8}
+                    >
+                        <View style={styles.uploadButtonContent}>
+                            <Ionicons name="image-outline" size={28} color="#00ADB5" />
+                            <Text style={styles.uploadButtonText}>Change Image</Text>
+                        </View>
+                    </TouchableOpacity>
+                    {imageName && (
+                        <View style={styles.fileInfoContainer}>
+                            <Ionicons name="checkmark-circle" size={16} color="#00ADB5" />
+                            <Text style={styles.fileNameText}>
+                                {imageName.length > 20 
+                                    ? `${imageName.substring(0, 15)}...${imageName.substring(imageName.length - 5)}`
+                                    : imageName}
+                            </Text>
+                        </View>
+                    )}
+                </View>
+            </View>
+
+            {/* Image Preview */}
+            {image && (
+                <View style={styles.imagePreviewContainer}>
+                    <Image 
+                        source={{ uri: image }} 
+                        style={styles.imagePreview} 
+                        resizeMode="cover"
+                    />
+                    <TouchableOpacity 
+                        style={styles.removeImageButton}
+                        onPress={() => {
+                            setImage(null);
+                            setImageName(null);
+                        }}
+                    >
+                        <Ionicons name="close-circle" size={24} color="#e74c3c" />
+                    </TouchableOpacity>
+                </View>
             )}
 
-            {/* Save & Cancel Buttons */}
-            <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-                <TouchableOpacity style={[globalStyles.button, {width: 150, marginHorizontal: 25 }, { backgroundColor: "green" }]} onPress={handleSave}>
-                    <Text style={globalStyles.buttonText}>Save</Text>
+            {/* Form Actions */}
+            <View style={styles.actionsContainer}>
+                <TouchableOpacity
+                    style={[styles.actionButton, styles.cancelActionButton]}
+                    onPress={handleCancel}
+                    activeOpacity={0.8}
+                >
+                    <Text style={styles.actionButtonText}>Discard Changes</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[globalStyles.button, {width: 150, marginHorizontal: 25 }, { backgroundColor: "red" }]} onPress={handleCancel}>
-                    <Text style={globalStyles.buttonText}>Cancel</Text>
+                <TouchableOpacity
+                    style={[styles.actionButton, styles.saveButton]}
+                    onPress={handleSave}
+                    activeOpacity={0.8}
+                >
+                    <Text style={styles.actionButtonText}>Update Room</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: "#222831",
+        paddingBottom: 40,
+    },
+    header: {
+        marginBottom: 25,
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#EEEEEE',
+        marginBottom: 8,
+    },
+    headerDivider: {
+        height: 2,
+        backgroundColor: '#00ADB5',
+        width: '30%',
+        borderRadius: 2,
+    },
+    inputContainer: {
+        marginBottom: 22,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#EEEEEE',
+        marginBottom: 10,
+        marginLeft: 5,
+    },
+    input: {
+        backgroundColor: '#393E46',
+        borderWidth: 1,
+        borderColor: '#444',
+        borderRadius: 10,
+        padding: 15,
+        fontSize: 16,
+        color: '#EEEEEE',
+    },
+    descriptionInput: {
+        height: 140,
+        textAlignVertical: 'top',
+    },
+    dropdownContainer: {
+        marginBottom: 22,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,0.8)",
+    },
+    modalContent: {
+        backgroundColor: "#393E46",
+        borderRadius: 14,
+        padding: 25,
+        marginHorizontal: 25,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 8,
+    },
+    modalTitle: {
+        color: '#EEEEEE',
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    picker: {
+        color: '#EEEEEE',
+        backgroundColor: '#393E46',
+    },
+    pickerItem: {
+        color: '#EEEEEE',
+        backgroundColor: '#393E46',
+        fontSize: 16,
+    },
+    modalButtons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 25,
+    },
+    modalButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    cancelButton: {
+        backgroundColor: "rgba(238, 238, 238, 0.1)",
+        borderWidth: 1,
+        borderColor: '#EEEEEE',
+    },
+    confirmButton: {
+        backgroundColor: "rgba(0, 173, 181, 0.3)",
+        borderWidth: 1,
+        borderColor: '#00ADB5',
+    },
+    buttonText: {
+        color: "#EEEEEE",
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    uploadSection: {
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#EEEEEE',
+        marginBottom: 12,
+        marginLeft: 5,
+    },
+    uploadContainer: {
+        marginBottom: 5,
+    },
+    uploadButton: {
+        backgroundColor: 'rgba(57, 62, 70, 0.6)',
+        padding: 16,
+        borderRadius: 10,
+        borderWidth: 1.5,
+        borderColor: '#00ADB5',
+        borderStyle: 'dashed',
+    },
+    uploadButtonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    uploadButtonText: {
+        color: '#EEEEEE',
+        fontSize: 16,
+        fontWeight: '600',
+        marginLeft: 12,
+    },
+    fileInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+        paddingLeft: 5,
+    },
+    fileNameText: {
+        color: "#00ADB5",
+        fontSize: 14,
+        marginLeft: 8,
+        fontStyle: 'italic',
+    },
+    imagePreviewContainer: {
+        alignItems: 'center',
+        marginBottom: 25,
+        position: 'relative',
+    },
+    imagePreview: {
+        width: Dimensions.get('window').width * 0.8,
+        height: 200,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: '#00ADB5',
+    },
+    removeImageButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: 'rgba(34, 40, 49, 0.7)',
+        borderRadius: 20,
+        padding: 2,
+    },
+    actionsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 30,
+    },
+    actionButton: {
+        flex: 1,
+        padding: 16,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    saveButton: {
+        backgroundColor: "rgba(0, 173, 181, 0.3)",
+        borderWidth: 1.5,
+        borderColor: '#00ADB5',
+        marginLeft: 15,
+    },
+    cancelActionButton: {
+        backgroundColor: "rgba(238, 238, 238, 0.1)",
+        borderWidth: 1.5,
+        borderColor: '#EEEEEE',
+        marginRight: 15,
+    },
+    actionButtonText: {
+        color: "#EEEEEE",
+        fontWeight: '600',
+        fontSize: 16,
+        marginHorizontal: 5,
+    },
+});

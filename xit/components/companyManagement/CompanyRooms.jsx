@@ -52,7 +52,7 @@ export default function CompanyRooms() {
         fetchData();
     }, []);
 
-    const handleAddRoom = () => navigation.navigate("Add Room");
+    const handleAddRoom = () => navigation.navigate("ADD_ROOM");
     const handleRoomPress = (roomId) => navigation.navigate("RoomManagement", { roomId });
 
     if (isLoading) {
