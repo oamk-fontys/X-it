@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator, ScrollView, Text } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { useRooms } from '../context/RoomProvider';
 import { useNotification } from "../context/NotificationContext";
@@ -9,6 +10,7 @@ import RoomDetails from "../components/companyManagement/roomManagement/RoomDeta
 import RoomActions from "../components/companyManagement/roomManagement/RoomActions";
 
 export default function RoomManagementScreen() {
+    const navigation = useNavigation();
     const route = useRoute();
     const { roomId } = route.params;
     const { getRoomByIdFromBackend, deleteRoom } = useRooms();
@@ -36,8 +38,7 @@ export default function RoomManagementScreen() {
     const handleDelete = async () => {
         try {
             await deleteRoom(roomId);
-            showNotification("Room deleted successfully");
-            navigation.goBack();
+            navigation.navigate("Company management");
         } catch (err) {
             showNotification("Failed to delete room");
             console.error("Delete error:", err);
@@ -45,8 +46,7 @@ export default function RoomManagementScreen() {
     };
 
     const handleUpdateSuccess = () => {
-        fetchRoomData(); // Refresh room data after update
-        showNotification("Room updated successfully");
+        fetchRoomData();
     };
 
     useEffect(() => {
