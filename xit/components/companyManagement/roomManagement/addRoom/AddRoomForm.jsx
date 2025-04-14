@@ -1,354 +1,504 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert, Modal, StyleSheet, ScrollView } from "react-native";
+import React, { useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from "@react-native-picker/picker";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRooms } from '../../../../context/RoomProvider';
+import { useNotification } from "../../../../context/NotificationContext";
 import DropdownSelector from "../../../DropdownSelector";
 
+const FIELD_NAMES = {
+  ROOM_NAME: 'roomName',
+  ADDRESS: 'address',
+  CITY: 'city',
+  COUNTRY: 'country',
+  POSTAL_CODE: 'postalCode',
+  PHONE: 'phone',
+  DURATION: 'duration',
+  CLEAN_UP_TIME: 'cleanUpTime',
+  DESCRIPTION: 'description'
+};
+
+const FormField = React.memo(({
+  label,
+  value,
+  onChangeText,
+  error,
+  placeholder,
+  multiline = false,
+  keyboardType = 'default',
+  isSubmitting = false,
+  style
+}) => {
+  const inputStyles = [
+    styles.input,
+    error ? styles.inputError : null,
+    multiline ? styles.descriptionInput : null,
+    style
+  ];
+
+  return (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput
+        style={inputStyles}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#777"
+        multiline={multiline}
+        keyboardType={keyboardType}
+        editable={!isSubmitting}
+      />
+      {error && <Text style={styles.errorText}>{error}</Text>}
+    </View>
+  );
+});
+
 export default function AddRoomForm() {
-    const navigation = useNavigation();
-    const [roomName, setRoomName] = useState("");
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
-    const [level, setLevel] = useState("Easy");
-    const [description, setDescription] = useState("");
-    const [image, setImage] = useState(null);
-    const [imageName, setImageName] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { companyId } = route.params;
+  const { createRoom } = useRooms();
+  const { showNotification } = useNotification();
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+  const [formData, setFormData] = useState({
+    [FIELD_NAMES.ROOM_NAME]: "",
+    [FIELD_NAMES.ADDRESS]: "",
+    [FIELD_NAMES.CITY]: "",
+    [FIELD_NAMES.COUNTRY]: "",
+    [FIELD_NAMES.POSTAL_CODE]: "",
+    [FIELD_NAMES.PHONE]: "",
+    [FIELD_NAMES.DURATION]: 0,
+    [FIELD_NAMES.CLEAN_UP_TIME]: 0,
+    [FIELD_NAMES.DESCRIPTION]: "",
+  });
+  const [level, setLevel] = useState("EASY");
+  const [image, setImage] = useState(null);
+  const [imageName, setImageName] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-        if (!result.canceled) {
-            const uri = result.assets[0].uri;
-            const fileName = uri.split('/').pop();
-            setImage(uri);
-            setImageName(fileName);
-        }
-    };
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      showNotification("Permission to access media library is required", "error");
+      return;
+    }
 
-    const handleSave = () => {
-        console.log("Room Saved:", { roomName, address, phone, level, description, image });
-        navigation.navigate("CompanyRoomListScreen");
-    };
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-    const handleCancel = () => {
-        Alert.alert(
-            "Cancel",
-            "Are you sure you want to cancel?",
-            [
-                { text: "No", style: "cancel" },
-                { text: "Yes", onPress: () => navigation.navigate("CompanyRoomListScreen") }
-            ]
-        );
-    };
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      const fileName = uri.split('/').pop();
+      setImage(uri);
+      setImageName(fileName);
+    }
+  };
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
+  const validateField = useCallback((fieldName, value) => {
+    switch (fieldName) {
+      case FIELD_NAMES.PHONE:
+        return /^[+]?[\d\s-]{8,15}$/.test(value) 
+          ? '' 
+          : 'Please enter a valid phone number';
+      case FIELD_NAMES.POSTAL_CODE:
+        return /^[\d-]{4,10}$/.test(value)
+          ? ''
+          : 'Please enter a valid postal code';
+      case FIELD_NAMES.DURATION:
+      case FIELD_NAMES.CLEAN_UP_TIME:
+        return /^\d+$/.test(value) && parseInt(value) > 0
+          ? ''
+          : 'Please enter a valid number (minimum 1)';
+      default:
+        return value.trim() ? '' : 'This field is required';
+    }
+  }, []);
 
-            {/* Header */}
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Add room</Text>
-                <View style={styles.headerDivider} />
-            </View>
+  const validateForm = useCallback(() => {
+    const newErrors = {};
+    let isValid = true;
 
-            {/* Room Name */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Room Name</Text>
-                <TextInput
-                    style={styles.input}
-                    value={roomName}
-                    onChangeText={setRoomName}
-                    placeholder="Enter room name"
-                    placeholderTextColor="#777"
-                />
-            </View>
+    Object.values(FIELD_NAMES).forEach(fieldName => {
+      const error = validateField(fieldName, formData[fieldName]);
+      if (error) {
+        newErrors[fieldName] = error;
+        isValid = false;
+      }
+    });
 
-            {/* Address */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Address</Text>
-                <TextInput
-                    style={styles.input}
-                    value={address}
-                    onChangeText={setAddress}
-                    placeholder="Enter address"
-                    placeholderTextColor="#777"
-                />
-            </View>
+    setErrors(newErrors);
+    return isValid;
+  }, [formData, validateField]);
 
-            {/* Phone */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Phone</Text>
-                <TextInput
-                    style={styles.input}
-                    keyboardType="phone-pad"
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Enter phone number"
-                    placeholderTextColor="#777"
-                />
-            </View>
+  const handleFieldChange = useCallback((fieldName, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: value
+    }));
 
-            {/* Level Dropdown */}
-            <DropdownSelector
-                label="Choose Level"
-                selectedValue={level}
-                onValueChange={setLevel}
-                containerStyle={styles.dropdownContainer}
-                textColor="#EEEEEE"
-                backgroundColor="#393E46"
-                accentColor="#00ADB5"
-            />
+    // Clear error when user starts typing
+    if (errors[fieldName]) {
+      setErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[fieldName];
+        return newErrors;
+      });
+    }
+  }, [errors]);
 
-            <Modal visible={modalVisible} transparent animationType="slide">
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
-                        <Picker
-                            selectedValue={level}
-                            onValueChange={(itemValue) => setLevel(itemValue)}
-                            style={styles.picker}
-                        >
-                            <Picker.Item label="Easy" value="Easy" style={styles.pickerItem} />
-                            <Picker.Item label="Middle" value="Middle" style={styles.pickerItem} />
-                            <Picker.Item label="Hard" value="Hard" style={styles.pickerItem} />
-                        </Picker>
+  const handleSave = useCallback(async () => {
+    if (!validateForm()) {
+      return;
+    }
 
-                        <View style={styles.modalButtons}>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.cancelButton]}
-                                onPress={() => setModalVisible(false)}
-                            >
-                                <Text style={styles.buttonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.confirmButton]}
-                                onPress={() => setModalVisible(false)}
-                            >
-                                <Text style={styles.buttonText}>Confirm</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+    setIsSubmitting(true);
+    try {
+      await createRoom(
+        formData.roomName,
+        formData.description,
+        companyId,
+        formData.duration,
+        formData.cleanUpTime,
+        level,
+        formData.address,
+        formData.city,
+        formData.postalCode,
+        formData.country,
+        formData.phone,
+        // image
+      );
+      navigation.navigate("Company management");
+    } catch (error) {
+      console.error("Room creation error:", error);
+      showNotification(error.message || "Failed to create room", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [formData, level, image, companyId, validateForm, navigation]);
 
-            {/* Description */}
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Description</Text>
-                <TextInput
-                    style={[styles.input, styles.descriptionInput]}
-                    multiline
-                    value={description}
-                    onChangeText={setDescription}
-                    placeholder="Enter room description"
-                    placeholderTextColor="#777"
-                />
-            </View>
+  const handleCancel = useCallback(() => {
+    if (Object.values(formData).some(value => value.trim())) {
+      Alert.alert(
+        "Unsaved Changes",
+        "You have unsaved changes. Are you sure you want to leave?",
+        [
+          { text: "Stay", style: "cancel" },
+          { text: "Leave", onPress: () => navigation.goBack() }
+        ]
+      );
+    } else {
+      navigation.goBack();
+    }
+  }, [formData, navigation]);
 
-            {/* Upload Image */}
-            <View style={styles.uploadContainer}>
-                <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-                    <Ionicons name="cloud-upload-outline" size={24} color="#EEEEEE" />
-                    <Text style={styles.uploadButtonText}>Upload Image</Text>
-                </TouchableOpacity>
-                {imageName && (
-                    <Text style={styles.fileNameText}>
-                        {`Selected: ${imageName}`}
-                    </Text>
-                )}
-            </View>
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoidingContainer}
+    >
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Add Room</Text>
+          <View style={styles.headerDivider} />
+        </View>
 
-            {/* Image Preview */}
-            {image && (
-                <View style={styles.imagePreviewContainer}>
-                    <Image source={{ uri: image }} style={styles.imagePreview} />
-                </View>
+        <View style={styles.formContainer}>
+          <FormField
+            label="Room Name"
+            value={formData.roomName}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.ROOM_NAME, text)}
+            error={errors.roomName}
+            placeholder="Enter room name"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Street Address"
+            value={formData.address}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.ADDRESS, text)}
+            error={errors.address}
+            placeholder="Enter street address"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="City"
+            value={formData.city}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.CITY, text)}
+            error={errors.city}
+            placeholder="Enter city"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Country"
+            value={formData.country}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.COUNTRY, text)}
+            error={errors.country}
+            placeholder="Enter country"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Postal Code"
+            value={formData.postalCode}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.POSTAL_CODE, text)}
+            error={errors.postalCode}
+            placeholder="Enter postal code"
+            keyboardType="number-pad"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Phone"
+            value={formData.phone}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.PHONE, text)}
+            error={errors.phone}
+            placeholder="Enter phone number"
+            keyboardType="phone-pad"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Duration (minutes)"
+            value={formData.duration}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.DURATION, text)}
+            error={errors.duration}
+            placeholder="Enter duration in minutes"
+            keyboardType="number-pad"
+            isSubmitting={isSubmitting}
+          />
+
+          <FormField
+            label="Clean Up Time (minutes)"
+            value={formData.cleanUpTime}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.CLEAN_UP_TIME, text)}
+            error={errors.cleanUpTime}
+            placeholder="Enter clean up time in minutes"
+            keyboardType="number-pad"
+            isSubmitting={isSubmitting}
+          />
+
+          <DropdownSelector
+            label="Choose Level"
+            selectedValue={level}
+            onValueChange={setLevel}
+            containerStyle={styles.dropdownContainer}
+            textColor="#EEEEEE"
+            backgroundColor="#393E46"
+            accentColor="#00ADB5"
+          />
+
+          <FormField
+            label="Description"
+            value={formData.description}
+            onChangeText={(text) => handleFieldChange(FIELD_NAMES.DESCRIPTION, text)}
+            error={errors.description}
+            placeholder="Enter room description"
+            multiline
+            isSubmitting={isSubmitting}
+          />
+
+          <View style={styles.uploadContainer}>
+            <TouchableOpacity 
+              style={styles.uploadButton} 
+              onPress={pickImage}
+              disabled={isSubmitting}
+            >
+              <Ionicons name="cloud-upload-outline" size={24} color="#EEEEEE" />
+              <Text style={styles.uploadButtonText}>Upload Image</Text>
+            </TouchableOpacity>
+            {imageName && (
+              <Text style={styles.fileNameText}>
+                {`Selected: ${imageName}`}
+              </Text>
             )}
+          </View>
 
-            {/* Save & Cancel Buttons */}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[styles.actionButton, styles.cancelActionButton]}
-                    onPress={handleCancel}
-                >
-                    <Text style={styles.actionButtonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.actionButton, styles.saveButton]}
-                    onPress={handleSave}
-                >
-                    <Text style={styles.actionButtonText}>Save</Text>
-                </TouchableOpacity>
+          {image && (
+            <View style={styles.imagePreviewContainer}>
+              <Image source={{ uri: image }} style={styles.imagePreview} />
             </View>
-        </ScrollView>
-    );
+          )}
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.actionButton, styles.cancelActionButton]}
+            onPress={handleCancel}
+            disabled={isSubmitting}
+          >
+            <Text style={styles.actionButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.actionButton, 
+              styles.saveButton,
+              isSubmitting && styles.disabledButton
+            ]}
+            onPress={handleSave}
+            disabled={isSubmitting}
+          >
+            <Text style={styles.actionButtonText}>
+              {isSubmitting ? "Saving..." : "Save"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        padding: 20,
-        backgroundColor: "#222831",
-    },
-    header: {
-        marginBottom: 25,
-    },
-    headerTitle: {
-        fontSize: 24,
-        fontWeight: '700',
-        color: '#EEEEEE',
-        marginBottom: 8,
-    },
-    headerDivider: {
-        height: 2,
-        backgroundColor: '#00ADB5',
-        width: '30%',
-        borderRadius: 2,
-    },
-    inputContainer: {
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#EEEEEE',
-        marginBottom: 8,
-    },
-    input: {
-        backgroundColor: '#393E46',
-        borderWidth: 1,
-        borderColor: '#444',
-        borderRadius: 8,
-        padding: 14,
-        fontSize: 16,
-        color: '#EEEEEE',
-    },
-    descriptionInput: {
-        height: 120,
-        textAlignVertical: 'top',
-    },
-    dropdownContainer: {
-        marginBottom: 20,
-    },
-    modalOverlay: {
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: "rgba(0,0,0,0.7)",
-    },
-    modalContent: {
-        backgroundColor: "#393E46",
-        borderRadius: 12,
-        padding: 20,
-        marginHorizontal: 20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    picker: {
-        color: '#EEEEEE',
-        backgroundColor: '#393E46',
-    },
-    pickerItem: {
-        color: '#EEEEEE',
-        backgroundColor: '#393E46',
-    },
-    modalButtons: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 20,
-    },
-    modalButton: {
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    cancelButton: {
-        backgroundColor: "rgba(238, 238, 238, 0.1)",
-        borderWidth: 1,
-        borderColor: '#EEEEEE',
-    },
-    confirmButton: {
-        backgroundColor: "rgba(0, 173, 181, 0.2)",
-        borderWidth: 1,
-        borderColor: '#00ADB5',
-    },
-    buttonText: {
-        color: "#EEEEEE",
-        fontWeight: '600',
-        fontSize: 16,
-    },
-    uploadContainer: {
-        marginBottom: 20,
-    },
-    uploadButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 173, 181, 0.2)',
-        padding: 14,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#00ADB5',
-    },
-    uploadButtonText: {
-        color: '#EEEEEE',
-        fontSize: 16,
-        fontWeight: '600',
-        marginLeft: 10,
-    },
-    fileNameText: {
-        color: "#00ADB5",
-        fontSize: 14,
-        marginTop: 8,
-        fontStyle: 'italic',
-    },
-    imagePreviewContainer: {
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    imagePreview: {
-        width: 200,
-        height: 150,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#00ADB5',
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 20,
-    },
-    actionButton: {
-        flex: 1,
-        padding: 16,
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    saveButton: {
-        backgroundColor: "rgba(0, 173, 181, 0.2)",
-        borderWidth: 1,
-        borderColor: '#00ADB5',
-        marginLeft: 10,
-    },
-    cancelActionButton: {
-        backgroundColor: "rgba(238, 238, 238, 0.1)",
-        borderWidth: 1,
-        borderColor: '#EEEEEE',
-        marginRight: 10,
-    },
-    actionButtonText: {
-        color: "#EEEEEE",
-        fontWeight: '600',
-        fontSize: 16,
-    },
+  keyboardAvoidingContainer: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: "#222831",
+    paddingBottom: 40,
+  },
+  formContainer: {
+    marginBottom: 20,
+  },
+  header: {
+    marginBottom: 25,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#EEEEEE',
+    marginBottom: 8,
+  },
+  headerDivider: {
+    height: 2,
+    backgroundColor: '#00ADB5',
+    width: '30%',
+    borderRadius: 2,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#EEEEEE',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#393E46',
+    borderWidth: 1,
+    borderColor: '#444',
+    borderRadius: 8,
+    padding: 14,
+    fontSize: 16,
+    color: '#EEEEEE',
+  },
+  inputError: {
+    borderColor: '#FF5555',
+    borderWidth: 1.5,
+  },
+  errorText: {
+    color: '#FF5555',
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  descriptionInput: {
+    height: 120,
+    textAlignVertical: 'top',
+  },
+  dropdownContainer: {
+    marginBottom: 20,
+  },
+  uploadContainer: {
+    marginBottom: 20,
+  },
+  uploadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 173, 181, 0.2)',
+    padding: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#00ADB5',
+  },
+  uploadButtonText: {
+    color: '#EEEEEE',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  fileNameText: {
+    color: "#00ADB5",
+    fontSize: 14,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  imagePreviewContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  imagePreview: {
+    width: 200,
+    height: 150,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#00ADB5',
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  actionButton: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveButton: {
+    backgroundColor: "rgba(0, 173, 181, 0.2)",
+    borderWidth: 1,
+    borderColor: '#00ADB5',
+    marginLeft: 10,
+  },
+  cancelActionButton: {
+    backgroundColor: "rgba(238, 238, 238, 0.1)",
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    marginRight: 10,
+  },
+  actionButtonText: {
+    color: "#EEEEEE",
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
 });

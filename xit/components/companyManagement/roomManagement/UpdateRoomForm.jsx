@@ -1,20 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert, Modal, StyleSheet, ScrollView, Dimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { useNotification } from '../../../context/NotificationContext';
+import { useRooms } from '../../../context/RoomProvider';
 import DropdownSelector from "../../DropdownSelector";
 
 export default function UpdateRoomForm() {
     const navigation = useNavigation();
     const route = useRoute();
-    const { room } = route.params;
+    const { roomId } = route.params;
+    const { getRoomById, updateRoom } = useRooms();
+    const { showNotification } = useNotification();
+    
+    const [room, setRoom] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
+    
+    useEffect(() => {
+        const fetchRoomData = async () => {
+            try {
+                setIsLoading(true);
+                setError(false);
+                const roomData = await getRoomById(roomId);
+                setRoom(roomData);
+            } catch (err) {
+                setError(true);
+                showNotification("Error fetching room data");
+                console.error("Fetch error:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchRoomData();
+    }, [roomId]);
 
     const [roomName, setRoomName] = useState(room.name);
     const [address, setAddress] = useState(room.address);
     const [phone, setPhone] = useState(room.phone);
-    const [level, setLevel] = useState(room.level);
+    const [level, setLevel] = useState(room.difficulty);
     const [description, setDescription] = useState(room.description);
     const [image, setImage] = useState(room.image || null);
     const [imageName, setImageName] = useState(room.image ? "Current image" : null);
@@ -37,8 +65,7 @@ export default function UpdateRoomForm() {
     };
 
     const handleSave = () => {
-        console.log("Updated Room:", { roomName, address, phone, level, description, image });
-        navigation.goBack();
+        navigation.navigate("CompanyRoomListScreen");
     };
 
     const handleCancel = () => {

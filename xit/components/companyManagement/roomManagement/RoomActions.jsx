@@ -27,7 +27,7 @@ export default function RoomActions({ roomId, room, onDelete, onUpdateSuccess })
 
     const handleUpdate = () => {
         navigation.navigate("UPDATE_ROOM", { 
-            room,
+            roomId: room.id,
             onUpdateSuccess 
         });
     };

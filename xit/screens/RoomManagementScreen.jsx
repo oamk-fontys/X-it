@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
+import { View, StyleSheet, ActivityIndicator, ScrollView, Text } from "react-native";
 import { useRoute } from "@react-navigation/native";
 
 import { useRooms } from '../context/RoomProvider';
@@ -11,7 +11,7 @@ import RoomActions from "../components/companyManagement/roomManagement/RoomActi
 export default function RoomManagementScreen() {
     const route = useRoute();
     const { roomId } = route.params;
-    const { getRoomById, deleteRoom } = useRooms();
+    const { getRoomByIdFromBackend, deleteRoom } = useRooms();
     const { showNotification } = useNotification();
     
     const [room, setRoom] = useState(null);
@@ -22,7 +22,7 @@ export default function RoomManagementScreen() {
         try {
             setIsLoading(true);
             setError(false);
-            const roomData = await getRoomById(roomId);
+            const roomData = await getRoomByIdFromBackend(roomId);
             setRoom(roomData);
         } catch (err) {
             setError(true);
@@ -51,7 +51,7 @@ export default function RoomManagementScreen() {
 
     useEffect(() => {
         fetchRoomData();
-    }, [roomId]); // Add roomId to dependency array to refetch when it changes
+    }, [roomId]);
 
     if (isLoading) {
         return (
