@@ -17,7 +17,7 @@ export default function RoomElement({ room, onPress }) {
                         color="#00ADB5" 
                         style={styles.icon}
                     />
-                    <Text style={styles.roomName} numberOfLines={1}>{room.name}</Text>
+                    <Text style={styles.roomName} numberOfLines={1}>{room?.name}</Text>
                 </View>
                 
                 {room.address && (
@@ -27,7 +27,7 @@ export default function RoomElement({ room, onPress }) {
                             size={16} 
                             color="#EEEEEE" 
                         />
-                        <Text style={styles.roomDetails} numberOfLines={1}>{room.address}</Text>
+                        <Text style={styles.roomDetails} numberOfLines={1}>{room?.address}</Text>
                     </View>
                 )}
                 
@@ -37,7 +37,7 @@ export default function RoomElement({ room, onPress }) {
                         size={16} 
                         color="#EEEEEE" 
                     />
-                    <Text style={styles.roomLevel}>Level {room.level}</Text>
+                    <Text style={styles.roomLevel}>Level {room?.difficulty}</Text>
                 </View>
             </View>
         </TouchableOpacity>

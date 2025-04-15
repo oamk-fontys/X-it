@@ -45,9 +45,9 @@ export default function DropdownSelector({ label, selectedValue, onValueChange }
                             onValueChange={onValueChange}
                             style={{ color: globalStyles.text.color }}
                         >
-                            <Picker.Item label="Easy" value="Easy" />
-                            <Picker.Item label="Middle" value="Middle" />
-                            <Picker.Item label="Hard" value="Hard" />
+                            <Picker.Item label="EASY" value="EASY" />
+                            <Picker.Item label="MIDDLE" value="MIDDLE" />
+                            <Picker.Item label="HARD" value="HARD" />
                         </Picker>
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
