@@ -122,6 +122,73 @@ export const TimeProvider = ({ children }) => {
         return +minute;
     }
 
+    const postTimeSlot = async (
+        day,
+        start,
+        roomId
+    ) => {
+        setLoading(true)
+
+        try {
+            const body = {
+                day: day,
+                start: start,
+                roomId: roomId
+            }
+
+            const res = await fetch(
+                `${apiUrl}/time-slots`,
+                {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }
+            )
+
+            if (!res.ok) {
+                throw new Error(`${res.status} error posting slot`)
+            }
+
+            const json = await res.json()
+
+            return json
+        } catch (e) {
+            showNotification(e.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteTimeSlot = async (id) => {
+        setLoading(true);
+
+        try {
+            const res = await fetch(
+                `${apiUrl}/time-slots/${id}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+
+            if (!res.ok) {
+                throw new Error(`${res.status} error deleting slot`)
+            }
+
+            return res.json()
+        } catch (e) {
+            showNotification(e.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <TimeContext.Provider
             value={{
@@ -132,7 +199,9 @@ export const TimeProvider = ({ children }) => {
                 getMinute,
                 loading,
                 getFirstSlotByDay,
-                getLastSlotByDay
+                getLastSlotByDay,
+                deleteTimeSlot,
+                postTimeSlot
             }}
         >
             {children}

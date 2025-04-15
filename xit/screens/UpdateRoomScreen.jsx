@@ -9,7 +9,6 @@ export default function UpdateRoomScreen({ route }) {
     return (
         <View style={globalStyles.safeArea}>
             <View style={{ paddingHorizontal: 5, flex: 1 }}>
-                <Text style={[globalStyles.title, { marginTop: 15, marginLeft: 10 }]}>Update Room</Text>
                 <UpdateRoomForm room={room} />
             </View>
         </View>

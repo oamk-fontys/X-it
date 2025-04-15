@@ -13,7 +13,7 @@ import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
-  const { getAllBookings } = useBooking();
+  const { getAllBookings, validateBooking } = useBooking();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'bookingsTab', title: 'Bookings', icon: 'dashboard' },
@@ -45,6 +45,12 @@ export default function ProfileScreen() {
   
     fetchBookings();
   }, []);
+
+  // this function should send booking id with jwt and return new token to encode it into qr
+  const createQr = async (booking_id) => {
+    const response = await validateBooking(booking_id);
+    return response;
+  }
 
   // Mock data
   const userMock = {

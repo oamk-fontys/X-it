@@ -6,17 +6,21 @@ import { useState } from "react"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native"
 import { useTime } from "../../context/TimeContext"
+import { useRooms } from "../../context/RoomProvider"
 
 export default function RoomSchedule({
-    roomId = '322372ea-7f35-4176-b424-546d21667020'
+    roomId = '0e0a8dbf-4609-40f3-a63e-6eab4092dca3'
 }) {
     const navigation = useNavigation();
-
+    const { getRoomById } = useRooms()
     const {
         getFirstSlotByDay,
         getLastSlotByDay,
         loading,
-        getTimesByRoom
+        getTimesByRoom,
+        getTimeSlotsByDay,
+        deleteTimeSlot,
+        postTimeSlot
     } = useTime()
 
     const weekdays = [
@@ -45,7 +49,6 @@ export default function RoomSchedule({
         setWeekday(value);
 
         const start = getFirstSlotByDay(value);
-        //console.log(timeSlots);
 
         if (start) {
             setUnavailable(false)
@@ -58,14 +61,58 @@ export default function RoomSchedule({
         }
     }
 
-    const submit = () => {
+    const deleteAllSlots = async (timeSlots) => {
+        const slots = [...timeSlots]
+
+        while (slots.length !== 0) {
+            await deleteTimeSlot(slots[0]?.id)
+            slots.splice(0, 1)
+        }
+    }
+
+    const submit = async () => {
+        const room = getRoomById(roomId) || {}
+        const timeSlots = getTimeSlotsByDay(weekday) || []
+
+        deleteAllSlots(timeSlots)
+        .then(async () => {
+            if (unavailable) {
+                return
+            }
+
+            let i = from
+
+            while (i <= to) {
+                const day = weekdays.find(e => (
+                    e.value === weekday
+                ))?.label?.toUpperCase()
+                
+                let time = times.find(e => (
+                    e.value === i
+                ))?.label
+                if (time.length < 5) {
+                    time = `0${time}`
+                }
+
+                await postTimeSlot(
+                    day,
+                    time,
+                    roomId
+                )
+
+                i += (room.duration + room.cleanUpTime) / 60
+            }
+        })
+        .then(() => {
+            getTimesByRoom(roomId)
+        })
     }
 
     useEffect(() => {
         getTimesByRoom(roomId)
     }, [])
     useEffect(() => {
-        weekdayChange(1)
+        weekdayChange(weekday)
     }, [loading])
 
     const content = (
@@ -258,11 +305,18 @@ export default function RoomSchedule({
             {
                 loading
                 ?
-                <Text
-                    style={globalStyles.text}
+                <View
+                    style={[
+                        globalStyles.safeArea,
+                        globalStyles.mainContainer
+                    ]}
                 >
-                    Loading...
-                </Text>
+                    <Text
+                        style={globalStyles.text}
+                    >
+                        Loading...
+                    </Text>
+                </View>
                 :
                 content
             }

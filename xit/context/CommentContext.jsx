@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import { useNotification } from "./NotificationContext";
 import { useAuth } from "./AuthContext";
 
@@ -9,9 +9,32 @@ export const CommentProvider = ({ children }) => {
     const { showNotification } = useNotification()
     const { token } = useAuth()
 
+    const [recent, setRecent] = useState([])
     const [noSpoiler, setNoSpoiler] = useState([])
     const [spoiler, setSpoiler] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const getRecentComments = async () => {
+        setLoading(true)
+
+        fetch(`${apiUrl}/comment`)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            }
+
+            return res.json()
+        })
+        .then(json => {
+            setRecent(json)
+        })
+        .catch(e => {
+            showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
+        })
+    }
 
     const getCommentsByRoom = async (roomId, isSpoiler) => {
         setLoading(true)
@@ -134,6 +157,10 @@ export const CommentProvider = ({ children }) => {
         }
     }
 
+    useEffect(() => {
+        getRecentComments()
+    }, [])
+
     return (
         <CommentContext.Provider
             value={{
@@ -143,7 +170,8 @@ export const CommentProvider = ({ children }) => {
                 getCommentsByRoom,
                 postComment,
                 editComment,
-                deleteComment
+                deleteComment,
+                recent
             }}
         >
             {children}
