@@ -6,9 +6,6 @@ import globalStyles from "../theme/globalStyles";
 export default function AddRoomScreen() {
     return (
         <SafeAreaView style={globalStyles.safeArea}>
-            <View style={{ padding: 20 }}>
-                <Text style={globalStyles.title}>Add Room</Text>
-            </View>
             <AddRoomForm />
         </SafeAreaView>
     );
