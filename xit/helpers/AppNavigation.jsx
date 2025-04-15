@@ -7,25 +7,29 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { useAuth } from '../context/AuthContext';
 
-import LoginScreen from "../screens/LoginScreen";
-import RegistrationScreen from "../screens/RegistrationScreen";
 import Header from "../components/Header";
-import secondaryHeader from "./secondaryHeaderOptions";
 import Footer from "../components/Footer";
+
+/*  PLEASE KEEP THE SCREENS ALPHABETICALLY ORGANIZED  */
+import AddRoomScreen from "../screens/AddRoomScreen";
+import CalendarScreen from "../components/roomDetails/booking/CalendarScreen";
+import CompanyPendingScreen from "../screens/CompanyPendingScreen";
+import CompanyRegistrationScreen from "../screens/CompanyRegistrationScreen";
+import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
 import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import RegistrationScreen from "../screens/RegistrationScreen";
 import RoomDetailsScreen from "../screens/RoomDetailsScreen";
 import RoomListScreen from "../screens/RoomListScreen";
-import CalendarScreen from "../components/roomDetails/booking/CalendarScreen";
 import RoomSchedule from "../components/roomSchedule/RoomSchedule";
-import CompanyRoomListScreen from "../screens/CompanyRoomListScreen";
-import AddRoomScreen from "../screens/AddRoomScreen";
 import RoomManagementScreen from "../screens/RoomManagementScreen";
+import secondaryHeader from "../helpers/secondaryHeaderOptions"
 import UpdateRoomScreen from "../screens/UpdateRoomScreen";
 
 export default function AppNavigation() {
 
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading, hasPendingCompany, logout } = useAuth();
   const Drawer = createDrawerNavigator();
   const RootStack = createNativeStackNavigator();
 
@@ -63,7 +67,7 @@ export default function AppNavigation() {
     const DrawerItem = useCallback(({ route, index }) => {
       const { options } = props.descriptors[route.key];
       const isFocused = props.state.index === index;
-      
+
       if (options.drawerItemStyle?.height === 0) return null;
 
       return (
@@ -75,10 +79,10 @@ export default function AppNavigation() {
           ]}
           onPress={() => props.navigation.navigate(route.name)}
         >
-          <Icon 
-            name={getIconForRoute(route.name)} 
-            size={22} 
-            color={isFocused ? "#00ADB5" : "#EEEEEE"} 
+          <Icon
+            name={getIconForRoute(route.name)}
+            size={22}
+            color={isFocused ? "#00ADB5" : "#EEEEEE"}
             style={styles.icon}
           />
           <Text style={[
@@ -92,21 +96,21 @@ export default function AppNavigation() {
     }, [props.state.index]);
 
     return (
-      <DrawerContentScrollView 
-        {...props} 
+      <DrawerContentScrollView
+        {...props}
         contentContainerStyle={styles.drawerContainer}
         scrollEnabled={false}
       >
         {/* Profile Header */}
         <Animated.View style={[
-          styles.drawerHeader, 
-          { 
+          styles.drawerHeader,
+          {
             opacity,
-            transform: [{ scale }] 
+            transform: [{ scale }]
           }
         ]}>
-          <Image 
-            source={require('../assets/profile-placeholder.jpeg')} 
+          <Image
+            source={require('../assets/profile-placeholder.jpeg')}
             style={styles.profileImage}
           />
           <View style={styles.userInfo}>
@@ -128,7 +132,7 @@ export default function AppNavigation() {
 
         {/* Sign Out Button */}
         {user && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.signOutButton}
             onPress={logout}
           >
@@ -147,6 +151,7 @@ export default function AppNavigation() {
       'Profile': 'person',
       'Login': 'login',
       'Sign up': 'person-add',
+      'Pending Application': 'hourglass-empty',
       'Company management': 'business',
       'Room schedule': 'schedule',
     };
@@ -154,7 +159,7 @@ export default function AppNavigation() {
   }, []);
 
   const DrawerNavigator = React.memo(() => (
-    <Drawer.Navigator 
+    <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: styles.drawer,
@@ -182,6 +187,15 @@ export default function AppNavigation() {
       {user && (
         <>
           <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          {!hasPendingCompany ? (
+            <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
+          ) : (
+            <Drawer.Screen
+              name="Pending Application"
+              component={CompanyPendingScreenWrapper}
+              options={{ drawerLabel: "Pending Application" }}
+            />
+          )}
           <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
           <Drawer.Screen
@@ -226,43 +240,55 @@ export default function AppNavigation() {
       <HomeScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomListScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomDetailsScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomDetailsScreen key={props.route.params.id} id={props.route.params.id} />
     </ScreenWrapper>
   ));
-  
+
   const ProfileScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <ProfileScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
+  const CompanyRegistrationScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <CompanyRegistrationScreen {...props} />
+    </ScreenWrapper>
+  ));
+
+  const CompanyPendingScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <CompanyPendingScreen {...props} />
+    </ScreenWrapper>
+  ));
+
   const LoginScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <LoginScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RegistrationScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RegistrationScreen {...props} />
     </ScreenWrapper>
   ));
-  
+
   const RoomScheduleWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RoomSchedule {...props} />
     </ScreenWrapper>
   ));
-  
+
   const CompanyRoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
@@ -288,9 +314,9 @@ export default function AppNavigation() {
   ));
 
   // add loading spinner animation
-  // if (isLoading) {
-  //   return null;
-  // }
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <NavigationContainer>

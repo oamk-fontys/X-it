@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import CustomDropdown from '../components/CustomDropdown';
+//import PhoneCountryCode from '../components/PhoneCountryCodes';
 import globalStyles from '../theme/globalStyles';
+
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['defaultProps']);
 
 export default function RegistrationScreen({ navigation }) {
 
@@ -18,8 +23,32 @@ export default function RegistrationScreen({ navigation }) {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
 
+    //Formatted birthday logic
+    const [birthDay, setBirthDay] = useState('');
+    const [birthMonth, setBirthMonth] = useState('');
+    const [birthYear, setBirthYear] = useState('');
+
+    const days = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }));
+    const months = Array.from({ length: 12 }, (_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }));
+    const years = Array.from({ length: 60 }, (_, i) => {
+        const year = new Date().getFullYear() - i;
+        return { label: `${year}`, value: `${year}` };
+    });
+
+    const handleDateChange = (day, month, year) => {
+        if (day && month && year) {
+            const formatted = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00Z`).toISOString();
+            setDateOfBirth(formatted);
+        }
+    };
+
+
     const handleRegister = async () => {
-        if (password !== confirmPassword) {
+
+        if (!birthDay || !birthMonth || !birthYear) {
+            showNotification('Please select a valid date of birth', 'error');
+            return;
+        } else if (password !== confirmPassword) {
             showNotification('Email and password required', 'error');
         }
 
@@ -45,7 +74,7 @@ export default function RegistrationScreen({ navigation }) {
         <SafeAreaView style={globalStyles.safeArea}>
             <View style={globalStyles.mainContainer}>
                 <View style={globalStyles.titleContainer}>
-                    <Text style={globalStyles.title}>Register</Text>
+                    <Text style={globalStyles.title}>Sign up</Text>
                 </View>
                 <TextInput
                     style={globalStyles.input}
@@ -95,20 +124,50 @@ export default function RegistrationScreen({ navigation }) {
                     value={lastName}
                     onChangeText={setLastName}
                 />
+
                 <TextInput
                     style={globalStyles.input}
-                    placeholder="Phone Number"
+                    placeholder="Phone number"
                     placeholderTextColor={globalStyles.placeholderTextColor}
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}
                 />
-                <TextInput
-                    style={globalStyles.input}
-                    placeholder="Date of Birth (DD.MM.YYYY)"
-                    placeholderTextColor={globalStyles.placeholderTextColor}
-                    value={dateOfBirth}
-                    onChangeText={setDateOfBirth}
-                />
+
+                <View style={[globalStyles.verticalAlignContainer, { width: '80%' }]}>
+                    <Text style={globalStyles.textMuted}>Birthday</Text>
+                    <View style={globalStyles.horizontalAlignContainer}>
+                        <CustomDropdown
+                            placeholder="Day"
+                            data={days}
+                            value={birthDay}
+                            onChange={(item) => {
+                                setBirthDay(item.value);
+                                handleDateChange(item.value, birthMonth, birthYear);
+                            }}
+                            style={{ marginRight: 4 }}
+                        />
+                        <CustomDropdown
+                            placeholder="Month"
+                            data={months}
+                            value={birthMonth}
+                            onChange={(item) => {
+                                setBirthMonth(item.value);
+                                handleDateChange(birthDay, item.value, birthYear);
+                            }}
+                            style={{ marginRight: 4 }}
+                        />
+                        <CustomDropdown
+                            placeholder="Year"
+                            data={years}
+                            value={birthYear}
+                            onChange={(item) => {
+                                setBirthYear(item.value);
+                                handleDateChange(birthDay, birthMonth, item.value);
+                            }}
+                        />
+                    </View>
+                </View>
+
                 <TouchableOpacity
                     style={globalStyles.button}
                     onPress={handleRegister}>
