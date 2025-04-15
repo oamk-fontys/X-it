@@ -114,7 +114,7 @@ export default function Comments({ roomId }) {
                                 if (!spoilerMode) {
                                     Alert.alert(
                                         'Spoiler Alert',
-                                        'This section contains comments, posted by people who alredy played the room. If you choose to continue, you might encounter spoilers. Are you sure you want to continue?',
+                                        'This section contains comments, posted by people who already played the room. If you choose to continue, you might encounter spoilers. Are you sure you want to continue?',
                                         [
                                             {
                                                 text: 'Cancel',
