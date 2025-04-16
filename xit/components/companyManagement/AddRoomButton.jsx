@@ -1,28 +1,37 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
-import globalStyles from "../../theme/globalStyles";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function AddRoomButton({ onPress }) {
     return (
         <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={styles.buttonText}>+ Add Room</Text>
+            <MaterialIcons name="add" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Add Room</Text>
         </TouchableOpacity>
     );
 }
 
-const styles = {
+const styles = StyleSheet.create({
     button: {
-        backgroundColor: globalStyles.primaryColor,
+        backgroundColor: '#00ADB5',
         paddingVertical: 12,
-        paddingHorizontal: 20,
+        paddingHorizontal: 16,
         borderRadius: 8,
-        alignSelf: 'flex-end',
+        alignSelf: 'flex-start',
         marginBottom: 16,
-        ...globalStyles.shadow
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     buttonText: {
         color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 16
+        fontWeight: '600',
+        fontSize: 16,
+        marginLeft: 8,
     }
-};
+});
