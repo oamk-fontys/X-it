@@ -179,6 +179,12 @@ export default function AppNavigation() {
       <Drawer.Screen name="Home" component={HomeScreenWrapper} />
       <Drawer.Screen name="Rooms" component={RoomListScreenWrapper} />
       <Drawer.Screen
+          name="Map"
+          component={MapScreenWrapper}
+          options={{
+            drawerLabel: "Map View",
+      }}/>
+      <Drawer.Screen
         name="Room Details"
         component={RoomDetailsScreenWrapper}
         options={{
@@ -234,7 +240,6 @@ export default function AppNavigation() {
           <Drawer.Screen name="Sign up" component={RegistrationScreenWrapper} options={{ headerShown: false }} />
         </>
       )}
-        <Drawer.Screen name="Map" component={MapScreenWrapper}/>
     </Drawer.Navigator>
   ));
 
@@ -331,6 +336,7 @@ export default function AppNavigation() {
     <NavigationContainer>
       <RootStack.Navigator>
         <RootStack.Screen name="Main" component={DrawerNavigator} options={{ headerShown: false }} />
+        <RootStack.Screen name="Map" component={MapScreenWrapper} options={{ headerShown: false }} />
         {user && (
           // authenticated screen
           <RootStack.Group>
