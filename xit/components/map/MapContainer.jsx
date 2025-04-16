@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import {View, StyleSheet, Text, TouchableOpacity} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,9 +7,11 @@ import { Ionicons } from "@expo/vector-icons";
 import globalStyles from "../../theme/globalStyles";
 import ZoomControl from "./ZoomControl";
 import LocationButton from "./LocationButton";
+import {useNavigation} from "@react-navigation/native";
 
 export default function MapContainer() {
     const mapRef = useRef(null);
+    const navigation = useNavigation();
     const [location, setLocation] = useState(null);
     const [region, setRegion] = useState({
         latitude: 60.192059,
@@ -17,31 +19,31 @@ export default function MapContainer() {
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
     });
+    const [rooms, setRooms] = useState([]);
 
-    // Simulated company markers
-    const companyMarkers = [
-        {
-            id: 1,
-            name: "Company A",
-            latitude: 60.192059,
-            longitude: 24.945831,
-        },
-        {
-            id: 2,
-            name: "Company B",
-            latitude: 60.200059,
-            longitude: 24.935831,
-        },
-    ];
+    useEffect(() => {
+        fetch("http://localhost:3000/api/room")
+            .then((res) => res.json())
+            .then((data) => {
+                const roomsWithFakeCoords = data.map((room, i) => ({
+                    ...room,
+                    latitude: 60.19 + Math.random() * 0.02,
+                    longitude: 24.93 + Math.random() * 0.02,
+                }));
+                setRooms(roomsWithFakeCoords);
+            })
+            .catch((err) => console.error("Failed to fetch rooms:", err));
+    }, []);
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
+            let { status } = await Location.requestBackgroundPermissionsAsync();
             if (status !== "granted") return;
             let loc = await Location.getCurrentPositionAsync({});
             setLocation(loc.coords);
         })();
     }, []);
+
 
     const handleZoom = (zoomIn) => {
         setRegion((prev) => {
@@ -64,9 +66,9 @@ export default function MapContainer() {
         }
     };
 
+
     return (
         <View style={{ flex: 1 }}>
-            <Text style={globalStyles.title}>Find Rooms on Map</Text>
             <MapView
                 ref={mapRef}
                 style={{ flex: 1 }}
@@ -75,24 +77,24 @@ export default function MapContainer() {
                 minZoomLevel={0}
                 maxZoomLevel={20}
             >
-                {companyMarkers.map((marker) => (
+                {rooms.map((room) => (
                     <Marker
-                        key={marker.id}
-                        coordinate={{
-                            latitude: marker.latitude,
-                            longitude: marker.longitude,
-                        }}
+                        key={room.id}
+                        coordinate={{ latitude: room.latitude, longitude: room.longitude }}
                     >
-                        <View style={styles.markerLabel}>
-                            <Text style={styles.markerLabelText}>{marker.name}</Text>
-                        </View>
-                        <Ionicons
-                            name="location-sharp"
-                            size={28}
-                            color="#FF5C58"
-                        />
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("Room Details", { id: room.id })}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.markerLabel}>
+                                <Text style={styles.markerLabelText}>{room.name}</Text>
+                                <Text style={styles.markerSubText}>{room.address}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Ionicons name="location-sharp" size={28} color="#FF5C58" />
                     </Marker>
                 ))}
+
                 {location && (
                     <Marker
                         coordinate={{
