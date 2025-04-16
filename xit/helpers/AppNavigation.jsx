@@ -182,7 +182,6 @@ export default function AppNavigation() {
       {user && (
         <>
           <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
-          {/* <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} /> */}
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
           <Drawer.Screen
             name="RoomManagement"
@@ -254,12 +253,6 @@ export default function AppNavigation() {
   const RegistrationScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <RegistrationScreen {...props} />
-    </ScreenWrapper>
-  ));
-  
-  const RoomScheduleWrapper = React.memo((props) => (
-    <ScreenWrapper>
-      <RoomSchedule {...props} />
     </ScreenWrapper>
   ));
   
