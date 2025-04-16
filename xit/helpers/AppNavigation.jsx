@@ -199,34 +199,38 @@ export default function AppNavigation() {
               options={{ drawerLabel: "Pending Application" }}
             />
           )}
-          <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
-          <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
-          <Drawer.Screen
-            name="RoomManagement"
-            component={RoomManagementScreenWrapper}
-            options={{
-              // hide item from drawer menu
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-            }}
-          />
-          <Drawer.Screen
-            name="ADD_ROOM"
-            component={AddRoomScreenWrapper}
-            options={{
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-            }}
-          />
-          <Drawer.Screen
-            name="UPDATE_ROOM"
-            component={UpdateRoomScreenWrapper}
-            options={{
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-              headerShown: false
-            }}
-          />
+          {user.role === 'COMPANY' && (
+            <>
+              <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
+              <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+              <Drawer.Screen
+                name="RoomManagement"
+                component={RoomManagementScreenWrapper}
+                options={{
+                  // hide item from drawer menu
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
+              <Drawer.Screen
+                name="ADD_ROOM"
+                component={AddRoomScreenWrapper}
+                options={{
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
+              <Drawer.Screen
+                name="UPDATE_ROOM"
+                component={UpdateRoomScreenWrapper}
+                options={{
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                  headerShown: false
+                }}
+              />
+            </>
+          )}
         </>
       )}
       {!user && (
