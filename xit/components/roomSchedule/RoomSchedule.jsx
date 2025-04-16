@@ -356,7 +356,12 @@ export default function RoomSchedule({
                 >
                     {header}
                     <Text
-                        style={globalStyles.text}
+                        style={[
+                            globalStyles.text,
+                            {
+                                flex: 1
+                            }
+                        ]}
                     >
                         Loading...
                     </Text>
