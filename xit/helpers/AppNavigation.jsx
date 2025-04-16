@@ -181,7 +181,10 @@ export default function AppNavigation() {
       />
       {user && (
         <>
-          <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          {/* Only show Profile if user has USER role */}
+          {user.role === 'USER' && (
+            <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          )}
           <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
           <Drawer.Screen
