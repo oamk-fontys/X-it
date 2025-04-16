@@ -45,10 +45,6 @@ export default function RoomManagementScreen() {
         }
     };
 
-    const handleUpdateSuccess = () => {
-        fetchRoomData();
-    };
-
     useEffect(() => {
         fetchRoomData();
     }, [roomId]);
@@ -79,7 +75,6 @@ export default function RoomManagementScreen() {
                 roomId={roomId} 
                 room={room} 
                 onDelete={handleDelete}
-                onUpdateSuccess={handleUpdateSuccess}
             />
         </ScrollView>
     );

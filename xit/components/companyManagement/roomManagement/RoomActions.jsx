@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function RoomActions({ roomId, room, onDelete, onUpdateSuccess }) {
+export default function RoomActions({ roomId, room, onDelete }) {
     const navigation = useNavigation();
 
     const handleDelete = () => {
@@ -27,8 +27,7 @@ export default function RoomActions({ roomId, room, onDelete, onUpdateSuccess })
 
     const handleUpdate = () => {
         navigation.navigate("UPDATE_ROOM", { 
-            roomId: room.id,
-            onUpdateSuccess 
+            roomId: room.id
         });
     };
 
