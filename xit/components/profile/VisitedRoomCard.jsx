@@ -31,7 +31,7 @@ export default function RoomElement({ id, rating, city, roomName, img }) {
                 
                 <View style={styles.content}>
                     <View style={styles.metaContainer}>
-                        <Rating rating={rating} size={14} />
+                        <Rating rating={rating ? rating : 0} size={14} />
                         <Text style={styles.city}>{city}</Text>
                     </View>
                     <Text style={styles.title}>{roomName}</Text>
