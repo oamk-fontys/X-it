@@ -12,7 +12,33 @@ export const BookingProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    // get all bookings by user id if role is user
+    // get all bookings of the user
+    const getAllUserBookings = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${apiUrl}/booking/user`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                const errorMessage = data.message || 'Internal error occured!';
+                showNotification(errorMessage, 'error');
+                return;
+            }
+
+            return data;
+        } catch (err) {
+            console.error('Fetch all bookings failed: ', err);
+            showNotification('Internal error occured!', 'error');
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // get all bookings if role is admin
     const getAllBookings = async () => {
         try {
@@ -160,6 +186,7 @@ export const BookingProvider = ({ children }) => {
             loading,
             error,
             getAllBookings,
+            getAllUserBookings,
             getBookingById,
             createBooking,
             updateBooking

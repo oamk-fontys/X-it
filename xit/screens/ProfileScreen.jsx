@@ -14,7 +14,7 @@ import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
-  const { getAllBookings, validateBooking } = useBooking();
+  const { getAllUserBookings, validateBooking } = useBooking();
   const { getVisitedRooms } = useRooms();
 
   const [index, setIndex] = useState(0);
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
         setIsLoading(true);
         setError(false);
 
-        const bookingsData = await getAllBookings();
+        const bookingsData = await getAllUserBookings();
         Array.isArray(bookingsData) && setBookings(bookingsData);
 
         const visitedRoomsData = await getVisitedRooms();
