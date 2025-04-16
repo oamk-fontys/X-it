@@ -7,6 +7,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native"
 import { useTime } from "../../context/TimeContext"
 import { useRooms } from "../../context/RoomProvider"
+import theme from "../../theme/theme"
 
 export default function RoomSchedule({
     roomId = '0e0a8dbf-4609-40f3-a63e-6eab4092dca3'
@@ -115,6 +116,47 @@ export default function RoomSchedule({
         weekdayChange(weekday)
     }, [loading])
 
+    const header = (
+        <View
+            style={styles.headerView}
+        >
+            <View
+                style={styles.backView}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack()
+                    }}
+                >
+                    <Text
+                        style={[
+                            globalStyles.text,
+                            {
+                                color: theme.colors.primary
+                            }
+                        ]}
+                    >
+                        Back
+                    </Text>
+                </TouchableOpacity>
+            </View>
+            <View
+                style={globalStyles.mainContainer}
+            >
+                <Text
+                    style={globalStyles.text}
+                >
+                    Manage schedule for:
+                </Text>
+                <Text
+                    style={globalStyles.subTitle}
+                >
+                    {getRoomById(roomId)?.name}
+                </Text>
+            </View>
+        </View>
+    )
+
     const content = (
         <View
             style={[
@@ -122,6 +164,7 @@ export default function RoomSchedule({
                 globalStyles.mainContainer
             ]}
         >
+            {header}
             <View
                 style={{
                     flex: 1
@@ -265,7 +308,7 @@ export default function RoomSchedule({
                     onPress={submit}
                 >
                     <Text
-                        style={globalStyles.text}
+                        style={globalStyles.buttonText}
                     >
                         Confirm
                     </Text>
@@ -311,6 +354,7 @@ export default function RoomSchedule({
                         globalStyles.mainContainer
                     ]}
                 >
+                    {header}
                     <Text
                         style={globalStyles.text}
                     >
@@ -325,6 +369,21 @@ export default function RoomSchedule({
 }
 
 const styles = new StyleSheet.create({
+    headerView: {
+        backgroundColor: theme.colors.containerBackground,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10
+    },
+    backView: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'flex-start'
+    },
     row: {
         flexDirection: 'row',
         alignItems: 'center',

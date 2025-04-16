@@ -182,7 +182,7 @@ export default function AppNavigation() {
       {user && (
         <>
           <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
-          <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
+          {/* <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} /> */}
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
           <Drawer.Screen
             name="RoomManagement"
@@ -302,6 +302,17 @@ export default function AppNavigation() {
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
                 <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
+              )}
+            </RootStack.Screen>
+            <RootStack.Screen
+              name="Room Schedule"
+              options={{headerShown: false}}
+            >
+              {(props) => (
+                <RoomSchedule
                   key={props.route.params.roomId}
                   {...props.route.params}
                 />

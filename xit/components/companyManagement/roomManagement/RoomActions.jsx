@@ -36,7 +36,7 @@ export default function RoomActions({ roomId, room, onDelete, onUpdateSuccess })
         <View style={styles.container}>
             <TouchableOpacity
                 style={[styles.button, styles.timeSlotsButton]}
-                onPress={() => navigation.navigate("Time Slots", { roomId })}
+                onPress={() => navigation.navigate("Room Schedule", { roomId })}
             >
                 <MaterialCommunityIcons 
                     name="clock-outline" 
