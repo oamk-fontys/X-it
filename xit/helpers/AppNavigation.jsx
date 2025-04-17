@@ -282,12 +282,6 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
   
-  const RoomScheduleWrapper = React.memo((props) => (
-    <ScreenWrapper>
-      <RoomSchedule {...props} />
-    </ScreenWrapper>
-  ));
-  
   const CompanyRoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
