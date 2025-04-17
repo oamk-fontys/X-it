@@ -26,7 +26,10 @@ const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
     },
-
+    borderContainer: {
+        borderWidth: 1,
+        borderRadius: 5,
+    },
 
     //Text styles
     title: {
@@ -54,6 +57,13 @@ const globalStyles = StyleSheet.create({
     textSmall: {
         color: theme.colors.text,
         fontSize: theme.fontSizes.small
+    },
+    textMini: {
+        color: theme.colors.text,
+        fontSize: theme.fontSizes.mini
+    },
+    textMuted: {
+        color: theme.colors.textMuted,
     },
     textError: {
         color: theme.colors.textMuted,
@@ -103,6 +113,10 @@ const globalStyles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 5
     },
+    singleCardBody: {
+        flex: 1,
+        padding: 10
+    },
     cardBody: {
         flex: 5,
         width: '100%',
@@ -116,9 +130,12 @@ const globalStyles = StyleSheet.create({
         borderRadius: 5,
         flexDirection: 'row',
         padding: 5,
-        alignItems: 'center'
     },
     cardItemImage: {
+        flex: 1,
+        aspectRatio: 1,
+    },
+    cardItemLeft: {
         flex: 1,
         aspectRatio: 1,
     },
@@ -126,7 +143,6 @@ const globalStyles = StyleSheet.create({
         flex: 5,
         marginLeft: 10
     },
-
 
 
     //Button styles
@@ -144,6 +160,7 @@ const globalStyles = StyleSheet.create({
         fontWeight: "bold"
     },
 
+
     //Input styles
     input: {
         width: "80%",
@@ -159,8 +176,57 @@ const globalStyles = StyleSheet.create({
 
     placeholderTextColor: theme.colors.textMuted,
 
-    //Image styles
 
+    //Dropdown menu styles
+    dropdownBase: {
+        flex: 1,
+        marginBottom: 10,
+        height: 40,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: theme.colors.textMuted,
+        backgroundColor: theme.colors.containerBackground,
+        paddingHorizontal: 10,
+    },
+
+    dropdownContainer: {
+        backgroundColor: theme.colors.containerBackground,
+        borderRadius: 5,
+        borderColor: theme.colors.textMuted,
+        borderWidth: 1,
+    },
+
+    dropdownText: {
+        fontSize: theme.fontSizes.small,
+        color: theme.colors.text,
+    },
+
+    dropdownPlaceholder: {
+        color: theme.colors.textMuted,
+    },
+
+    dropdownSelectedText: {
+        fontSize: theme.fontSizes.small,
+        color: theme.colors.text,
+    },
+
+    dropdownItemText: {
+        fontSize: theme.fontSizes.small,
+        color: theme.colors.textMuted,        
+        textAlign: 'center',
+    },
+
+    dropdownItemContainer: {
+        backgroundColor: theme.colors.containerBackground,
+        marginHorizontal: 5,
+    },
+
+    dropdownActiveColor: {
+        backgroundColor: theme.colors.containerBackground,
+    },
+
+
+    //Image styles
     imgContainer: {
         height: '100%',
         width: '100%',
