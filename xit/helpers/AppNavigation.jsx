@@ -26,6 +26,7 @@ import RoomSchedule from "../components/roomSchedule/RoomSchedule";
 import RoomManagementScreen from "../screens/RoomManagementScreen";
 import secondaryHeader from "../helpers/secondaryHeaderOptions"
 import UpdateRoomScreen from "../screens/UpdateRoomScreen";
+import MapScreen from "../screens/MapScreen";
 
 export default function AppNavigation() {
 
@@ -154,6 +155,7 @@ export default function AppNavigation() {
       'Pending Application': 'hourglass-empty',
       'Company management': 'business',
       'Room schedule': 'schedule',
+      'Map': 'map',
     };
     return icons[routeName] || 'help-outline';
   }, []);
@@ -176,6 +178,12 @@ export default function AppNavigation() {
     >
       <Drawer.Screen name="Home" component={HomeScreenWrapper} />
       <Drawer.Screen name="Rooms" component={RoomListScreenWrapper} />
+      <Drawer.Screen
+          name="Map"
+          component={MapScreenWrapper}
+          options={{
+            drawerLabel: "Map View",
+      }}/>
       <Drawer.Screen
         name="Room Details"
         component={RoomDetailsScreenWrapper}
@@ -289,13 +297,7 @@ export default function AppNavigation() {
       <RegistrationScreen {...props} />
     </ScreenWrapper>
   ));
-
-  const RoomScheduleWrapper = React.memo((props) => (
-    <ScreenWrapper>
-      <RoomSchedule {...props} />
-    </ScreenWrapper>
-  ));
-
+  
   const CompanyRoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
@@ -320,6 +322,12 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
 
+    const MapScreenWrapper = React.memo((props) => (
+        <ScreenWrapper>
+            <MapScreen {...props} />
+        </ScreenWrapper>
+    ));
+
   // add loading spinner animation
   if (isLoading) {
     return null;
@@ -329,12 +337,24 @@ export default function AppNavigation() {
     <NavigationContainer>
       <RootStack.Navigator>
         <RootStack.Screen name="Main" component={DrawerNavigator} options={{ headerShown: false }} />
+        <RootStack.Screen name="Map" component={MapScreenWrapper} options={{ headerShown: false }} />
         {user && (
           // authenticated screen
           <RootStack.Group>
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
                 <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
+              )}
+            </RootStack.Screen>
+            <RootStack.Screen
+              name="Room Schedule"
+              options={{headerShown: false}}
+            >
+              {(props) => (
+                <RoomSchedule
                   key={props.route.params.roomId}
                   {...props.route.params}
                 />
