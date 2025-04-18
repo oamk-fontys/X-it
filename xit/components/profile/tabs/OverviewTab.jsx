@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SectionList, Text, StyleSheet, View, ActivityIndicator } from "react-native";
 import { useAuth } from '../../../context/AuthContext';
-import { useBooking } from '../../../context/BookingContext';
 import BookingItem from "../BookingItem";
 
 export default function OverviewTab({ bookings }) {

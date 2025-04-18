@@ -6,6 +6,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import QRCode from 'react-native-qrcode-svg';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
+import { useRooms } from '../context/RoomProvider';
 
 import OverviewTab from "../components/profile/tabs/OverviewTab";
 import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
@@ -13,16 +14,20 @@ import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
-  const { getAllBookings, validateBooking } = useBooking();
+  const { getAllUserBookings, validateBooking } = useBooking();
+  const { getVisitedRooms } = useRooms();
+
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'bookingsTab', title: 'Bookings', icon: 'dashboard' },
-    { key: 'visitedRooms', title: 'Visited Rooms', icon: 'bar-chart' },
-    { key: 'stats', title: 'Stats', icon: 'dashboard' },
+    { key: 'visitedRoomsTab', title: 'Visited Rooms', icon: 'bar-chart' },
+    { key: 'statsTab', title: 'Stats', icon: 'dashboard' },
   ]);
   
   const [isTokenModalVisible, setIsTokenModalVisible] = useState(false);
   const [bookings, setBookings] = useState([]);
+  const [visitedRooms, setVisitedRooms] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -30,12 +35,16 @@ export default function ProfileScreen() {
   const closeTokenModal = () => setIsTokenModalVisible(false);
   
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         setError(false);
-        const bookingsData = await getAllBookings();
+
+        const bookingsData = await getAllUserBookings();
         Array.isArray(bookingsData) && setBookings(bookingsData);
+
+        const visitedRoomsData = await getVisitedRooms();
+        Array.isArray(visitedRoomsData) && setVisitedRooms(visitedRoomsData);
       } catch (err) {
         setError(true);
       } finally {
@@ -43,7 +52,7 @@ export default function ProfileScreen() {
       }
     };
   
-    fetchBookings();
+    fetchData();
   }, []);
 
   // this function should send booking id with jwt and return new token to encode it into qr
@@ -64,8 +73,8 @@ export default function ProfileScreen() {
 
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} />,
-    visitedRooms: () => <VisitedRoomsTab />,
-    stats: () => <StatsTab roomStats={userMock.roomStats} />,
+    visitedRoomsTab: () => <VisitedRoomsTab visitedRooms={visitedRooms} />,
+    statsTab: () => <StatsTab roomStats={userMock.roomStats} />,
   });
 
   return (

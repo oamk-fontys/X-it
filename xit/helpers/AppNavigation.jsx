@@ -194,7 +194,10 @@ export default function AppNavigation() {
       />
       {user && (
         <>
-          <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          {/* Only show Profile if user has USER role */}
+          {user.role === 'USER' && (
+            <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
+          )}
           {!hasPendingCompany ? (
             <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
           ) : (
@@ -204,33 +207,46 @@ export default function AppNavigation() {
               options={{ drawerLabel: "Pending Application" }}
             />
           )}
-          <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
-          <Drawer.Screen
-            name="RoomManagement"
-            component={RoomManagementScreenWrapper}
-            options={{
-              // hide item from drawer menu
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-            }}
-          />
-          <Drawer.Screen
-            name="ADD_ROOM"
-            component={AddRoomScreenWrapper}
-            options={{
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-            }}
-          />
-          <Drawer.Screen
-            name="UPDATE_ROOM"
-            component={UpdateRoomScreenWrapper}
-            options={{
-              drawerItemStyle: { height: 0 },
-              drawerLabel: () => null,
-              headerShown: false
-            }}
-          />
+          {user.role === 'COMPANY' && (
+            <>
+              <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+              <Drawer.Screen
+                name="Room schedule"
+                component={RoomScheduleWrapper}
+                options={{
+                  // hide item from drawer menu
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
+              <Drawer.Screen
+                name="RoomManagement"
+                component={RoomManagementScreenWrapper}
+                options={{
+                  // hide item from drawer menu
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
+              <Drawer.Screen
+                name="ADD_ROOM"
+                component={AddRoomScreenWrapper}
+                options={{
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
+              <Drawer.Screen
+                name="UPDATE_ROOM"
+                component={UpdateRoomScreenWrapper}
+                options={{
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                  headerShown: false
+                }}
+              />
+            </>
+          )}
         </>
       )}
       {!user && (
@@ -314,11 +330,17 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
 
-    const MapScreenWrapper = React.memo((props) => (
-        <ScreenWrapper>
-            <MapScreen {...props} />
-        </ScreenWrapper>
-    ));
+  const RoomScheduleWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomSchedule {...props} />
+    </ScreenWrapper>
+  ));
+
+  const MapScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <MapScreen {...props} />
+    </ScreenWrapper>
+  ));
 
   // add loading spinner animation
   if (isLoading) {

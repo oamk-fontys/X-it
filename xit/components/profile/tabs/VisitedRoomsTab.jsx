@@ -1,64 +1,53 @@
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import VisitedRoomCard from "../VisitedRoomCard";
 
-export default function VisitedRoomsTab() {
-  const visitedRooms = [
-    { 
-      id: 1, 
-      rating: 4.5, 
-      city: 'New York', 
-      roomName: 'Meeting Room A',
-      img: null 
-    },
-    { 
-      id: 2, 
-      rating: 3.8, 
-      city: 'Los Angeles', 
-      roomName: 'Conference Hall',
-      img: null 
-    },
-    { 
-      id: 3, 
-      rating: 3.8, 
-      city: 'Los Angeles', 
-      roomName: 'Conference Hall',
-      img: null 
-    },
-    { 
-      id: 4, 
-      rating: 3.8, 
-      city: 'Los Angeles', 
-      roomName: 'Conference Hall',
-      img: null 
-    },
-  ];
-
+export default function VisitedRoomsTab({ visitedRooms }) {
   return (
-    <FlatList
-      data={visitedRooms}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <VisitedRoomCard 
-          id={item.id}
-          rating={item.rating}
-          city={item.city}
-          roomName={item.roomName}
-          img={item.img}
+    <View style={styles.container}>
+      {visitedRooms.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No visited rooms</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={visitedRooms}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <VisitedRoomCard 
+              id={item.id}
+              rating={item.rating}
+              city={item.city}
+              roomName={item.name}
+              img={item.img}
+            />
+          )}
+          contentContainerStyle={styles.listContainer}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          showsVerticalScrollIndicator={false}
         />
       )}
-      contentContainerStyle={styles.listContainer}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      showsVerticalScrollIndicator={false}
-    />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   listContainer: {
     padding: 20,
   },
   separator: {
     height: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#888',
   },
 });

@@ -135,6 +135,32 @@ export const RoomProvider = ({ children }) => {
         }
     };
 
+    const getVisitedRooms = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${apiUrl}/room/visited-rooms`, {
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                const errorMessage = data.message || 'Internal error occured!';
+                showNotification(errorMessage, 'error');
+                return;
+            }
+
+            return data;
+        } catch (err) {
+            console.error('Fetch room by id from backend failed: ', err);
+            showNotification('Internal error occured!', 'error');
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const getRoomsByCompanyId = async (companyId) => {
         try {
             setLoading(true);
@@ -302,6 +328,7 @@ export const RoomProvider = ({ children }) => {
                 getCities,
                 filteredRooms,
                 getRoomByIdFromBackend,
+                getVisitedRooms,
                 getRoomsByCompanyId,
                 createRoom,
                 updateRoom,

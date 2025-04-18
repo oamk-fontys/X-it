@@ -195,10 +195,6 @@ export const AuthProvider = ({ children }) => {
 
       const companies = await response.json();
 
-      // DEBUG LOGS
-      console.log("USER ID:", userId);
-      console.log("COMPANIES:", companies);
-
       const pending = companies.find(
         (company) => company.ownerId === userId && company.verified === false
       );
