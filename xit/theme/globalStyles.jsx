@@ -307,7 +307,16 @@ const globalStyles = StyleSheet.create({
         fontSize: theme.fontSizes.small,
         color: theme.colors.text,
         fontWeight: "bold"
-    }
+    },
+
+    // map styles
+    mapWrapper: {
+        flex: 1,
+        paddingHorizontal: 15,
+        paddingBottom: 20,
+        paddingTop: 20,
+    },
+
 })
 
 export default globalStyles
