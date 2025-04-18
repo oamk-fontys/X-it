@@ -196,7 +196,6 @@ export default function AppNavigation() {
               options={{ drawerLabel: "Pending Application" }}
             />
           )}
-          <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
           <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
           <Drawer.Screen
             name="RoomManagement"
@@ -282,13 +281,7 @@ export default function AppNavigation() {
       <RegistrationScreen {...props} />
     </ScreenWrapper>
   ));
-
-  const RoomScheduleWrapper = React.memo((props) => (
-    <ScreenWrapper>
-      <RoomSchedule {...props} />
-    </ScreenWrapper>
-  ));
-
+  
   const CompanyRoomListScreenWrapper = React.memo((props) => (
     <ScreenWrapper>
       <CompanyRoomListScreen {...props} />
@@ -328,6 +321,17 @@ export default function AppNavigation() {
             <RootStack.Screen name="Calendar" options={secondaryHeader("Choose Reservation Time")}>
               {(props) => (
                 <CalendarScreen
+                  key={props.route.params.roomId}
+                  {...props.route.params}
+                />
+              )}
+            </RootStack.Screen>
+            <RootStack.Screen
+              name="Room Schedule"
+              options={{headerShown: false}}
+            >
+              {(props) => (
+                <RoomSchedule
                   key={props.route.params.roomId}
                   {...props.route.params}
                 />
