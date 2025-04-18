@@ -209,8 +209,16 @@ export default function AppNavigation() {
           )}
           {user.role === 'COMPANY' && (
             <>
-              <Drawer.Screen name="Room schedule" component={RoomScheduleWrapper} />
               <Drawer.Screen name="Company management" component={CompanyRoomListScreenWrapper} />
+              <Drawer.Screen
+                name="Room schedule"
+                component={RoomScheduleWrapper}
+                options={{
+                  // hide item from drawer menu
+                  drawerItemStyle: { height: 0 },
+                  drawerLabel: () => null,
+                }}
+              />
               <Drawer.Screen
                 name="RoomManagement"
                 component={RoomManagementScreenWrapper}
@@ -322,11 +330,17 @@ export default function AppNavigation() {
     </ScreenWrapper>
   ));
 
-    const MapScreenWrapper = React.memo((props) => (
-        <ScreenWrapper>
-            <MapScreen {...props} />
-        </ScreenWrapper>
-    ));
+  const RoomScheduleWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <RoomSchedule {...props} />
+    </ScreenWrapper>
+  ));
+
+  const MapScreenWrapper = React.memo((props) => (
+    <ScreenWrapper>
+      <MapScreen {...props} />
+    </ScreenWrapper>
+  ));
 
   // add loading spinner animation
   if (isLoading) {
