@@ -48,7 +48,6 @@ export default function OverviewTab({ bookings }) {
         <BookingItem 
           booking={item}
           token={token}
-          user_id={user?.id}
         />
       )}
       renderSectionHeader={({ section }) => (
