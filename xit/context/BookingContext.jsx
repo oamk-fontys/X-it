@@ -125,7 +125,7 @@ export const BookingProvider = ({ children }) => {
         }
     };
 
-    const validateBooking = async (booking_id) => {
+    const generateQRtoken = async (booking_id) => {
         try {
             setLoading(true);
             const response = await fetch(`${apiUrl}/booking`, {
@@ -189,7 +189,8 @@ export const BookingProvider = ({ children }) => {
             getAllUserBookings,
             getBookingById,
             createBooking,
-            updateBooking
+            updateBooking,
+            generateQRtoken
         }}>
         {children}
         </BookingContext.Provider>
