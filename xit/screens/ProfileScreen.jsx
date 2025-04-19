@@ -14,7 +14,7 @@ import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
-  const { getAllUserBookings, validateBooking } = useBooking();
+  const { getAllUserBookings, generateQRtoken } = useBooking();
   const { getVisitedRooms } = useRooms();
 
   const [index, setIndex] = useState(0);
@@ -57,7 +57,7 @@ export default function ProfileScreen() {
 
   // this function should send booking id with jwt and return new token to encode it into qr
   const createQr = async (booking_id) => {
-    const response = await validateBooking(booking_id);
+    const response = await generateQRtoken(booking_id);
     return response;
   }
 
@@ -130,7 +130,7 @@ export default function ProfileScreen() {
           <View style={styles.modalContent}>
             <QRCode
               value={token}
-              size={200}
+              size={Dimensions.get('window').width}
               color="black"
               backgroundColor="white"
             />
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: '80%',
+    width: Dimensions.get('window').width,
   },
   // Tab styles
   tabBar: {
