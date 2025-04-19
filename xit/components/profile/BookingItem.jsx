@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Modal, Button } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Modal, Button, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import QRCode from 'react-native-qrcode-svg';
 
@@ -34,7 +34,7 @@ export default function BookingItem({ booking, token }) {
               value={JSON.stringify({
                 token: token
               })}
-              size={200}
+              size={Dimensions.get('window').width}
               color="black"
               backgroundColor="white"
             />
@@ -83,5 +83,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
+    width: Dimensions.get('window').width,
   },
 });
