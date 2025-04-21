@@ -128,11 +128,11 @@ export const BookingProvider = ({ children }) => {
     const generateQRtoken = async (booking_id) => {
         try {
             setLoading(true);
-            const response = await fetch(`${apiUrl}/booking`, {
+            const response = await fetch(`${apiUrl}/booking/generate-qr/${booking_id}`, {
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({'booking_id':booking_id}),
             });
 
             if (response.status == 401) {
@@ -140,6 +140,12 @@ export const BookingProvider = ({ children }) => {
             }
 
             const data = await response.json();
+            if (!response.ok) {
+                const errorMessage = data.message || 'Internal error occured!';
+                showNotification(errorMessage, 'error');
+                return;
+            }
+
             return data;
         } catch (err) {
             console.error('Booking validation failed: ', err);
