@@ -31,15 +31,16 @@ export default function BookingItem({ booking, token }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <QRCode
-              value={JSON.stringify({
-                token: token
-              })}
-              size={Dimensions.get('window').width}
+              value = {token}
+              size={300}
+              style={{ backgroundColor: 'white', padding: 10 }}
               color="black"
               backgroundColor="white"
             />
-            <Button title="Close" onPress={closeModal} />
-          </View>
+            <View style={{ marginTop: 20 }}>
+              <Button title="Close" onPress={closeModal} />
+            </View>
+            </View>
         </View>
       </Modal>
     </View>
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "white", 
   },
   modalContent: {
     backgroundColor: "#222831",
@@ -84,5 +85,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     width: Dimensions.get('window').width,
+    backgroundColor: "white", 
   },
 });

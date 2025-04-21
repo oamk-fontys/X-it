@@ -130,11 +130,13 @@ export default function ProfileScreen() {
           <View style={styles.modalContent}>
             <QRCode
               value={token}
-              size={Dimensions.get('window').width}
+              size={300}
               color="black"
               backgroundColor="white"
             />
-            <Button title="Close" onPress={closeTokenModal} />
+            <View style={{ marginTop: 20 }}>
+              <Button title="Close" onPress={closeTokenModal} />
+            </View>
           </View>
         </View>
       </Modal>
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: "white", 
   },
   modalContent: {
     backgroundColor: '#222831',
@@ -267,6 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: Dimensions.get('window').width,
+    backgroundColor: "white", 
   },
   // Tab styles
   tabBar: {
