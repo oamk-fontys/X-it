@@ -16,7 +16,7 @@ export default function RoomDetailsScreen({ id }) {
     const navigationTarget = user ? 'Calendar' : 'Login';
 
     const room = getRoomById(id);
-    const img = room.logo?.id;
+    const img = room.company?.logo?.url;
     const title = room.name;
     const description = room.description;
     const ratings = [];
