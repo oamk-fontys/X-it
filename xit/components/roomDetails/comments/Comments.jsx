@@ -45,7 +45,7 @@ export default function Comments({ roomId }) {
                             username={e.user?.username}
                             text={e.content}
                             date={e.updatedAt}
-                            pfp={null}
+                            pfp={e.profilePicture?.url}
                             commentId={e.id}
                             userId={e.user?.id}
                             roomId={roomId}

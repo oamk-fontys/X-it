@@ -22,7 +22,8 @@ export default function PopularRooms() {
                         key={i}
                         id={e.id}
                         roomName={e.name}
-                        city={e.company.city}
+                        city={e.company?.city}
+                        img={e.logo?.url}
                     />
                 )
             }

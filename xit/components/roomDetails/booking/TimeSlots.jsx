@@ -42,7 +42,14 @@ export default function TimeSlots({ selectedDate, type, roomId }) {
                 }
             )
         } else if (type === 'cancel') {
-            // Creating canceling
+            createBooking({
+                roomId: roomId,
+                timeslotId: slotId,
+                date: new Date(selectedDate)
+            })
+            .then(() => {
+                getTimesByRoom(roomId, new Date(selectedDate))
+            })
         }
     }
 

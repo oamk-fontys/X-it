@@ -23,7 +23,7 @@ export default function RecentComments() {
                     city={null}
                     username={e.user?.username}
                     date={e.updatedAt}
-                    pfp={null}
+                    pfp={e.profilePicture?.url}
                     roomId={e.room?.id}
                 />
             )
