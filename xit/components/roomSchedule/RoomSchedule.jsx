@@ -4,15 +4,16 @@ import globalStyles from "../../theme/globalStyles"
 import { Dropdown } from "react-native-element-dropdown"
 import { useState } from "react"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useTime } from "../../context/TimeContext"
 import { useRooms } from "../../context/RoomProvider"
 import theme from "../../theme/theme"
 
 export default function RoomSchedule({
-    roomId = '0e0a8dbf-4609-40f3-a63e-6eab4092dca3'
+    roomId
 }) {
     const navigation = useNavigation();
+    const screenFocused = useIsFocused()
     const { getRoomById } = useRooms()
     const {
         getFirstSlotByDay,
@@ -110,8 +111,10 @@ export default function RoomSchedule({
     }
 
     useEffect(() => {
-        getTimesByRoom(roomId)
-    }, [])
+        if (screenFocused) {
+            getTimesByRoom(roomId)
+        }
+    }, [screenFocused])
     useEffect(() => {
         weekdayChange(weekday)
     }, [loading])

@@ -5,7 +5,6 @@ import Calendar from "./Calendar";
 import TimeSlots from "./TimeSlots";
 import { useTime } from "../../../context/TimeContext";
 import globalStyles from '../../../theme/globalStyles'
-import { useBooking } from "../../../context/BookingContext";
 
 export default function CalendarScreen({ roomId, type }) {
     const { getTimesByRoom } = useTime()
