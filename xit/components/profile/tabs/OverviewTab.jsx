@@ -3,7 +3,7 @@ import { SectionList, Text, StyleSheet, View, ActivityIndicator } from "react-na
 import { useAuth } from '../../../context/AuthContext';
 import BookingItem from "../BookingItem";
 
-export default function OverviewTab({ bookings }) {
+export default function OverviewTab({ bookings, openBookingQr }) {
   const { user, token } = useAuth();
 
   const now = new Date();
@@ -47,7 +47,7 @@ export default function OverviewTab({ bookings }) {
       renderItem={({ item }) => (
         <BookingItem 
           booking={item}
-          token={token}
+          openBookingQr={openBookingQr}
         />
       )}
       renderSectionHeader={({ section }) => (

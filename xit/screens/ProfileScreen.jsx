@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image, Dimensions } from "react-native";
+import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image, Dimensions, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
@@ -33,6 +33,32 @@ export default function ProfileScreen() {
 
   const openTokenModal = () => setIsTokenModalVisible(true);
   const closeTokenModal = () => setIsTokenModalVisible(false);
+
+  // Booking QR Modal
+  const [bookingQrModalVisible, setBookingQrModalVisible] = useState(false);
+  const [qrData, setQrData] = useState({
+    value: null,
+    loading: false,
+    error: null
+  });
+
+  const openBookingQr = async (bookingId) => {
+    setQrData({ value: null, loading: true, error: null });
+    setBookingQrModalVisible(true);
+    
+    try {
+      const token = await generateQRtoken(bookingId);
+      setQrData({ value: token.token, loading: false, error: null });
+    } catch (err) {
+      setQrData({ value: null, loading: false, error: err.message });
+      Alert.alert("Error", err.message);
+    }
+  };
+
+  const closeQrModal = () => {
+    setBookingQrModalVisible(false);
+    setQrData({ value: null, loading: false, error: null });
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -55,12 +81,6 @@ export default function ProfileScreen() {
     fetchData();
   }, []);
 
-  // this function should send booking id with jwt and return new token to encode it into qr
-  const createQr = async (booking_id) => {
-    const response = await generateQRtoken(booking_id);
-    return response;
-  }
-
   // Mock data
   const userMock = {
     profilePic: require("../assets/profile-placeholder.jpeg"),
@@ -72,7 +92,7 @@ export default function ProfileScreen() {
   };
 
   const renderScene = SceneMap({
-    bookingsTab: () => <OverviewTab bookings={bookings} />,
+    bookingsTab: () => <OverviewTab bookings={bookings} openBookingQr={openBookingQr} />,
     visitedRoomsTab: () => <VisitedRoomsTab visitedRooms={visitedRooms} />,
     statsTab: () => <StatsTab roomStats={userMock.roomStats} />,
   });
@@ -119,7 +139,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Token QR Code Modal */}
+      {/* Personal QR code */}
       <Modal
         visible={isTokenModalVisible}
         transparent={true}
@@ -130,11 +150,55 @@ export default function ProfileScreen() {
           <View style={styles.modalContent}>
             <QRCode
               value={token}
-              size={Dimensions.get('window').width}
+              size={300}
               color="black"
               backgroundColor="white"
             />
-            <Button title="Close" onPress={closeTokenModal} />
+            <View style={{ marginTop: 20 }}>
+              <Button title="Close" onPress={closeTokenModal} color="#00ADB5" />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Booking QR code */}
+      <Modal
+        visible={bookingQrModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeQrModal}
+        statusBarTranslucent={true}
+        hardwareAccelerated={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {qrData.loading ? (
+              <View style={styles.centerContent}>
+                <ActivityIndicator size="large" color="#00ADB5" />
+                <Text style={styles.loadingText}>Generating QR Code...</Text>
+              </View>
+            ) : qrData.error ? (
+              <View style={styles.centerContent}>
+                <MaterialIcons name="error" size={48} color="#FF6B6B" />
+                <Text style={styles.errorText}>{qrData.error}</Text>
+              </View>
+            ) : qrData.value ? (
+              <View style={styles.centerContent}>
+                <QRCode
+                  value={qrData.value}
+                  size={300}
+                  color="#222831"
+                  backgroundColor="#EEEEEE"
+                />
+              </View>
+            ) : null}
+            <View style={{ marginTop: 20 }}>
+              <Button 
+                title="Close" 
+                onPress={closeQrModal} 
+                color="#00ADB5"
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -259,7 +323,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: "white",
   },
   modalContent: {
     backgroundColor: '#222831',
@@ -267,6 +331,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: Dimensions.get('window').width,
+    backgroundColor: "white",
   },
   // Tab styles
   tabBar: {
