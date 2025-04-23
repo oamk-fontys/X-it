@@ -32,6 +32,24 @@ export const RoomProvider = ({ children }) => {
         })
     }, [])
 
+    const getAllRooms = async () => {
+        fetch(apiUrl + '/room')
+        .then(res => res.json())
+        .then(json => {
+            if (Array.isArray(json)) {
+                setRooms(json)
+            } else {
+                throw new Error(JSON.stringify(json.message))
+            }
+        })
+        .catch(e => {
+            showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
+        })
+    }
+
     const getRoomById = (id) => {
         return rooms.find(e => e.id === id)
     }
@@ -348,6 +366,7 @@ export const RoomProvider = ({ children }) => {
         <RoomContext.Provider
             value={{
                 rooms,
+                getAllRooms,
                 getRoomById,
                 searchForRoom,
                 getCompanyNames,
