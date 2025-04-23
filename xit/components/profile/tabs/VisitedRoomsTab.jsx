@@ -19,7 +19,7 @@ export default function VisitedRoomsTab({ visitedRooms }) {
               rating={item.rating}
               city={item.city}
               roomName={item.name}
-              img={item.img}
+              img={item.logo ? item.logo.url : null}
             />
           )}
           contentContainerStyle={styles.listContainer}
