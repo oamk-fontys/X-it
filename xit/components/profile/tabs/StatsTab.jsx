@@ -29,7 +29,6 @@ const darkChartConfig = {
 };
 
 export default function StatsTab({ roomStats }) {
-  // Calculate statistics
   const stats = {
     avgScore: Math.round(
       roomStats.reduce((sum, stat) => sum + stat.score, 0) / roomStats.length || 0
@@ -45,11 +44,9 @@ export default function StatsTab({ roomStats }) {
     noHintGames: roomStats.filter(stat => stat.hintsUsed === 0).length,
   };
 
-  // Prepare data for charts
   const scoreHistory = roomStats.map(stat => stat.score);
   const labels = roomStats.map((_, index) => `Game ${index + 1}`);
 
-  // Calculate performance percentages (assuming 1000 is max score)
   const MAX_SCORE = 1000;
   const highScoreRatio = stats.highScore / MAX_SCORE;
   const avgScoreRatio = stats.avgScore / MAX_SCORE;
@@ -71,10 +68,10 @@ export default function StatsTab({ roomStats }) {
                   progress={highScoreRatio}
                   showsText={true}
                   formatText={() => `${Math.round(highScoreRatio * 100)}%`}
-                  color="#00ADB5" // Teal accent color
+                  color="#00ADB5"
                   thickness={8}
                   borderWidth={0}
-                  unfilledColor="#393E46" // Darker background
+                  unfilledColor="#393E46"
                 />
                 <Text style={styles.chartSubtitle}>High Score</Text>
               </View>
@@ -84,7 +81,7 @@ export default function StatsTab({ roomStats }) {
                   progress={avgScoreRatio}
                   showsText={true}
                   formatText={() => `${Math.round(avgScoreRatio * 100)}%`}
-                  color="#4CAF50" // Green for contrast
+                  color="#4CAF50"
                   thickness={8}
                   borderWidth={0}
                   unfilledColor="#393E46"
@@ -110,7 +107,7 @@ export default function StatsTab({ roomStats }) {
             />
           </View>
 
-          {/* Stats Cards - 3 per row */}
+          {/* Stats Cards */}
           <View style={styles.cardRow}>
             <StatCard 
               title="Avg Score" 

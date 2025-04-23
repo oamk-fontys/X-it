@@ -88,16 +88,6 @@ export default function ProfileScreen() {
     fetchData();
   }, []);
 
-  // Mock data
-  const userMock = {
-    profilePic: require("../assets/placeholder2.png"),
-    roomStats: {
-      totalBookings: 15,
-      upcoming: 2,
-      favorites: 5
-    }
-  };
-
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} openBookingQr={openBookingQr} />,
     visitedRoomsTab: () => <VisitedRoomsTab visitedRooms={visitedRooms} />,
@@ -111,9 +101,9 @@ export default function ProfileScreen() {
         {/* Left Container: Profile Image and Username */}
         <View style={styles.leftContainer}>
           <Image
-            source={userMock.profilePic}
+            source={require("../assets/placeholder2.png")}
             style={styles.profileImage}
-            defaultSource={require("../assets/profile-placeholder.jpeg")}
+            defaultSource={require("../assets/placeholder2.png")}
           />
           <Text style={styles.name}>{user?.username}</Text>
         </View>
@@ -325,7 +315,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginLeft: 6,
   },
-  // Modal styles
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -340,7 +329,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     backgroundColor: "white",
   },
-  // Tab styles
   tabBar: {
     backgroundColor: '#222831',
     elevation: 0,
