@@ -111,7 +111,7 @@ export default function AppNavigation() {
           }
         ]}>
           <Image
-            source={require('../assets/profile-placeholder.jpeg')}
+            source={require('../assets/placeholder2.png')}
             style={styles.profileImage}
           />
           <View style={styles.userInfo}>

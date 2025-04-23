@@ -90,7 +90,7 @@ export default function ProfileScreen() {
 
   // Mock data
   const userMock = {
-    profilePic: require("../assets/profile-placeholder.jpeg"),
+    profilePic: require("../assets/placeholder2.png"),
     roomStats: {
       totalBookings: 15,
       upcoming: 2,
