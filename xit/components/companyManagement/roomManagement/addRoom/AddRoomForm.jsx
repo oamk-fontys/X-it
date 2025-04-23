@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,12 +11,12 @@ import {
   KeyboardAvoidingView,
   Platform
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
+
 import { useRooms } from '../../../../context/RoomProvider';
 import { useNotification } from "../../../../context/NotificationContext";
 import DropdownSelector from "../../../DropdownSelector";
+import ImageUpload from '../../../ImageUpload';
 
 const FIELD_NAMES = {
   ROOM_NAME: 'roomName',
@@ -72,7 +72,9 @@ export default function AddRoomForm() {
   const { companyId } = route.params;
   const { createRoom } = useRooms();
   const { showNotification } = useNotification();
-
+  
+  const [room, setRoom] = useState(null);
+  
   const [formData, setFormData] = useState({
     [FIELD_NAMES.ROOM_NAME]: "",
     [FIELD_NAMES.ADDRESS]: "",
@@ -86,31 +88,8 @@ export default function AddRoomForm() {
   });
   const [level, setLevel] = useState("EASY");
   const [image, setImage] = useState(null);
-  const [imageName, setImageName] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      showNotification("Permission to access media library is required", "error");
-      return;
-    }
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      const fileName = uri.split('/').pop();
-      setImage(uri);
-      setImageName(fileName);
-    }
-  };
 
   const validateField = useCallback((fieldName, value) => {
     switch (fieldName) {
@@ -154,7 +133,6 @@ export default function AddRoomForm() {
       [fieldName]: value
     }));
 
-    // Clear error when user starts typing
     if (errors[fieldName]) {
       setErrors(prev => {
         const newErrors = {...prev};
@@ -183,11 +161,12 @@ export default function AddRoomForm() {
         formData.postalCode,
         formData.country,
         formData.phone,
-        // image
+        image ? image : null
       );
-      navigation.navigate("Company management");
+      showNotification("Room created successfully", "success");
+      navigation.goBack();
     } catch (error) {
-      console.error("Room creation error:", error);
+      console.error("Room create error:", error);
       showNotification(error.message || "Failed to create room", "error");
     } finally {
       setIsSubmitting(false);
@@ -219,7 +198,7 @@ export default function AddRoomForm() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Add Room</Text>
+          <Text style={styles.headerTitle}>Create Room</Text>
           <View style={styles.headerDivider} />
         </View>
 
@@ -282,7 +261,7 @@ export default function AddRoomForm() {
 
           <FormField
             label="Duration (minutes)"
-            value={formData.duration}
+            value={formData.duration.toString()}
             onChangeText={(text) => handleFieldChange(FIELD_NAMES.DURATION, text)}
             error={errors.duration}
             placeholder="Enter duration in minutes"
@@ -292,7 +271,7 @@ export default function AddRoomForm() {
 
           <FormField
             label="Clean Up Time (minutes)"
-            value={formData.cleanUpTime}
+            value={formData.cleanUpTime.toString()}
             onChangeText={(text) => handleFieldChange(FIELD_NAMES.CLEAN_UP_TIME, text)}
             error={errors.cleanUpTime}
             placeholder="Enter clean up time in minutes"
@@ -320,36 +299,26 @@ export default function AddRoomForm() {
             isSubmitting={isSubmitting}
           />
 
-          <View style={styles.uploadContainer}>
-            <TouchableOpacity 
-              style={styles.uploadButton} 
-              onPress={pickImage}
-              disabled={isSubmitting}
-            >
-              <Ionicons name="cloud-upload-outline" size={24} color="#EEEEEE" />
-              <Text style={styles.uploadButtonText}>Upload Image</Text>
-            </TouchableOpacity>
-            {imageName && (
-              <Text style={styles.fileNameText}>
-                {`Selected: ${imageName}`}
-              </Text>
-            )}
-          </View>
-
-          {image && (
-            <View style={styles.imagePreviewContainer}>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
-            </View>
-          )}
+          <ImageUpload 
+            onUploadSuccess={(response) => {
+              setImage(response.id);
+            }}
+            initialImage={null}
+            style={styles.imageUploadContainer}
+          />
         </View>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.actionButton, styles.cancelActionButton]}
+            style={[
+              styles.actionButton, 
+              styles.cancelActionButton,
+              isSubmitting && styles.disabledButton
+            ]}
             onPress={handleCancel}
             disabled={isSubmitting}
           >
-            <Text style={styles.actionButtonText}>Cancel</Text>
+            <Text style={styles.actionButtonText}>Discard Changes</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -361,7 +330,7 @@ export default function AddRoomForm() {
             disabled={isSubmitting}
           >
             <Text style={styles.actionButtonText}>
-              {isSubmitting ? "Saving..." : "Save"}
+              {isSubmitting ? "Creating..." : "Create Room"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -379,6 +348,39 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#222831",
     paddingBottom: 40,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#222831",
+  },
+  loadingText: {
+    color: '#EEEEEE',
+    fontSize: 18,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#222831",
+  },
+  errorText: {
+    color: '#FF5555',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: 'rgba(0, 173, 181, 0.3)',
+    padding: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#00ADB5',
+  },
+  retryButtonText: {
+    color: '#EEEEEE',
+    fontSize: 16,
+    fontWeight: '600',
   },
   formContainer: {
     marginBottom: 20,
@@ -433,41 +435,8 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     marginBottom: 20,
   },
-  uploadContainer: {
+  imageUploadContainer: {
     marginBottom: 20,
-  },
-  uploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 173, 181, 0.2)',
-    padding: 14,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#00ADB5',
-  },
-  uploadButtonText: {
-    color: '#EEEEEE',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 10,
-  },
-  fileNameText: {
-    color: "#00ADB5",
-    fontSize: 14,
-    marginTop: 8,
-    fontStyle: 'italic',
-  },
-  imagePreviewContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  imagePreview: {
-    width: 200,
-    height: 150,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#00ADB5',
   },
   buttonContainer: {
     flexDirection: "row",

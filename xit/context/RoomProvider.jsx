@@ -210,7 +210,8 @@ export const RoomProvider = ({ children }) => {
         city,
         postalCode,
         country,
-        phoneNumber
+        phoneNumber,
+        logoId
     ) => {
         try {
             setLoading(true);
@@ -231,7 +232,8 @@ export const RoomProvider = ({ children }) => {
                     city,
                     postalCode,
                     country,
-                    phoneNumber
+                    phoneNumber,
+                    logoId
                 })
             });
 
