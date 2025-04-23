@@ -40,7 +40,7 @@ export default function RoomListScreen() {
                 companyName={e.company?.name}
                 id={e.id}
                 city={e.company?.city}
-                img={e.company?.logo?.url}
+                img={e.logo?.url}
             />
         ))
     }
