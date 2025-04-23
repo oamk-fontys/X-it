@@ -4,10 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import QRCode from 'react-native-qrcode-svg';
+
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { useRooms } from '../context/RoomProvider';
 import { useIsFocused } from "@react-navigation/native";
+import { useStatistic } from '../context/StatisticContext';
 
 import OverviewTab from "../components/profile/tabs/OverviewTab";
 import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
@@ -18,6 +20,7 @@ export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
   const { getAllUserBookings, generateQRtoken } = useBooking();
   const { getVisitedRooms } = useRooms();
+  const { getUserStatistic } = useStatistic();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -29,6 +32,7 @@ export default function ProfileScreen() {
   const [isTokenModalVisible, setIsTokenModalVisible] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [visitedRooms, setVisitedRooms] = useState([]);
+  const [stats, setStats] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,6 +77,9 @@ export default function ProfileScreen() {
 
         const visitedRoomsData = await getVisitedRooms();
         Array.isArray(visitedRoomsData) && setVisitedRooms(visitedRoomsData);
+
+        const statsData = await getUserStatistic();
+        Array.isArray(statsData) && setStats(statsData);
       } catch (err) {
         setError(true);
       } finally {
@@ -83,20 +90,10 @@ export default function ProfileScreen() {
     if (screenFocused) {fetchData()}
   }, [screenFocused]);
 
-  // Mock data
-  const userMock = {
-    profilePic: require("../assets/profile-placeholder.jpeg"),
-    roomStats: {
-      totalBookings: 15,
-      upcoming: 2,
-      favorites: 5
-    }
-  };
-
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} openBookingQr={openBookingQr} />,
     visitedRoomsTab: () => <VisitedRoomsTab visitedRooms={visitedRooms} />,
-    statsTab: () => <StatsTab roomStats={userMock.roomStats} />,
+    statsTab: () => <StatsTab roomStats={stats} />,
   });
 
   return (
@@ -106,9 +103,9 @@ export default function ProfileScreen() {
         {/* Left Container: Profile Image and Username */}
         <View style={styles.leftContainer}>
           <Image
-            source={userMock.profilePic}
+            source={require("../assets/placeholder2.png")}
             style={styles.profileImage}
-            defaultSource={require("../assets/profile-placeholder.jpeg")}
+            defaultSource={require("../assets/placeholder2.png")}
           />
           <Text style={styles.name}>{user?.username}</Text>
         </View>
@@ -320,7 +317,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginLeft: 6,
   },
-  // Modal styles
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -335,7 +331,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     backgroundColor: "white",
   },
-  // Tab styles
   tabBar: {
     backgroundColor: '#222831',
     elevation: 0,

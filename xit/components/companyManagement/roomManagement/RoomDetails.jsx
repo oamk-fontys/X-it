@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const placeholderImage = require("../../../assets/profile-placeholder.jpeg");
+const placeholderImage = require("../../../assets/placeholder3.png");
 
 export default function RoomDetails({ room }) {
     if (!room) return null;
@@ -13,7 +13,7 @@ export default function RoomDetails({ room }) {
             
             <View style={styles.imageContainer}>
                 <Image
-                    source={room.image ? { uri: room.image } : placeholderImage}
+                    source={room.logo ? { uri: room.logo.url } : placeholderImage}
                     style={styles.image}
                     resizeMode="cover"
                 />

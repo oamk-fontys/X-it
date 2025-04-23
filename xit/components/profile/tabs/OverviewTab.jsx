@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SectionList, Text, StyleSheet, View, ActivityIndicator } from "react-native";
 import BookingItem from "../BookingItem";
-import globalStyles from "../../../theme/globalStyles";
 
 export default function OverviewTab({ bookings, openBookingQr }) {
 
@@ -11,9 +10,9 @@ export default function OverviewTab({ bookings, openBookingQr }) {
 
   //Sorting by oldest first
   const inProgressSorted = inProgress
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
   const futureBookingsSorted = futureBookings
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const sections = [
     /* This will show up, IF the user is currently playing a game, meaning: state in db: "IN_PROGRESS" */

@@ -111,7 +111,7 @@ export default function AppNavigation() {
           }
         ]}>
           <Image
-            source={require('../assets/profile-placeholder.jpeg')}
+            source={require('../assets/placeholder2.png')}
             style={styles.profileImage}
           />
           <View style={styles.userInfo}>
@@ -199,12 +199,22 @@ export default function AppNavigation() {
             <Drawer.Screen name="Profile" component={ProfileScreenWrapper} />
           )}
           {!hasPendingCompany ? (
-            <Drawer.Screen name="Register Company" component={CompanyRegistrationScreenWrapper} />
+            <Drawer.Screen
+              name="Register Company"
+              component={CompanyRegistrationScreenWrapper}
+              options={{
+                drawerItemStyle: { height: 0 },
+                drawerLabel: () => null,
+              }}
+            />
           ) : (
             <Drawer.Screen
               name="Pending Application"
               component={CompanyPendingScreenWrapper}
-              options={{ drawerLabel: "Pending Application" }}
+              options={{
+                drawerItemStyle: { height: 0 },
+                drawerLabel: () => null,
+              }}
             />
           )}
           {user.role === 'COMPANY' && (

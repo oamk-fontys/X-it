@@ -3,18 +3,23 @@ import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function BookingItem({ booking, openBookingQr }){
+export default function BookingItem({ booking, openBookingQr }) {
+
+  const bookingDate = new Date(booking.date);
+  const dateStr = bookingDate.toLocaleDateString();
+  const start = booking.timeSlot?.start ?? "";
+  const end = booking.timeSlot?.end ?? "";
+  const bookedTimeslot = ` - ${start}-${end}`;
+
   return (
     <View style={styles.bookingItem}>
       <MaterialIcons name="event" size={20} color="#EEEEEE" />
       <View style={styles.bookingDetails}>
-        <Text style={styles.bookingDate}>
-          {new Date(booking?.createdAt).toLocaleString()}
-        </Text>
+        <Text style={styles.bookingDate}>{dateStr + bookedTimeslot}</Text>
         <Text style={styles.bookingRoom}>{booking?.room?.name}</Text>
       </View>
-      
-      <TouchableOpacity 
+
+      <TouchableOpacity
         onPress={() => openBookingQr(booking.id)}
         style={styles.qrButton}
         activeOpacity={0.7}
