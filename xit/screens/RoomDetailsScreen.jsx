@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Rating from "../components/home/popularRooms/Rating";
 import Comments from "../components/roomDetails/comments/Comments";
 import { useRooms } from "../context/RoomProvider";
@@ -9,28 +9,19 @@ import { useAuth } from '../context/AuthContext';
 
 export default function RoomDetailsScreen({ id }) {
     const navigation = useNavigation();
-    const { getRoomById } = useRooms();
+    const { getRoomById, getRatingByRoom, average } = useRooms();
     const { user } = useAuth();
 
     // unauthorized users are navigated to login page
     const navigationTarget = user ? 'Calendar' : 'Login';
 
+    const [ratings, setRatings] = useState([]);
+
     const room = getRoomById(id);
     const img = room.logo?.url;
     const title = room.name;
     const description = room.description;
-    const ratings = [];
     const companyName = room.company.name
-
-    const average = (arr) => {
-        let sum = 0;
-
-        arr.forEach(e => {
-            sum += e;
-        });
-
-        return sum / arr.length
-    }
 
     const bookingPress = () => {
         if (navigationTarget === 'Calendar') {
@@ -45,6 +36,16 @@ export default function RoomDetailsScreen({ id }) {
             navigation.navigate(navigationTarget)
         }
     }
+
+    useEffect(() => {
+        const fetchRating = async(roomId) => {
+            const res = await getRatingByRoom(roomId)
+
+            setRatings(res)
+        }
+
+        fetchRating(id)
+    }, [])
 
     return(
         <View

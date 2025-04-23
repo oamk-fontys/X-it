@@ -1,17 +1,30 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import Rating from "./Rating";
 import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../../../theme/globalStyles";
+import { useRooms } from "../../../context/RoomProvider";
 
 export default function RoomElement({
     id,
-    rating,
     city,
     roomName,
     img
 }) {
     const navigation = useNavigation();
+    const {getRatingByRoom, average} = useRooms()
+
+    const [rating, setRating] = useState([])
+
+    useEffect(() => {
+        const fetchRating = async (roomId) => {
+            const res = await getRatingByRoom(roomId)
+            
+            setRating(res)
+        }
+
+        fetchRating(id)
+    }, [])
 
     return (
         <View
@@ -52,7 +65,7 @@ export default function RoomElement({
                         style={globalStyles.horizontalAlignContainer}
                     >
                         <Rating
-                            rating={rating}
+                            rating={average(rating)}
                             size={14}
                         />
                         <Text

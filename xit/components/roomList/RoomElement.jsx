@@ -1,17 +1,20 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import Rating from "../home/popularRooms/Rating";
 import { useNavigation } from "@react-navigation/native";
+import { useRooms } from "../../context/RoomProvider";
 
 export default function RoomElement({
     img,
     title,
     id,
-    rating,
     companyName,
     city
 }) {
     const navigation = useNavigation();
+    const { getRatingByRoom, average } = useRooms()
+
+    const [rating, setRating] = useState([])
 
     const press = () => {
         navigation.navigate(
@@ -21,6 +24,16 @@ export default function RoomElement({
             }
         );
     }
+
+    useEffect(() => {
+        const fetchRating = async (roomId) => {
+            const res = await getRatingByRoom(roomId)
+            
+            setRating(res)
+        }
+
+        fetchRating(id)
+    }, [])
 
     return (
         <Pressable
@@ -64,7 +77,7 @@ export default function RoomElement({
                 </Text>
                 <Rating
                     size={24}
-                    rating={rating}
+                    rating={average(rating)}
                 />
                 <Text
                     style={styles.company}

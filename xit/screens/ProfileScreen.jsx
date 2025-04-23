@@ -8,6 +8,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { useRooms } from '../context/RoomProvider';
+import { useIsFocused } from "@react-navigation/native";
 import { useStatistic } from '../context/StatisticContext';
 
 import OverviewTab from "../components/profile/tabs/OverviewTab";
@@ -15,6 +16,7 @@ import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
 import StatsTab from "../components/profile/tabs/StatsTab";
 
 export default function ProfileScreen() {
+  const screenFocused = useIsFocused()
   const { user, logout, token } = useAuth();
   const { getAllUserBookings, generateQRtoken } = useBooking();
   const { getVisitedRooms } = useRooms();
@@ -85,8 +87,8 @@ export default function ProfileScreen() {
       }
     };
   
-    fetchData();
-  }, []);
+    if (screenFocused) {fetchData()}
+  }, [screenFocused]);
 
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} openBookingQr={openBookingQr} />,

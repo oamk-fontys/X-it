@@ -32,6 +32,24 @@ export const RoomProvider = ({ children }) => {
         })
     }, [])
 
+    const getAllRooms = async () => {
+        fetch(apiUrl + '/room')
+        .then(res => res.json())
+        .then(json => {
+            if (Array.isArray(json)) {
+                setRooms(json)
+            } else {
+                throw new Error(JSON.stringify(json.message))
+            }
+        })
+        .catch(e => {
+            showNotification(e.message)
+        })
+        .finally(() => {
+            setLoading(false)
+        })
+    }
+
     const getRoomById = (id) => {
         return rooms.find(e => e.id === id)
     }
@@ -335,10 +353,37 @@ export const RoomProvider = ({ children }) => {
         }
     };
 
+    const getRatingByRoom = async (roomId) => {
+        try {
+            const res = await fetch(`${apiUrl}/rating/room/${roomId}`)
+
+            if (!res.ok) {
+                throw new Error(`${res.status} Ratings error`)
+            }
+
+            const json = await res.json() || []
+
+            return json.map(e => e.rating) || []
+        } catch(e) {
+            showNotification(e.message)
+        }
+    }
+
+    const average = (arr) => {
+        let sum = 0;
+
+        arr.forEach(e => {
+            sum += e;
+        });
+
+        return sum / arr.length
+    }
+
     return (
         <RoomContext.Provider
             value={{
                 rooms,
+                getAllRooms,
                 getRoomById,
                 searchForRoom,
                 getCompanyNames,
@@ -350,7 +395,9 @@ export const RoomProvider = ({ children }) => {
                 createRoom,
                 updateRoom,
                 deleteRoom,
-                loading
+                loading,
+                getRatingByRoom,
+                average
             }}
         >
             {children}

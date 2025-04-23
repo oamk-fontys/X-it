@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, ScrollView, TextInput, TouchableOpacity } from "react-native"
 import RoomElement from "../components/roomList/RoomElement";
 import { useRooms } from "../context/RoomProvider";
@@ -6,9 +6,11 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from "react";
 import Filters from "../components/roomList/Filters";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function RoomListScreen() {
-    const { searchForRoom, filteredRooms, loading } = useRooms();
+    const screenFocused = useIsFocused()
+    const { searchForRoom, filteredRooms, loading, getAllRooms } = useRooms();
     const [query, setQuery] = useState('');
     const [hideFilters, setHideFilters] = useState(true);
     const [filters, setFilters] = useState({});
@@ -44,6 +46,12 @@ export default function RoomListScreen() {
             />
         ))
     }
+
+    useEffect(() => {
+        if (screenFocused) {
+            getAllRooms()
+        }
+    }, [screenFocused])
 
     return (
         <View
