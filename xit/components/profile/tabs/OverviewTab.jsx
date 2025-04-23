@@ -1,26 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { SectionList, Text, StyleSheet, View, ActivityIndicator } from "react-native";
-import { useAuth } from '../../../context/AuthContext';
 import BookingItem from "../BookingItem";
+import globalStyles from "../../../theme/globalStyles";
 
 export default function OverviewTab({ bookings, openBookingQr }) {
-  const { user, token } = useAuth();
 
-  const now = new Date();
-  /* REPLACE CREATED AT WITH REAL BOOKING SCHEDULE */
-  const futureBookings = bookings && bookings.filter(booking => new Date(booking.createdAt) >= now);
-  const pastBookings = bookings && bookings.filter(booking => new Date(booking.createdAt) < now);
+  /* const now = new Date(); */
+  const inProgress = bookings?.filter(b => b.state === "IN_PROGRESS") ?? [];
+  const futureBookings = bookings?.filter(b => b.state === "SCHEDULED") ?? [];
+
+  //Sorting by oldest first
+  const inProgressSorted = inProgress
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  const futureBookingsSorted = futureBookings
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   const sections = [
+    /* This will show up, IF the user is currently playing a game, meaning: state in db: "IN_PROGRESS" */
+    ...(inProgress.length > 0
+      ? [
+        {
+          title: "Currently playing",
+          data: inProgressSorted
+        },
+      ]
+      : []),
     {
       title: 'Upcoming bookings',
-      data: futureBookings,
+      data: futureBookingsSorted,
       emptyText: 'No upcoming bookings'
-    },
-    {
-      title: 'Past bookings',
-      data: pastBookings,
-      emptyText: 'No past bookings'
     }
   ];
 
@@ -45,7 +53,7 @@ export default function OverviewTab({ bookings, openBookingQr }) {
       sections={sections}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <BookingItem 
+        <BookingItem
           booking={item}
           openBookingQr={openBookingQr}
         />
