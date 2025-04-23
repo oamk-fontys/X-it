@@ -186,7 +186,6 @@ export default function UpdateRoomForm() {
     }
 
     setIsSubmitting(true);
-    console.log('SAVE image' + image)
     try {
       await updateRoom(
         roomId,
@@ -368,7 +367,6 @@ export default function UpdateRoomForm() {
 
           <ImageUpload 
             onUploadSuccess={(response) => {
-              console.log('update form ' + response.id)
               setImage(response.id);
             }}
             initialImage={initialImage}

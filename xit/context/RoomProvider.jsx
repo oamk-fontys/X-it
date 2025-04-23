@@ -216,6 +216,21 @@ export const RoomProvider = ({ children }) => {
                     phoneNumber
                 })
             });
+
+            console.log('DATA UPDATE REQUEST ' + JSON.stringify({
+                name,
+                description,
+                companyId,
+                duration: Number(duration),
+                cleanUpTime: Number(cleanUpTime),
+                difficulty,
+                address,
+                city,
+                postalCode,
+                country,
+                phoneNumber,
+                logoId
+            }))
     
             const data = await response.json();
             if (!response.ok) {
@@ -273,21 +288,6 @@ export const RoomProvider = ({ children }) => {
                     logoId
                 })
             });
-
-            console.log('DATA UPDATE REQUEST ' + JSON.stringify({
-                name,
-                description,
-                companyId,
-                duration: Number(duration),
-                cleanUpTime: Number(cleanUpTime),
-                difficulty,
-                address,
-                city,
-                postalCode,
-                country,
-                phoneNumber,
-                logoId
-            }))
     
             const data = await response.json();
             if (!response.ok) {

@@ -25,7 +25,6 @@ export default function RoomManagementScreen() {
             setIsLoading(true);
             setError(false);
             const roomData = await getRoomByIdFromBackend(roomId);
-            console.log(roomData)
             setRoom(roomData);
         } catch (err) {
             setError(true);
