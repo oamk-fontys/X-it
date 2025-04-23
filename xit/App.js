@@ -11,6 +11,7 @@ import { AuthProvider } from './context/AuthContext';
 import { RoomProvider } from "./context/RoomProvider";
 import { BookingProvider } from './context/BookingContext';
 import { CompanyProvider } from './context/CompanyContext';
+import { StatisticProvider } from './context/StatisticContext';
 
 import AppNavigation from "./helpers/AppNavigation";
 
@@ -30,9 +31,11 @@ export default function App() {
             <BookingProvider>
               <TimeProvider>
                 <CommentProvider>
-                  <SafeAreaView style={globalStyles.safeArea}>
-                    <AppNavigation />
-                  </SafeAreaView>
+                  <StatisticProvider>
+                    <SafeAreaView style={globalStyles.safeArea}>
+                      <AppNavigation />
+                    </SafeAreaView>
+                  </StatisticProvider>
                 </CommentProvider>
               </TimeProvider>
             </BookingProvider>

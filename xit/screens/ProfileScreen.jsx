@@ -4,9 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import QRCode from 'react-native-qrcode-svg';
+
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
 import { useRooms } from '../context/RoomProvider';
+import { useStatistic } from '../context/StatisticContext';
 
 import OverviewTab from "../components/profile/tabs/OverviewTab";
 import VisitedRoomsTab from "../components/profile/tabs/VisitedRoomsTab";
@@ -16,6 +18,7 @@ export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
   const { getAllUserBookings, generateQRtoken } = useBooking();
   const { getVisitedRooms } = useRooms();
+  const { getUserStatistic } = useStatistic();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -27,6 +30,7 @@ export default function ProfileScreen() {
   const [isTokenModalVisible, setIsTokenModalVisible] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [visitedRooms, setVisitedRooms] = useState([]);
+  const [stats, setStats] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -71,6 +75,9 @@ export default function ProfileScreen() {
 
         const visitedRoomsData = await getVisitedRooms();
         Array.isArray(visitedRoomsData) && setVisitedRooms(visitedRoomsData);
+
+        const statsData = await getUserStatistic();
+        Array.isArray(statsData) && setStats(statsData);
       } catch (err) {
         setError(true);
       } finally {
@@ -94,7 +101,7 @@ export default function ProfileScreen() {
   const renderScene = SceneMap({
     bookingsTab: () => <OverviewTab bookings={bookings} openBookingQr={openBookingQr} />,
     visitedRoomsTab: () => <VisitedRoomsTab visitedRooms={visitedRooms} />,
-    statsTab: () => <StatsTab roomStats={userMock.roomStats} />,
+    statsTab: () => <StatsTab roomStats={stats} />,
   });
 
   return (
