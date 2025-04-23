@@ -92,38 +92,23 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Login error:', error);
       showNotification('Internal error occured!', 'error');
-    } 
+    }
   };
 
-  const register = async (
-    email,
-    password,
-    confirmPassword,
-    username,
-    firstName,
-    lastName,
-    phoneNumber,
-    dateOfBirth
-  ) => {
+  const register = async (payload) => {
     try {
       const response = await fetch(API_URL + '/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          confirmPassword: confirmPassword,
-          username: username,
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: phoneNumber,
-          dateOfBirth: dateOfBirth
-        })
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        showNotification(data.message, 'error');
+        const errorMsg = Array.isArray(data.message)
+          ? data.message.join('\n')
+          : data.message;
+        showNotification(errorMsg, 'error');
         return false;
       }
 
@@ -131,6 +116,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Registration error:', error);
       showNotification('Internal error occured!', 'error');
+      return false;
     }
   };
 
